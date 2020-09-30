@@ -24,9 +24,7 @@ public:
 
     boolean blinkReady();
     void showBlink(int value);
-
-    // void highLighter(Buttons &buttons);
-
+    
     void logo();
 
     void showTimerSet(Timer &timer);

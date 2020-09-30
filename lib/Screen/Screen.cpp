@@ -158,48 +158,6 @@ void Screen::showVacuumState(Switchers &relayState, Buttons &buttonPlus, Timer &
     }
 }
 
-/*
-
-void Screen::highLighter(Keyboard &keyboard)
-{
-    switch (keyboard.mode)
-    {
-    case keyboard.LIGHT:
-
-        setFontMode(1);  // activate transparent font mode 
-        setDrawColor(1); // color 1 for the box 
-        switch (keyboard.highLight)
-        {
-        case keyboard.DATE:
-            drawBox(0, 0, 70, 22);
-            break;
-
-        case keyboard.TIME:
-            drawBox(70, 0, 58, 14);
-            break;
-
-        case keyboard.START:
-            drawBox(5, 57, 30, 14);
-            break;
-
-        case keyboard.STOP:
-            drawBox(30, 57, 30, 14);
-            break;
-
-        default:
-            break;
-        }
-
-        setDrawColor(2);
-        break;
-
-    default:
-        break;
-    }
-}
-
-*/
-
 void Screen::vacuumScreen(Switchers &relayState, Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer)
 {
     if (!buttonMinus.setTimerFlag)
