@@ -29,7 +29,6 @@ void Screen::logo()
 
 boolean Screen::blinkReady()
 {
-    
     if (millis() - prewCursorMillis >= blinkMillis)
     {
         blink = true;
@@ -39,7 +38,7 @@ boolean Screen::blinkReady()
             blink = false;
         }
     }
-    
+
     return blink;
 }
 
@@ -54,7 +53,7 @@ void Screen::showBlink(int value)
         else
         {
             print("_");
-        }        
+        }
     }
     else
     {
@@ -77,7 +76,6 @@ void Screen::showTimerSet(Timer &timer)
         setCursor(57, 43);
     }
     setFont(u8g2_font_courB18_tr);
-    // print(timer.counter);
     showBlink(timer.counter);
 
     setCursor(5, 59);
@@ -165,7 +163,6 @@ void Screen::vacuumScreen(Switchers &relayState, Buttons &buttonMinus, Buttons &
         firstPage();
         do
         {
-            // highLighter(keyboard);
             showVacuumState(relayState, buttonPlus, timer);
             bottomLine(buttonPlus);
         } while (nextPage());

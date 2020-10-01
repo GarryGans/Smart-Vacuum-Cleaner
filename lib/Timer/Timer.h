@@ -13,7 +13,7 @@ class Timer
 private:
     byte counter = 10;
     byte maxCounter;
-    byte defaultCounter = 10;
+    const byte defaultCounter = 10;
     const byte minSetCounter = 1;
     const byte maxSetCounter = 99;
 

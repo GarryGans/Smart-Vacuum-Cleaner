@@ -25,8 +25,6 @@ void Timer::readTimer()
 void Timer::writeTimer()
 {
     EEPROM.put(couterAddr, counter);
-    // Serial.print("write counter: ");
-    // Serial.println(counter);
 }
 
 void Timer::changeTimer(boolean minus, boolean plus)
@@ -41,7 +39,6 @@ void Timer::changeTimer(boolean minus, boolean plus)
         counter++;
         counter = constrain(counter, minSetCounter, maxSetCounter);
     }
-    // Serial.println(counter);
 }
 
 void Timer::minusCounter()
@@ -52,14 +49,10 @@ void Timer::minusCounter()
         prewCounterMillis = millis();
         counter--;
         counter = constrain(counter, 0, maxCounter);
-        // Serial.println(counter);
-        // Serial.println(maxCounter);
     }
 }
 
 void Timer::timerReset()
 {
     EEPROM.get(couterAddr, counter);
-    // Serial.print("reset counter ");
-    // Serial.println(counter);
 }
