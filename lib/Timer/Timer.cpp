@@ -52,14 +52,14 @@ void Timer::minusCounter()
         prewCounterMillis = millis();
         counter--;
         counter = constrain(counter, 0, maxCounter);
-        Serial.println(counter);
-        Serial.println(maxCounter);
+        // Serial.println(counter);
+        // Serial.println(maxCounter);
     }
 }
 
 void Timer::timerReset()
 {
     EEPROM.get(couterAddr, counter);
-    Serial.print("reset counter ");
-    Serial.println(counter);
+    // Serial.print("reset counter ");
+    // Serial.println(counter);
 }
