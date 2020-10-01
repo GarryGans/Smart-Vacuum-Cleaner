@@ -12,19 +12,14 @@
 class Screen : public U8G2_SH1106_128X64_NONAME_1_HW_I2C
 {
 private:
-    boolean blink;
-    const unsigned long blinkMillis = 700;
-    unsigned long prewCursorMillis;
-
     const String vacState[2] = {"OFF", "ON"};
 
 public:
     Screen(/* args */);
     ~Screen();
 
-    boolean blinkReady();
-    void showBlink(int value);
-    
+    void showBlink(Timer &timer);
+
     void logo();
 
     void showTimerSet(Timer &timer);

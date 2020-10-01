@@ -11,6 +11,8 @@ class Timer
     friend class Screen;
     friend class Buttons;
 private:
+    boolean blink;
+
     byte counter = 10;
     byte maxCounter;
     const byte defaultCounter = 10;
@@ -19,11 +21,14 @@ private:
 
     unsigned long prewCounterMillis;
     const unsigned long secMillis = 1000;
+    const unsigned long blinkMillis = 700;
+    unsigned long prewCursorMillis;
 
 public:
     Timer(/* args */);
     ~Timer();
 
+    boolean blinkReady();
     void changeTimer(boolean minus, boolean plus);
     void minusCounter();
     void timerReset();

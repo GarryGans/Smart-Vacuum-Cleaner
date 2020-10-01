@@ -27,26 +27,11 @@ void Screen::logo()
     } while (nextPage());
 }
 
-boolean Screen::blinkReady()
+void Screen::showBlink(Timer &timer)
 {
-    if (millis() - prewCursorMillis >= blinkMillis)
+    if (timer.blinkReady())
     {
-        blink = true;
-        if (millis() - prewCursorMillis >= blinkMillis * 2)
-        {
-            prewCursorMillis = millis();
-            blink = false;
-        }
-    }
-
-    return blink;
-}
-
-void Screen::showBlink(int value)
-{
-    if (blinkReady())
-    {
-        if (value > 9)
+        if (timer.counter > 9)
         {
             print("__");
         }
@@ -57,7 +42,7 @@ void Screen::showBlink(int value)
     }
     else
     {
-        print(value);
+        print(timer.counter);
     }
 }
 
@@ -76,7 +61,7 @@ void Screen::showTimerSet(Timer &timer)
         setCursor(57, 43);
     }
     setFont(u8g2_font_courB18_tr);
-    showBlink(timer.counter);
+    showBlink(timer);
 
     setCursor(5, 59);
     setFont(u8g2_font_t0_12b_tf);
