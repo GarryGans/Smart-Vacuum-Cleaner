@@ -79,8 +79,8 @@ void Buttons::buttonCommands(Buttons &buttonMinus, Buttons &motor, Timer &timer)
                 }
                 else if (motor.motorSwitch)
                 {
-                    vacuumState = swOFF;
                     motor.motorSwitch = false;
+                    vacuumState = swOFF;
                 }
                 break;
 
