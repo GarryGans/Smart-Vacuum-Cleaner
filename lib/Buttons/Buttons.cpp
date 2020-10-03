@@ -32,6 +32,7 @@ void Buttons::setTimer(Buttons &motor, Buttons &buttonPlus, Timer &timer)
         {
             setTimerFlag = true;
             buttonPlus.manualSwitch = false;
+            buttonPlus.vacuumState = swOFF;
             motor.motorSwitch = false;
             timer.timerReset();
         }
