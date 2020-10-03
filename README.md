@@ -1,7 +1,6 @@
 # Smart-vacuum-cleaner
 
-Arduino project to use micromotor with Vacuum Cleaner automaticaly.
-Created with Platformio via VSCode.
+Arduino project to use micromotor with Vacuum Cleaner automaticaly.  Created with Platformio via VSCode.
 
 Used libraries:
 
