@@ -1,7 +1,7 @@
-#define plusPin 4
-#define minusPin 5
-#define motorPin 3
-#define vacPin 2
+#define plusPin 5
+#define minusPin 4
+#define motorPin 2
+#define vacPin 3
 
 #include <Arduino.h>
 #include <Screen.h>
@@ -38,12 +38,12 @@ void setup()
 
 void loop()
 {
-  buttonMinus.setTimer(motor, buttonPlus, timer);
-  buttonPlus.buttonCommands(buttonMinus, motor, timer);
+  buttonMinus.blueButton(motor, buttonPlus, timer);
+  buttonPlus.redButton(buttonMinus, buttonPlus, motor, timer);
   motor.motorCommands(buttonMinus, buttonPlus, timer);
 
   switchers.switcher(buttonPlus, motor);
 
   screen.vacuumScreen(switchers, buttonMinus, buttonPlus, timer);
-  screen.setTimerScreen(buttonMinus, timer);
+  screen.setTimerScreen(buttonMinus, buttonPlus, timer);
 }

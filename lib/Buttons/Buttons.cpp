@@ -4,15 +4,21 @@ Buttons::Buttons(int8_t pin) : GButton(pin)
 {
 }
 
+Buttons::Buttons(int8_t minus, int8_t plus)
+{
+    // Buttons minus(minus);
+    // Buttons plus(plus);
+}
+
 Buttons::~Buttons()
 {
 }
 
 void Buttons::begin()
 {
-    setDebounce(30);      // настройка антидребезга (по умолчанию 80 мс)
-    setTimeout(1000);      // настройка таймаута на удержание (по умолчанию 500 мс)
-    setClickTimeout(100); // настройка таймаута между кликами (по умолчанию 300 мс)
+    setDebounce(50);      // настройка антидребезга (по умолчанию 80 мс)
+    setTimeout(1000);     // настройка таймаута на удержание (по умолчанию 500 мс)
+    setClickTimeout(200); // настройка таймаута между кликами (по умолчанию 300 мс)
 
     // HIGH_PULL - кнопка подключена к GND, пин подтянут к VCC (PIN --- КНОПКА --- GND)
     // LOW_PULL  - кнопка подключена к VCC, пин подтянут к GND
@@ -23,90 +29,195 @@ void Buttons::begin()
     setDirection(NORM_OPEN);
 }
 
-void Buttons::setTimer(Buttons &motor, Buttons &buttonPlus, Timer &timer)
+void Buttons::blueButton(Buttons &motor, Buttons &buttonPlus, Timer &timer)
 {
     tick();
-    if (isClick())
-    {
-        if (!setTimerFlag)
-        {
-            setTimerFlag = true;
-            buttonPlus.manualSwitch = false;
-            buttonPlus.vacuumState = swOFF;
-            motor.motorSwitch = false;
-            timer.timerReset();
-        }
 
-        else if (setTimerFlag)
-        {
-            minus = true;
-            timer.changeTimer(minus, plus);
-        }
-    }
-    if (isHolded())
+    if (!buttonLock)
     {
-        timer.writeTimer();
-        setTimerFlag = false;
-    }
-}
 
-void Buttons::buttonCommands(Buttons &buttonMinus, Buttons &motor, Timer &timer)
-{
-    tick();
-    if (isClick())
-    {
-        if (buttonMinus.setTimerFlag)
+        if (setTimerFlag || buttonPlus.setTimerFlag)
         {
-            plus = true;
-            timer.changeTimer(minus, plus);
-        }
-        else if (!buttonMinus.setTimerFlag)
-        {
-            manualSwitch = true;
-            if (motor.motorSwitch)
+            timer.escapeTimer();
+            if (timer.escapeCounter == 0)
             {
-                motor.resetMotor = false;
-                timer.timerReset();
+                timer.writeTimer();
+                setTimerFlag = false;
+                buttonPlus.setTimerFlag = false;
             }
+        }
 
-            switch (vacuumState)
+        if (isClick())
+        {
+            timer.counterHold = true;
+            if (!setTimerFlag)
             {
-            case swOFF:
+                setTimerFlag = true;
+                buttonPlus.setTimerFlag = true;
 
-                if (!motor.motorSwitch)
-                {
-                    vacuumState = swON;
-                }
-                else if (motor.motorSwitch)
-                {
-                    motor.motorSwitch = false;
-                    vacuumState = swOFF;
-                }
-                break;
-
-            case swON:
-
+                buttonPlus.manualSwitch = false;
+                buttonPlus.vacuumState = swOFF;
                 if (motor.motorSwitch)
                 {
                     motor.motorSwitch = false;
+                    motor.resetMotor = false;
+                    timer.timerReset();
                 }
-                vacuumState = swOFF;
-                break;
-
-            default:
-                break;
             }
+
+            else if (setTimerFlag)
+            {
+                timer.updateEscape();
+                minus = true;
+                timer.changeTimer(minus, plus);
+            }
+        }
+
+        if (isHold() && (setTimerFlag || buttonPlus.setTimerFlag))
+        {
+            timer.counterHold = true;
+            timer.updateEscape();
+            minus = true;
+            timer.changeTimer(minus, plus);
+        }
+
+        if (isRelease())
+        {
+            timer.counterHold = false;
+        }
+        if (isHolded() && !(setTimerFlag || buttonPlus.setTimerFlag))
+        {
+            buttonLock = true;
+            buttonPlus.manualSwitch = false;
+            buttonPlus.vacuumState = swOFF;
+            if (motor.motorSwitch)
+            {
+                motor.motorSwitch = false;
+                motor.resetMotor = false;
+                timer.timerReset();
+            }
+        }
+    }
+
+    else if (isHolded() && buttonLock)
+    {
+        buttonLock = false;
+    }
+}
+
+void Buttons::redButton(Buttons &buttonMinus, Buttons &buttonPlus, Buttons &motor, Timer &timer)
+{
+
+    if (!buttonMinus.buttonLock)
+    {
+        tick();
+        if (buttonMinus.setTimerFlag || setTimerFlag)
+        {
+            timer.escapeTimer();
+            if (timer.escapeCounter == 0)
+            {
+                timer.writeTimer();
+                buttonMinus.setTimerFlag = false;
+                setTimerFlag = false;
+            }
+        }
+
+        if (isClick())
+        {
+            timer.counterHold = true;
+            if (!buttonMinus.setTimerFlag || !setTimerFlag)
+            {
+                setTimerFlag = true;
+                buttonMinus.setTimerFlag = true;
+
+                manualSwitch = false;
+                vacuumState = swOFF;
+                if (motor.motorSwitch)
+                {
+                    motor.motorSwitch = false;
+
+                    motor.resetMotor = false;
+                    timer.timerReset();
+                }
+            }
+
+            else if (buttonMinus.setTimerFlag || setTimerFlag)
+            {
+
+                timer.updateEscape();
+                plus = true;
+                timer.changeTimer(minus, plus);
+            }
+        }
+        if (isHolded())
+        {
+            if (!buttonMinus.setTimerFlag && !setTimerFlag)
+            {
+                manualSwitch = true;
+                if (motor.motorSwitch)
+                {
+                    motor.resetMotor = false;
+                    timer.timerReset();
+                }
+
+                switch (vacuumState)
+                {
+                case swOFF:
+
+                    if (!motor.motorSwitch)
+                    {
+                        vacuumState = swON;
+                    }
+                    else if (motor.motorSwitch)
+                    {
+                        motor.motorSwitch = false;
+                        vacuumState = swOFF;
+                    }
+                    break;
+
+                case swON:
+
+                    if (motor.motorSwitch)
+                    {
+                        motor.motorSwitch = false;
+                    }
+                    vacuumState = swOFF;
+                    break;
+
+                default:
+                    break;
+                }
+            }
+        }
+        if (isHold() && (buttonMinus.setTimerFlag || setTimerFlag))
+        {
+            timer.counterHold = true;
+            timer.updateEscape();
+            plus = true;
+            timer.changeTimer(minus, plus);
+        }
+        if (isRelease())
+        {
+            timer.counterHold = false;
         }
     }
 }
 
 void Buttons::motorCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer)
 {
-    if (!buttonMinus.setTimerFlag)
+    if (!buttonMinus.buttonLock)
     {
+
         tick();
         if (isClick() || isHolded())
         {
+            if (buttonMinus.setTimerFlag || buttonPlus.setTimerFlag)
+            {
+                timer.writeTimer();
+                buttonMinus.setTimerFlag = false;
+                buttonPlus.setTimerFlag = false;
+            }
+
             resetMotor = false;
             timer.timerReset();
             buttonPlus.manualSwitch = false;

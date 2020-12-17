@@ -10,11 +10,17 @@ class Timer
 {
     friend class Screen;
     friend class Buttons;
+
 private:
     boolean blink;
+    boolean escape;
+
+    byte escapeCounter = 5;
+    byte maxEscapeCounter = 5;
 
     byte counter = 10;
     byte maxCounter;
+    byte counterHold;
     const byte defaultCounter = 10;
     const byte minSetCounter = 1;
     const byte maxSetCounter = 99;
@@ -23,12 +29,15 @@ private:
     const unsigned long secMillis = 1000;
     const unsigned long blinkMillis = 700;
     unsigned long prewCursorMillis;
+    unsigned long prewEscapeMillis;
 
 public:
     Timer(/* args */);
     ~Timer();
 
+    void updateEscape();
     boolean blinkReady();
+    void escapeTimer();
     void changeTimer(boolean minus, boolean plus);
     void minusCounter();
     void timerReset();

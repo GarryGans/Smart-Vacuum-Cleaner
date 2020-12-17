@@ -23,10 +23,11 @@ public:
     void logo();
 
     void showTimerSet(Timer &timer);
-    void setTimerScreen(Buttons &buttonMinus, Timer &timer);
-
+    void setTimerScreen(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer);
+    void blockScreen();
     void showAlert();
-    void bottomLine(Buttons &buttonPlus);
+    void bottomLine(Buttons &buttonMinus, Buttons &buttonPlus);
+
     void showVacuumState(Switchers &relayState, Buttons &buttonPlus, Timer &timer);
     void vacuumScreen(Switchers &relayState, Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer);
 };

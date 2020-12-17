@@ -42,6 +42,21 @@ boolean Timer::blinkReady()
     return blink;
 }
 
+void Timer::escapeTimer()
+{  
+    if (millis() - prewEscapeMillis >= blinkMillis)
+    {
+        prewEscapeMillis = millis();
+        escapeCounter--;
+        escapeCounter = constrain(escapeCounter, 0 , defaultCounter);
+    }
+}
+
+void Timer::updateEscape()
+{
+    escapeCounter = maxEscapeCounter;
+}
+
 void Timer::changeTimer(boolean minus, boolean plus)
 {
     if (minus)
@@ -57,7 +72,7 @@ void Timer::changeTimer(boolean minus, boolean plus)
 }
 
 void Timer::minusCounter()
-{   
+{
     if ((millis() - prewCounterMillis >= secMillis))
     {
         EEPROM.get(couterAddr, maxCounter);

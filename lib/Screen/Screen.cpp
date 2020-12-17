@@ -29,7 +29,7 @@ void Screen::logo()
 
 void Screen::showBlink(Timer &timer)
 {
-    if (timer.blinkReady())
+    if (timer.blinkReady() && !timer.counterHold)
     {
         if (timer.counter > 9)
         {
@@ -65,12 +65,12 @@ void Screen::showTimerSet(Timer &timer)
 
     setCursor(5, 59);
     setFont(u8g2_font_t0_12b_tf);
-    print("Hold minus to escape");
+    print("auto Escape Bar");
 }
 
-void Screen::setTimerScreen(Buttons &buttonMinus, Timer &timer)
+void Screen::setTimerScreen(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer)
 {
-    if (buttonMinus.setTimerFlag)
+    if (buttonMinus.setTimerFlag || buttonPlus.setTimerFlag)
     {
         firstPage();
         do
@@ -85,7 +85,14 @@ void Screen::showAlert()
     print("manual mode");
 }
 
-void Screen::bottomLine(Buttons &buttonPlus)
+void Screen::blockScreen()
+{
+    setFont(u8g2_font_HelvetiPixelOutline_tr);
+    setCursor(25, 25);
+    print("BLOCK !!!");
+}
+
+void Screen::bottomLine(Buttons &buttonMinus, Buttons &buttonPlus)
 {
     if (buttonPlus.manualSwitch)
     {
@@ -93,6 +100,13 @@ void Screen::bottomLine(Buttons &buttonPlus)
         setFont(u8g2_font_pixelmordred_tf);
         showAlert();
     }
+    else if (buttonMinus.buttonLock)
+    {
+        setCursor(17, 59);
+        setFont(u8g2_font_pixelmordred_tf);
+        print("block mode ");
+    }
+    
     else
     {
         setCursor(17, 59);
@@ -143,13 +157,23 @@ void Screen::showVacuumState(Switchers &relayState, Buttons &buttonPlus, Timer &
 
 void Screen::vacuumScreen(Switchers &relayState, Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer)
 {
-    if (!buttonMinus.setTimerFlag)
+    if (!buttonMinus.setTimerFlag && !buttonPlus.setTimerFlag)
     {
         firstPage();
         do
         {
-            showVacuumState(relayState, buttonPlus, timer);
-            bottomLine(buttonPlus);
+            if (buttonMinus.buttonLock)
+            {
+                blockScreen();
+            }
+            else
+            {
+                showVacuumState(relayState, buttonPlus, timer);
+            }
+            
+            
+            
+            bottomLine(buttonMinus,buttonPlus);
         } while (nextPage());
     }
 }

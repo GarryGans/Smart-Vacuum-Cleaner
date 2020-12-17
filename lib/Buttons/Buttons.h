@@ -23,15 +23,17 @@ private:
     boolean timerReset;
     boolean minus;
     boolean plus;
+    boolean buttonLock;
 
 public:
     
     Buttons(int8_t pin);
+    Buttons(int8_t minus, int8_t plus);
     ~Buttons();
 
     void begin();
-    void setTimer(Buttons &motor, Buttons &buttonPlus, Timer &timer);
-    void buttonCommands(Buttons &buttonMinus, Buttons &motor, Timer &timer);
+    void blueButton(Buttons &motor, Buttons &buttonPlus, Timer &timer);
+    void redButton(Buttons &buttonMinus, Buttons &buttonPlus, Buttons &motor, Timer &timer);
     void motorCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer);
 };
 
