@@ -29,6 +29,7 @@ void Screen::logo()
 
 void Screen::showBlink(Timer &timer)
 {
+    timer.unFreezeBlink();
     if (timer.blinkReady() && !timer.counterHold)
     {
         if (timer.counter > 9)

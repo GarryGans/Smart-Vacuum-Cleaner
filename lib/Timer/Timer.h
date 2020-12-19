@@ -29,6 +29,7 @@ private:
     const unsigned long secMillis = 1000;
     const unsigned long blinkMillis = 700;
     unsigned long prewCursorMillis;
+    unsigned long prewFreezeMillis;
     unsigned long prewEscapeMillis;
 
 public:
@@ -37,7 +38,9 @@ public:
 
     void updateEscape();
     boolean blinkReady();
-    void escapeTimer();
+
+    void unFreezeBlink();
+    void escapeMenuTimer();
     void changeTimer(boolean minus, boolean plus);
     void minusCounter();
     void timerReset();

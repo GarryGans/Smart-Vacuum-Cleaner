@@ -4,10 +4,8 @@ Buttons::Buttons(int8_t pin) : GButton(pin)
 {
 }
 
-Buttons::Buttons(int8_t minus, int8_t plus)
+Buttons::Buttons()
 {
-    // Buttons minus(minus);
-    // Buttons plus(plus);
 }
 
 Buttons::~Buttons()
@@ -29,6 +27,18 @@ void Buttons::begin()
     setDirection(NORM_OPEN);
 }
 
+void Buttons::totalOFF(Buttons &motor, Buttons &buttonPlus, Timer &timer)
+{
+    buttonPlus.manualSwitch = false;
+    buttonPlus.vacuumState = swOFF;
+    if (motor.motorSwitch)
+    {
+        motor.motorSwitch = false;
+        motor.resetMotor = false;
+        timer.timerReset();
+    }
+}
+
 void Buttons::blueButton(Buttons &motor, Buttons &buttonPlus, Timer &timer)
 {
     tick();
@@ -38,7 +48,7 @@ void Buttons::blueButton(Buttons &motor, Buttons &buttonPlus, Timer &timer)
 
         if (setTimerFlag || buttonPlus.setTimerFlag)
         {
-            timer.escapeTimer();
+            timer.escapeMenuTimer();
             if (timer.escapeCounter == 0)
             {
                 timer.writeTimer();
@@ -49,20 +59,14 @@ void Buttons::blueButton(Buttons &motor, Buttons &buttonPlus, Timer &timer)
 
         if (isClick())
         {
+            
             timer.counterHold = true;
             if (!setTimerFlag)
             {
+                totalOFF(motor, buttonPlus, timer);
                 setTimerFlag = true;
                 buttonPlus.setTimerFlag = true;
-
-                buttonPlus.manualSwitch = false;
-                buttonPlus.vacuumState = swOFF;
-                if (motor.motorSwitch)
-                {
-                    motor.motorSwitch = false;
-                    motor.resetMotor = false;
-                    timer.timerReset();
-                }
+                
             }
 
             else if (setTimerFlag)
@@ -81,21 +85,15 @@ void Buttons::blueButton(Buttons &motor, Buttons &buttonPlus, Timer &timer)
             timer.changeTimer(minus, plus);
         }
 
-        if (isRelease())
-        {
-            timer.counterHold = false;
-        }
+        // if (isRelease())
+        // {
+        //     timer.unFreezeBlink();
+        // }
+
         if (isHolded() && !(setTimerFlag || buttonPlus.setTimerFlag))
         {
             buttonLock = true;
-            buttonPlus.manualSwitch = false;
-            buttonPlus.vacuumState = swOFF;
-            if (motor.motorSwitch)
-            {
-                motor.motorSwitch = false;
-                motor.resetMotor = false;
-                timer.timerReset();
-            }
+            totalOFF(motor, buttonPlus, timer);
         }
     }
 
@@ -113,7 +111,7 @@ void Buttons::redButton(Buttons &buttonMinus, Buttons &buttonPlus, Buttons &moto
         tick();
         if (buttonMinus.setTimerFlag || setTimerFlag)
         {
-            timer.escapeTimer();
+            timer.escapeMenuTimer();
             if (timer.escapeCounter == 0)
             {
                 timer.writeTimer();
@@ -130,15 +128,7 @@ void Buttons::redButton(Buttons &buttonMinus, Buttons &buttonPlus, Buttons &moto
                 setTimerFlag = true;
                 buttonMinus.setTimerFlag = true;
 
-                manualSwitch = false;
-                vacuumState = swOFF;
-                if (motor.motorSwitch)
-                {
-                    motor.motorSwitch = false;
-
-                    motor.resetMotor = false;
-                    timer.timerReset();
-                }
+                totalOFF(motor, buttonPlus, timer);
             }
 
             else if (buttonMinus.setTimerFlag || setTimerFlag)
@@ -196,10 +186,10 @@ void Buttons::redButton(Buttons &buttonMinus, Buttons &buttonPlus, Buttons &moto
             plus = true;
             timer.changeTimer(minus, plus);
         }
-        if (isRelease())
-        {
-            timer.counterHold = false;
-        }
+        // if (isRelease())
+        // {
+        //     timer.unFreezeBlink();
+        // }
     }
 }
 
@@ -241,4 +231,11 @@ void Buttons::motorCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &ti
             }
         }
     }
+}
+
+void Buttons::commands(Buttons &buttonMinus, Buttons &buttonPlus, Buttons motor, Timer &timer)
+{
+    buttonMinus.blueButton(motor, buttonPlus, timer);
+    buttonPlus.redButton(buttonMinus,buttonPlus, motor, timer);
+    motor.motorCommands(buttonMinus, buttonPlus, timer);
 }

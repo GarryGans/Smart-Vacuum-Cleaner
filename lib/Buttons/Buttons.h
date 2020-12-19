@@ -9,6 +9,7 @@ class Buttons : public GButton
 {
     friend class Switchers;
     friend class Screen;
+
 private:
     enum VacuumState
     {
@@ -26,14 +27,15 @@ private:
     boolean buttonLock;
 
 public:
-    
     Buttons(int8_t pin);
-    Buttons(int8_t minus, int8_t plus);
+    Buttons();
     ~Buttons();
 
     void begin();
+    void totalOFF(Buttons &motor, Buttons &buttonPlus, Timer &timer);
     void blueButton(Buttons &motor, Buttons &buttonPlus, Timer &timer);
     void redButton(Buttons &buttonMinus, Buttons &buttonPlus, Buttons &motor, Timer &timer);
+    void commands(Buttons &buttonMinus, Buttons &buttonPlus, Buttons motor, Timer &timer);
     void motorCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer);
 };
 

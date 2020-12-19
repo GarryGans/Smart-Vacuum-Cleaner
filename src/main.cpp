@@ -38,6 +38,9 @@ void setup()
 
 void loop()
 {
+  // Buttons buttons;
+  // buttons.commands(buttonMinus, buttonPlus, motor, timer);
+
   buttonMinus.blueButton(motor, buttonPlus, timer);
   buttonPlus.redButton(buttonMinus, buttonPlus, motor, timer);
   motor.motorCommands(buttonMinus, buttonPlus, timer);

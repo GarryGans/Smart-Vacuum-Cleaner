@@ -42,13 +42,25 @@ boolean Timer::blinkReady()
     return blink;
 }
 
-void Timer::escapeTimer()
-{  
+void Timer::unFreezeBlink()
+{
+    if (counterHold)
+    {
+        if (millis() - prewFreezeMillis >= blinkMillis)
+        {
+            prewFreezeMillis = millis();
+            counterHold = false;
+        }
+    }
+}
+
+void Timer::escapeMenuTimer()
+{
     if (millis() - prewEscapeMillis >= blinkMillis)
     {
         prewEscapeMillis = millis();
         escapeCounter--;
-        escapeCounter = constrain(escapeCounter, 0 , defaultCounter);
+        escapeCounter = constrain(escapeCounter, 0, defaultCounter);
     }
 }
 
