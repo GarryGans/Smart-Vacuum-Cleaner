@@ -230,10 +230,3 @@ void Buttons::motorCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &ti
         }
     }
 }
-
-void Buttons::commands(Buttons &buttonMinus, Buttons &buttonPlus, Buttons motor, Timer &timer)
-{
-    buttonMinus.blueButton(motor, buttonPlus, timer);
-    buttonPlus.redButton(buttonMinus,buttonPlus, motor, timer);
-    motor.motorCommands(buttonMinus, buttonPlus, timer);
-}

@@ -35,7 +35,6 @@ public:
     void totalOFF(Buttons &motor, Buttons &buttonPlus, Timer &timer);
     void blueButton(Buttons &motor, Buttons &buttonPlus, Timer &timer);
     void redButton(Buttons &buttonMinus, Buttons &buttonPlus, Buttons &motor, Timer &timer);
-    void commands(Buttons &buttonMinus, Buttons &buttonPlus, Buttons motor, Timer &timer);
     void motorCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer);
 };
 
