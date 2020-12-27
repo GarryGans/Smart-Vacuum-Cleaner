@@ -45,7 +45,6 @@ void Buttons::blueButton(Buttons &motor, Buttons &buttonPlus, Timer &timer)
 
     if (!buttonLock)
     {
-
         if (setTimerFlag || buttonPlus.setTimerFlag)
         {
             timer.escapeMenuTimer();
@@ -59,7 +58,6 @@ void Buttons::blueButton(Buttons &motor, Buttons &buttonPlus, Timer &timer)
 
         if (isClick())
         {
-            
             timer.counterHold = true;
             if (!setTimerFlag)
             {
@@ -85,10 +83,10 @@ void Buttons::blueButton(Buttons &motor, Buttons &buttonPlus, Timer &timer)
             timer.changeTimer(minus, plus);
         }
 
-        // if (isRelease())
-        // {
-        //     timer.unFreezeBlink();
-        // }
+        if (isRelease())
+        {
+            timer.unFreezeBlink();
+        }
 
         if (isHolded() && !(setTimerFlag || buttonPlus.setTimerFlag))
         {
@@ -144,6 +142,7 @@ void Buttons::redButton(Buttons &buttonMinus, Buttons &buttonPlus, Buttons &moto
             if (!buttonMinus.setTimerFlag && !setTimerFlag)
             {
                 manualSwitch = true;
+                
                 if (motor.motorSwitch)
                 {
                     motor.resetMotor = false;
@@ -186,10 +185,10 @@ void Buttons::redButton(Buttons &buttonMinus, Buttons &buttonPlus, Buttons &moto
             plus = true;
             timer.changeTimer(minus, plus);
         }
-        // if (isRelease())
-        // {
-        //     timer.unFreezeBlink();
-        // }
+        if (isRelease())
+        {
+            timer.unFreezeBlink();
+        }
     }
 }
 
@@ -197,22 +196,22 @@ void Buttons::motorCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &ti
 {
     if (!buttonMinus.buttonLock)
     {
-
         tick();
         if (isClick() || isHolded())
         {
+            
+            resetMotor = false;
             if (buttonMinus.setTimerFlag || buttonPlus.setTimerFlag)
             {
                 timer.writeTimer();
                 buttonMinus.setTimerFlag = false;
                 buttonPlus.setTimerFlag = false;
             }
-
-            resetMotor = false;
             timer.timerReset();
-            buttonPlus.manualSwitch = false;
-            buttonPlus.vacuumState = swOFF;
             motorSwitch = true;
+
+            buttonPlus.manualSwitch = false;
+            buttonPlus.vacuumState = swOFF;       
         }
 
         if (isRelease() && !buttonPlus.manualSwitch && !resetMotor)
@@ -227,7 +226,6 @@ void Buttons::motorCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &ti
             {
                 motorSwitch = false;
                 resetMotor = false;
-                timer.timerReset();
             }
         }
     }

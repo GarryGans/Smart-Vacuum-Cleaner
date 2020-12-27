@@ -23,7 +23,7 @@ void Screen::logo()
 
         setCursor(10, 59);
         setFont(u8g2_font_t0_12b_tf);
-        print("iGor Studio 2020");
+        print("Garik Studio 2020");
     } while (nextPage());
 }
 
@@ -95,23 +95,22 @@ void Screen::blockScreen()
 
 void Screen::bottomLine(Buttons &buttonMinus, Buttons &buttonPlus)
 {
+    setFont(u8g2_font_pixelmordred_tf);
+
     if (buttonPlus.manualSwitch)
     {
         setCursor(12, 59);
-        setFont(u8g2_font_pixelmordred_tf);
         showAlert();
     }
     else if (buttonMinus.buttonLock)
     {
         setCursor(17, 59);
-        setFont(u8g2_font_pixelmordred_tf);
         print("block mode ");
     }
     
     else
     {
         setCursor(17, 59);
-        setFont(u8g2_font_pixelmordred_tf);
         print("auto mode ");
     }
 }
@@ -171,8 +170,6 @@ void Screen::vacuumScreen(Switchers &relayState, Buttons &buttonMinus, Buttons &
             {
                 showVacuumState(relayState, buttonPlus, timer);
             }
-            
-            
             
             bottomLine(buttonMinus,buttonPlus);
         } while (nextPage());
