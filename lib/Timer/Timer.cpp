@@ -29,13 +29,13 @@ void Timer::writeTimer()
 
 boolean Timer::moveReady()
 {
-    if (millis() - prewMoveMillis >= secMillis / 4)
+    if (millis() - prewMoveMillis >= secMillis/10)
     {
-        move = false;
-        if (millis() - prewMoveMillis >= secMillis / 2)
+        move = true;
+        if (millis() - prewMoveMillis >= secMillis/5)
         {
             prewMoveMillis = millis();
-            move = true;
+            move = false;
         }
     }
 

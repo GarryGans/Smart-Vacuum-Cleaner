@@ -15,21 +15,27 @@ private:
     const byte screenWidth = 128;
     const byte screenHeight = 64;
 
-    const String vacState[2] = {"OFF", "ON"};
+    const char *vacState[2] = {"OFF", "ON"};
     boolean moveLeft;
     boolean moveRight;
     boolean difGet;
     boolean restart;
     boolean widthGet;
 
-    byte allert_x = 18;
-    byte auto_x = 24;
-    byte block_x = 20;
+    
     const byte deep_x = 30;
     byte bottom_x;
     byte bottom_y = 59;
 
+    byte x;
     byte blockWidth;
+
+    enum Position
+    {
+        center,
+        left,
+        right
+    } position;
 
 public:
     Screen(/* args */);
@@ -39,13 +45,13 @@ public:
 
     void logo();
 
-    void textAlign(const char *string, byte y);
+    void textAlign(const char *string, byte y, Position position);
     void showTimerSet(Timer &timer);
     void setTimerScreen(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer);
     void blockScreen();
     void bottomLine(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer);
     void escapeBar(Timer &timer);
-    void moveString(Timer &timer, byte x, byte end_x, const char *string);
+    void moveString(Timer &timer, byte end_x, byte bottom_y, const char *string);
     void showVacuumState(Switchers &relayState, Buttons &buttonPlus, Timer &timer);
     void vacuumScreen(Switchers &relayState, Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer);
 };

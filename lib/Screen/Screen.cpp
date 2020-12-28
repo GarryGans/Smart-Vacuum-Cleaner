@@ -14,11 +14,11 @@ void Screen::logo()
     do
     {
         setFont(u8g2_font_pixelmordred_tf);
-        textAlign("smart", 18);
-        textAlign("vacuum cleaner", 38);
+        textAlign("smart", 18, center);
+        textAlign("vacuum cleaner", 38, center);
 
         setFont(u8g2_font_t0_12b_tf);
-        textAlign("2020", 59);
+        textAlign("2020", 59, center);
     } while (nextPage());
 }
 
@@ -28,11 +28,11 @@ void Screen::showBlink(Timer &timer)
     {
         if (timer.counter > 9)
         {
-            print("__");
+            textAlign("__", 43, center);
         }
         else
         {
-            print("_");
+            textAlign("_", 43, center);
         }
     }
     else
@@ -57,11 +57,11 @@ void Screen::escapeBar(Timer &timer)
     }
 }
 
-void Screen::moveString(Timer &timer, byte x, byte end_x, const char *string)
+void Screen::moveString(Timer &timer, byte deep_x, byte bottom_y, const char *string)
 {
     if (!difGet)
     {
-        bottom_x = x;
+        bottom_x = (screenWidth - getStrWidth(string)) / 2;
         difGet = true;
         moveLeft = true;
         moveRight = false;
@@ -71,21 +71,22 @@ void Screen::moveString(Timer &timer, byte x, byte end_x, const char *string)
     {
         if (timer.moveReady())
         {
-            end_x = constrain(end_x, 0, x);
+            x = (screenWidth - getStrWidth(string)) / 2;
+            deep_x = constrain(deep_x, 0, x);
 
-            if (bottom_x > (x - end_x) && moveLeft)
+            if (bottom_x > (x - deep_x) && moveLeft)
             {
                 bottom_x--;
-                if (bottom_x == x - end_x)
+                if (bottom_x == x - deep_x)
                 {
                     moveRight = true;
                     moveLeft = false;
                 }
             }
-            else if (bottom_x < (end_x + x) && moveRight)
+            else if (bottom_x < (deep_x + x) && moveRight)
             {
                 bottom_x++;
-                if (bottom_x == end_x + x)
+                if (bottom_x == deep_x + x)
                 {
                     moveRight = false;
                     moveLeft = true;
@@ -97,9 +98,27 @@ void Screen::moveString(Timer &timer, byte x, byte end_x, const char *string)
     print(string);
 }
 
-void Screen::textAlign(const char *string, byte y)
+void Screen::textAlign(const char *string, byte y, Position position)
 {
-    byte x = (screenWidth - getStrWidth(string)) / 2;
+    switch (position)
+    {
+    case left:
+        x = (screenWidth / 2 - getStrWidth(string)) / 2;
+        break;
+
+    case right:
+        x = (screenWidth + (screenWidth / 2) - getStrWidth(string)) / 2;
+        break;
+
+    case center:
+        x = (screenWidth - getStrWidth(string)) / 2;
+        break;
+
+    
+    default:
+        break;
+    }
+    
     setCursor(x, y);
     print(string);
 }
@@ -107,7 +126,7 @@ void Screen::textAlign(const char *string, byte y)
 void Screen::showTimerSet(Timer &timer)
 {
     setFont(u8g2_font_crox2cb_tf);
-    textAlign("Set Timer", 18);
+    textAlign("Set Timer", 18, center);
 
     if (timer.counter > 9)
     {
@@ -138,7 +157,7 @@ void Screen::setTimerScreen(Buttons &buttonMinus, Buttons &buttonPlus, Timer &ti
 void Screen::blockScreen()
 {
     setFont(u8g2_font_HelvetiPixelOutline_tr);
-    textAlign("BLOCK !!!" ,25);
+    textAlign("BLOCK !!!", 25, center);
 }
 
 void Screen::bottomLine(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer)
@@ -152,22 +171,17 @@ void Screen::bottomLine(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer)
 
     if (buttonPlus.manualSwitch)
     {
-        moveString(timer, allert_x, deep_x, "manual mode");
-        // setCursor(bottom_x, bottom_y);
-        // print("manual mode");
+        moveString(timer, deep_x, bottom_y, "manual mode");
     }
+
     else if (buttonMinus.buttonLock)
     {
-        moveString(timer, block_x, deep_x);
-        setCursor(bottom_x, bottom_y);
-        print("block mode ");
+        moveString(timer, deep_x, bottom_y, "block mode ");
     }
 
     else
     {
-        moveString(timer, auto_x, deep_x);
-        setCursor(bottom_x, bottom_y);
-        print("auto mode ");
+        moveString(timer, deep_x, bottom_y, "auto mode ");
     }
 }
 
@@ -175,29 +189,27 @@ void Screen::showVacuumState(Switchers &relayState, Buttons &buttonPlus, Timer &
 {
     if (relayState.relaySW && !buttonPlus.manualSwitch)
     {
-        setFont(u8g2_font_courB18_tr);
-        if (timer.counter > 9)
-        {
-            setCursor(60, 33);
-        }
-        else
-        {
-            setCursor(75, 33);
-        }
-
-        print(timer.counter);
-        print("s");
-
         setFont(u8g2_font_HelvetiPixelOutline_tr);
-        setCursor(25, 30);
         if (relayState.relaySW)
         {
-            print(vacState[1]);
+            textAlign(vacState[1], 30, left);
         }
         else
         {
-            print(vacState[0]);
+            textAlign(vacState[0], 30, left);
         }
+
+        setFont(u8g2_font_courB18_tr);
+        // if (timer.counter > 9)
+        // {
+        //     setCursor(60, 33);
+        // }
+        // else
+        // {
+        //     setCursor(75, 33);
+        // }
+        char time[] = (char)timer.counter;
+        textAlign(time, 33, right);
     }
 
     else
