@@ -13,23 +13,17 @@ void Screen::logo()
     firstPage();
     do
     {
-        setFont(u8g2_font_HelvetiPixelOutline_tr);
-        setCursor(29, 18);
-        print("SMART");
-
         setFont(u8g2_font_pixelmordred_tf);
-        setCursor(0, 42);
-        print("Vacuum Cleaner");
+        textAlign("smart", 18);
+        textAlign("vacuum cleaner", 38);
 
-        setCursor(10, 59);
         setFont(u8g2_font_t0_12b_tf);
-        print("Garik Studio 2020");
+        textAlign("2020", 59);
     } while (nextPage());
 }
 
 void Screen::showBlink(Timer &timer)
 {
-    timer.unFreezeBlink();
     if (timer.blinkReady() && !timer.counterHold)
     {
         if (timer.counter > 9)
@@ -47,7 +41,23 @@ void Screen::showBlink(Timer &timer)
     }
 }
 
-void Screen::moveString(Timer &timer, byte x, byte end_x)
+void Screen::escapeBar(Timer &timer)
+{
+    if (!widthGet)
+    {
+        blockWidth = screenWidth / timer.escapeCounter;
+        widthGet = true;
+    }
+
+    drawBox(0, 50, blockWidth * timer.escapeCounter, 10);
+
+    if (timer.escapeCounter == 0)
+    {
+        widthGet = false;
+    }
+}
+
+void Screen::moveString(Timer &timer, byte x, byte end_x, const char *string)
 {
     if (!difGet)
     {
@@ -61,6 +71,8 @@ void Screen::moveString(Timer &timer, byte x, byte end_x)
     {
         if (timer.moveReady())
         {
+            end_x = constrain(end_x, 0, x);
+
             if (bottom_x > (x - end_x) && moveLeft)
             {
                 bottom_x--;
@@ -81,13 +93,21 @@ void Screen::moveString(Timer &timer, byte x, byte end_x)
             }
         }
     }
+    setCursor(bottom_x, bottom_y);
+    print(string);
+}
+
+void Screen::textAlign(const char *string, byte y)
+{
+    byte x = (screenWidth - getStrWidth(string)) / 2;
+    setCursor(x, y);
+    print(string);
 }
 
 void Screen::showTimerSet(Timer &timer)
 {
     setFont(u8g2_font_crox2cb_tf);
-    setCursor(20, 18);
-    print("Set Timer");
+    textAlign("Set Timer", 18);
 
     if (timer.counter > 9)
     {
@@ -100,9 +120,7 @@ void Screen::showTimerSet(Timer &timer)
     setFont(u8g2_font_courB18_tr);
     showBlink(timer);
 
-    setCursor(5, 59);
-    setFont(u8g2_font_t0_12b_tf);
-    print("auto Escape Bar");
+    escapeBar(timer);
 }
 
 void Screen::setTimerScreen(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer)
@@ -117,16 +135,10 @@ void Screen::setTimerScreen(Buttons &buttonMinus, Buttons &buttonPlus, Timer &ti
     }
 }
 
-void Screen::showAlert()
-{
-    print("manual mode");
-}
-
 void Screen::blockScreen()
 {
     setFont(u8g2_font_HelvetiPixelOutline_tr);
-    setCursor(25, 25);
-    print("BLOCK !!!");
+    textAlign("BLOCK !!!" ,25);
 }
 
 void Screen::bottomLine(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer)
@@ -140,9 +152,9 @@ void Screen::bottomLine(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer)
 
     if (buttonPlus.manualSwitch)
     {
-        moveString(timer, allert_x, deep_x);
-        setCursor(bottom_x, bottom_y);
-        showAlert();
+        moveString(timer, allert_x, deep_x, "manual mode");
+        // setCursor(bottom_x, bottom_y);
+        // print("manual mode");
     }
     else if (buttonMinus.buttonLock)
     {
@@ -166,36 +178,40 @@ void Screen::showVacuumState(Switchers &relayState, Buttons &buttonPlus, Timer &
         setFont(u8g2_font_courB18_tr);
         if (timer.counter > 9)
         {
-            setCursor(32, 20);
+            setCursor(60, 33);
         }
         else
         {
-            setCursor(47, 20);
+            setCursor(75, 33);
         }
 
         print(timer.counter);
         print("s");
-    }
-    else
-    {
-        setFont(u8g2_font_Born2bSportySlab_tf);
-        setCursor(7, 18);
-        print("Are You Ready ?");
+
+        setFont(u8g2_font_HelvetiPixelOutline_tr);
+        setCursor(25, 30);
+        if (relayState.relaySW)
+        {
+            print(vacState[1]);
+        }
+        else
+        {
+            print(vacState[0]);
+        }
     }
 
-    setFont(u8g2_font_9x15B_mr);
-    setCursor(5, 40);
-    print("VACUUM");
-
-    setFont(u8g2_font_HelvetiPixelOutline_tr);
-    setCursor(75, 40);
-    if (relayState.relaySW)
-    {
-        print(vacState[1]);
-    }
     else
     {
-        print(vacState[0]);
+        setFont(u8g2_font_HelvetiPixelOutline_tr);
+        setCursor(48, 30);
+        if (relayState.relaySW)
+        {
+            print(vacState[1]);
+        }
+        else
+        {
+            print(vacState[0]);
+        }
     }
 }
 
