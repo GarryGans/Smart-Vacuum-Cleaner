@@ -39,6 +39,17 @@ void Buttons::totalOFF(Buttons &motor, Buttons &buttonPlus, Timer &timer)
     }
 }
 
+void Buttons::startEscape(Timer &timer, boolean &blue, boolean &red)
+{
+    timer.escapeMenuTimer();
+    if (timer.escapeCounter == 0)
+    {
+        timer.writeTimer();
+        blue = false;
+        red = false;
+    }
+}
+
 void Buttons::blueButton(Buttons &motor, Buttons &buttonPlus, Timer &timer)
 {
     tick();
@@ -47,13 +58,7 @@ void Buttons::blueButton(Buttons &motor, Buttons &buttonPlus, Timer &timer)
     {
         if (setTimerFlag || buttonPlus.setTimerFlag)
         {
-            timer.escapeMenuTimer();
-            if (timer.escapeCounter == 0)
-            {
-                timer.writeTimer();
-                setTimerFlag = false;
-                buttonPlus.setTimerFlag = false;
-            }
+            startEscape(timer, setTimerFlag, buttonPlus.setTimerFlag);
         }
 
         if (isClick())
@@ -64,7 +69,7 @@ void Buttons::blueButton(Buttons &motor, Buttons &buttonPlus, Timer &timer)
                 totalOFF(motor, buttonPlus, timer);
                 setTimerFlag = true;
                 buttonPlus.setTimerFlag = true;
-                
+                timer.updateEscape();
             }
 
             else if (setTimerFlag)
@@ -85,7 +90,7 @@ void Buttons::blueButton(Buttons &motor, Buttons &buttonPlus, Timer &timer)
 
         if (isRelease())
         {
-            timer.unFreezeBlink();
+            timer.counterHold = false;
         }
 
         if (isHolded() && !(setTimerFlag || buttonPlus.setTimerFlag))
@@ -109,13 +114,7 @@ void Buttons::redButton(Buttons &buttonMinus, Buttons &buttonPlus, Buttons &moto
         tick();
         if (buttonMinus.setTimerFlag || setTimerFlag)
         {
-            timer.escapeMenuTimer();
-            if (timer.escapeCounter == 0)
-            {
-                timer.writeTimer();
-                buttonMinus.setTimerFlag = false;
-                setTimerFlag = false;
-            }
+            startEscape(timer, buttonMinus.setTimerFlag, setTimerFlag);
         }
 
         if (isClick())
@@ -127,6 +126,7 @@ void Buttons::redButton(Buttons &buttonMinus, Buttons &buttonPlus, Buttons &moto
                 buttonMinus.setTimerFlag = true;
 
                 totalOFF(motor, buttonPlus, timer);
+                timer.updateEscape();
             }
 
             else if (buttonMinus.setTimerFlag || setTimerFlag)
@@ -140,7 +140,7 @@ void Buttons::redButton(Buttons &buttonMinus, Buttons &buttonPlus, Buttons &moto
         if (isHolded())
         {
             if (!buttonMinus.setTimerFlag && !setTimerFlag)
-            {   
+            {
                 if (motor.motorSwitch)
                 {
                     motor.resetMotor = false;
@@ -186,7 +186,7 @@ void Buttons::redButton(Buttons &buttonMinus, Buttons &buttonPlus, Buttons &moto
         }
         if (isRelease())
         {
-            timer.unFreezeBlink();
+            timer.counterHold = false;
         }
     }
 }
@@ -198,7 +198,7 @@ void Buttons::motorCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &ti
         tick();
         if (isClick() || isHold())
         {
-            
+
             resetMotor = false;
             if (buttonMinus.setTimerFlag || buttonPlus.setTimerFlag)
             {
@@ -210,7 +210,7 @@ void Buttons::motorCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &ti
             motorSwitch = true;
 
             buttonPlus.manualSwitch = false;
-            buttonPlus.vacuumState = swOFF;       
+            buttonPlus.vacuumState = swOFF;
         }
 
         if (isRelease() && !buttonPlus.manualSwitch && !resetMotor)
