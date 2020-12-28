@@ -47,6 +47,42 @@ void Screen::showBlink(Timer &timer)
     }
 }
 
+void Screen::moveString(Timer &timer, byte x, byte end_x)
+{
+    if (!difGet)
+    {
+        bottom_x = x;
+        difGet = true;
+        moveLeft = true;
+        moveRight = false;
+    }
+
+    if (difGet)
+    {
+        if (timer.moveReady())
+        {
+            if (bottom_x > (x - end_x) && moveLeft)
+            {
+                bottom_x--;
+                if (bottom_x == x - end_x)
+                {
+                    moveRight = true;
+                    moveLeft = false;
+                }
+            }
+            else if (bottom_x < (end_x + x) && moveRight)
+            {
+                bottom_x++;
+                if (bottom_x == end_x + x)
+                {
+                    moveRight = false;
+                    moveLeft = true;
+                }
+            }
+        }
+    }
+}
+
 void Screen::showTimerSet(Timer &timer)
 {
     setFont(u8g2_font_crox2cb_tf);
@@ -93,24 +129,32 @@ void Screen::blockScreen()
     print("BLOCK !!!");
 }
 
-void Screen::bottomLine(Buttons &buttonMinus, Buttons &buttonPlus)
+void Screen::bottomLine(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer)
 {
     setFont(u8g2_font_pixelmordred_tf);
 
+    if (buttonMinus.isClick() || buttonMinus.isHold() || buttonPlus.isClick() || buttonPlus.isHold())
+    {
+        difGet = false;
+    }
+
     if (buttonPlus.manualSwitch)
     {
-        setCursor(12, 59);
+        moveString(timer, allert_x, deep_x);
+        setCursor(bottom_x, bottom_y);
         showAlert();
     }
     else if (buttonMinus.buttonLock)
     {
-        setCursor(17, 59);
+        moveString(timer, block_x, deep_x);
+        setCursor(bottom_x, bottom_y);
         print("block mode ");
     }
-    
+
     else
     {
-        setCursor(17, 59);
+        moveString(timer, auto_x, deep_x);
+        setCursor(bottom_x, bottom_y);
         print("auto mode ");
     }
 }
@@ -170,8 +214,8 @@ void Screen::vacuumScreen(Switchers &relayState, Buttons &buttonMinus, Buttons &
             {
                 showVacuumState(relayState, buttonPlus, timer);
             }
-            
-            bottomLine(buttonMinus,buttonPlus);
+
+            bottomLine(buttonMinus, buttonPlus, timer);
         } while (nextPage());
     }
 }

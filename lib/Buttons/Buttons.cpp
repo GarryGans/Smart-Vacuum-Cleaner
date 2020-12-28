@@ -140,9 +140,7 @@ void Buttons::redButton(Buttons &buttonMinus, Buttons &buttonPlus, Buttons &moto
         if (isHolded())
         {
             if (!buttonMinus.setTimerFlag && !setTimerFlag)
-            {
-                manualSwitch = true;
-                
+            {   
                 if (motor.motorSwitch)
                 {
                     motor.resetMotor = false;
@@ -155,6 +153,7 @@ void Buttons::redButton(Buttons &buttonMinus, Buttons &buttonPlus, Buttons &moto
 
                     if (!motor.motorSwitch)
                     {
+                        manualSwitch = true;
                         vacuumState = swON;
                     }
                     else if (motor.motorSwitch)
@@ -165,7 +164,7 @@ void Buttons::redButton(Buttons &buttonMinus, Buttons &buttonPlus, Buttons &moto
                     break;
 
                 case swON:
-
+                    manualSwitch = false;
                     if (motor.motorSwitch)
                     {
                         motor.motorSwitch = false;
@@ -197,7 +196,7 @@ void Buttons::motorCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &ti
     if (!buttonMinus.buttonLock)
     {
         tick();
-        if (isClick() || isHolded())
+        if (isClick() || isHold())
         {
             
             resetMotor = false;
@@ -226,6 +225,7 @@ void Buttons::motorCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &ti
             {
                 motorSwitch = false;
                 resetMotor = false;
+                timer.timerReset();
             }
         }
     }

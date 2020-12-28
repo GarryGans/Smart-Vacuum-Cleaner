@@ -13,6 +13,7 @@ class Timer
 
 private:
     boolean blink;
+    boolean move;
     boolean escape;
 
     byte escapeCounter = 5;
@@ -29,6 +30,8 @@ private:
     const unsigned long secMillis = 1000;
     const unsigned long blinkMillis = 700;
     unsigned long prewCursorMillis;
+    unsigned long prewMoveMillis;
+
     unsigned long prewFreezeMillis;
     unsigned long prewEscapeMillis;
 
@@ -37,6 +40,7 @@ public:
     ~Timer();
 
     void updateEscape();
+    boolean moveReady();
     boolean blinkReady();
 
     void unFreezeBlink();

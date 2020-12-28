@@ -27,6 +27,21 @@ void Timer::writeTimer()
     EEPROM.put(couterAddr, counter);
 }
 
+boolean Timer::moveReady()
+{
+    if (millis() - prewMoveMillis >= secMillis / 4)
+    {
+        move = true;
+        if (millis() - prewMoveMillis >= secMillis / 2)
+        {
+            prewMoveMillis = millis();
+            move = false;
+        }
+    }
+
+    return move;
+}
+
 boolean Timer::blinkReady()
 {
     if (millis() - prewCursorMillis >= blinkMillis)
