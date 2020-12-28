@@ -31,8 +31,6 @@ private:
     const unsigned long blinkMillis = 700;
     unsigned long prewCursorMillis;
     unsigned long prewMoveMillis;
-
-    unsigned long prewFreezeMillis;
     unsigned long prewEscapeMillis;
 
 public:
@@ -43,7 +41,6 @@ public:
     boolean moveReady();
     boolean blinkReady();
 
-    void unFreezeBlink();
     void escapeMenuTimer();
     void changeTimer(boolean minus, boolean plus);
     void minusCounter();

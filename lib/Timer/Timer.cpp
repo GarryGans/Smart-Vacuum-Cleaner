@@ -31,11 +31,11 @@ boolean Timer::moveReady()
 {
     if (millis() - prewMoveMillis >= secMillis / 4)
     {
-        move = true;
+        move = false;
         if (millis() - prewMoveMillis >= secMillis / 2)
         {
             prewMoveMillis = millis();
-            move = false;
+            move = true;
         }
     }
 
@@ -57,25 +57,15 @@ boolean Timer::blinkReady()
     return blink;
 }
 
-void Timer::unFreezeBlink()
-{
-    if (counterHold)
-    {
-        if (millis() - prewFreezeMillis >= blinkMillis)
-        {
-            prewFreezeMillis = millis();
-            counterHold = false;
-        }
-    }
-}
-
 void Timer::escapeMenuTimer()
 {
     if (millis() - prewEscapeMillis >= blinkMillis)
     {
         prewEscapeMillis = millis();
-        escapeCounter--;
-        escapeCounter = constrain(escapeCounter, 0, defaultCounter);
+        if (escapeCounter > 0)
+        {
+            escapeCounter--;
+        }
     }
 }
 
@@ -104,8 +94,10 @@ void Timer::minusCounter()
     {
         EEPROM.get(couterAddr, maxCounter);
         prewCounterMillis = millis();
-        counter--;
-        counter = constrain(counter, 0, maxCounter);
+        if (counter > 0)
+        {
+            counter--;
+        }
     }
 }
 
