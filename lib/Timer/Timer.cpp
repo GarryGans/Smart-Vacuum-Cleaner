@@ -48,7 +48,7 @@ boolean Timer::blinkReady()
             blink = false;
         }
     }
-    
+
     return blink;
 }
 
@@ -75,8 +75,9 @@ void Timer::escapeMenuTimer()
     }
 }
 
-void Timer::updateEscape()
+void Timer::resetEscapeCount()
 {
+    counterHold = true;
     escapeCounter = maxEscapeCounter;
 }
 

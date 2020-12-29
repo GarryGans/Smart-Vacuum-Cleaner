@@ -46,11 +46,11 @@ public:
     void logo();
     void digAlign(byte dig, const char *string, byte y, Position position, boolean digMix);
     void textAlign(const char *string, byte y, Position position);
+    void escapeBar(Timer &timer);
     void showTimerSet(Timer &timer);
     void setTimerScreen(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer);
     void blockScreen();
     void bottomLine(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer);
-    void escapeBar(Timer &timer);
     void moveString(Timer &timer, byte end_x, byte bottom_y, const char *string);
     void showVacuumState(Switchers &relayState, Buttons &buttonPlus, Timer &timer);
     void vacuumScreen(Switchers &relayState, Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer);

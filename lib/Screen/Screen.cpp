@@ -41,23 +41,6 @@ void Screen::showBlink(Timer &timer)
     }
 }
 
-void Screen::escapeBar(Timer &timer)
-{
-    if (!timer.widthGet)
-    {
-        blockWidth = screenWidth / timer.maxEscapeCounter;
-        timer.widthGet = true;
-    }
-
-    width = blockWidth * (timer.maxEscapeCounter - timer.escapeCounter);
-    drawBox(0, 50, width, 10);
-
-    if (width == blockWidth * timer.maxEscapeCounter)
-    {
-        timer.widthGet = false;
-    }
-}
-
 void Screen::moveString(Timer &timer, byte deep_x, byte bottom_y, const char *string)
 {
     if (!difGet)
@@ -155,6 +138,9 @@ void Screen::textAlign(const char *string, byte y, Position position)
 {
     switch (position)
     {
+    case center:
+        x = (screenWidth - getStrWidth(string)) / 2;
+        break;
     case left:
         x = (screenWidth / 2 - getStrWidth(string)) / 2;
         break;
@@ -163,16 +149,29 @@ void Screen::textAlign(const char *string, byte y, Position position)
         x = (screenWidth + (screenWidth / 2) - getStrWidth(string)) / 2;
         break;
 
-    case center:
-        x = (screenWidth - getStrWidth(string)) / 2;
-        break;
-
     default:
         break;
     }
 
     setCursor(x, y);
     print(string);
+}
+
+void Screen::escapeBar(Timer &timer)
+{
+    if (!timer.widthGet)
+    {
+        blockWidth = screenWidth / timer.maxEscapeCounter;
+        timer.widthGet = true;
+    }
+
+    width = blockWidth * (timer.maxEscapeCounter - timer.escapeCounter);
+    drawBox(0, 50, width, 10);
+
+    if (width == blockWidth * timer.maxEscapeCounter)
+    {
+        timer.widthGet = false;
+    }
 }
 
 void Screen::showTimerSet(Timer &timer)
@@ -250,14 +249,13 @@ void Screen::showVacuumState(Switchers &relayState, Buttons &buttonPlus, Timer &
     else
     {
         setFont(u8g2_font_HelvetiPixelOutline_tr);
-        setCursor(48, 30);
         if (relayState.relaySW)
         {
-            print(vacState[1]);
+            textAlign(vacState[1], 30, center);
         }
         else
         {
-            print(vacState[0]);
+            textAlign(vacState[0], 30, center);
         }
     }
 }

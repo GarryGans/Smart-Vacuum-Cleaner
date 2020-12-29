@@ -18,7 +18,7 @@ private:
     boolean widthGet;
     boolean counterHold;
 
-    const byte maxEscapeCounter = 8;
+    const byte maxEscapeCounter = 5;
     byte escapeCounter = maxEscapeCounter;
     byte counter = 10;
     byte maxCounter;
@@ -38,7 +38,7 @@ public:
     Timer(/* args */);
     ~Timer();
 
-    void updateEscape();
+    void resetEscapeCount();
     boolean moveReady();
     boolean blinkReady();
     void startEscape(boolean &blue, boolean &red);

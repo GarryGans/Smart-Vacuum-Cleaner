@@ -54,18 +54,17 @@ void Buttons::blueButton(Buttons &motor, Buttons &buttonPlus, Timer &timer)
 
         if (isClick())
         {
-            timer.counterHold = true;
+            timer.resetEscapeCount();
+
             if (!setTimerFlag)
             {
                 totalOFF(motor, buttonPlus, timer);
                 setTimerFlag = true;
                 buttonPlus.setTimerFlag = true;
-                timer.updateEscape();
             }
 
             else if (setTimerFlag)
             {
-                timer.updateEscape();
                 minus = true;
                 timer.changeTimer(minus, plus);
             }
@@ -73,8 +72,8 @@ void Buttons::blueButton(Buttons &motor, Buttons &buttonPlus, Timer &timer)
 
         if (isHold() && (setTimerFlag || buttonPlus.setTimerFlag))
         {
-            timer.counterHold = true;
-            timer.updateEscape();
+            timer.resetEscapeCount();
+
             minus = true;
             timer.changeTimer(minus, plus);
         }
@@ -110,20 +109,18 @@ void Buttons::redButton(Buttons &buttonMinus, Buttons &buttonPlus, Buttons &moto
 
         if (isClick())
         {
-            timer.counterHold = true;
+            timer.resetEscapeCount();
+
             if (!buttonMinus.setTimerFlag || !setTimerFlag)
             {
                 setTimerFlag = true;
                 buttonMinus.setTimerFlag = true;
 
                 totalOFF(motor, buttonPlus, timer);
-                timer.updateEscape();
             }
 
             else if (buttonMinus.setTimerFlag || setTimerFlag)
             {
-
-                timer.updateEscape();
                 plus = true;
                 timer.changeTimer(minus, plus);
             }
@@ -170,8 +167,8 @@ void Buttons::redButton(Buttons &buttonMinus, Buttons &buttonPlus, Buttons &moto
         }
         if (isHold() && (buttonMinus.setTimerFlag || setTimerFlag))
         {
-            timer.counterHold = true;
-            timer.updateEscape();
+            timer.resetEscapeCount();
+
             plus = true;
             timer.changeTimer(minus, plus);
         }
@@ -189,7 +186,7 @@ void Buttons::motorCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &ti
         tick();
         if (isClick() || isHold())
         {
-
+            timer.widthGet = false;
             resetMotor = false;
             if (buttonMinus.setTimerFlag || buttonPlus.setTimerFlag)
             {
