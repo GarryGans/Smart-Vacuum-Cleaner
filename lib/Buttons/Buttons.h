@@ -32,7 +32,6 @@ public:
     ~Buttons();
 
     void begin();
-    void startEscape(Timer &timer, boolean &blue, boolean &red);
     void totalOFF(Buttons &motor, Buttons &buttonPlus, Timer &timer);
     void blueButton(Buttons &motor, Buttons &buttonPlus, Timer &timer);
     void redButton(Buttons &buttonMinus, Buttons &buttonPlus, Buttons &motor, Timer &timer);

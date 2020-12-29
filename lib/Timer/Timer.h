@@ -16,8 +16,8 @@ private:
     boolean move;
     boolean escape;
 
-    byte escapeCounter = 5;
-    byte maxEscapeCounter = 5;
+    byte escapeCounter = 8;
+    byte maxEscapeCounter = 8;
 
     byte counter = 10;
     byte maxCounter;
@@ -40,6 +40,7 @@ public:
     void updateEscape();
     boolean moveReady();
     boolean blinkReady();
+    void startEscape(boolean &blue, boolean &red);
 
     void escapeMenuTimer();
     void changeTimer(boolean minus, boolean plus);

@@ -10,6 +10,7 @@ Timer::~Timer()
 
 byte Timer::getTimer()
 {
+    EEPROM.get(couterAddr, counter);
     return counter;
 }
 
@@ -29,10 +30,10 @@ void Timer::writeTimer()
 
 boolean Timer::moveReady()
 {
-    if (millis() - prewMoveMillis >= secMillis/10)
+    if (millis() - prewMoveMillis >= secMillis / 10)
     {
         move = true;
-        if (millis() - prewMoveMillis >= secMillis/5)
+        if (millis() - prewMoveMillis >= secMillis / 5)
         {
             prewMoveMillis = millis();
             move = false;
@@ -55,6 +56,17 @@ boolean Timer::blinkReady()
     }
 
     return blink;
+}
+
+void Timer::startEscape(boolean &blue, boolean &red)
+{
+    escapeMenuTimer();
+    if (escapeCounter == 0)
+    {
+        writeTimer();
+        blue = false;
+        red = false;
+    }
 }
 
 void Timer::escapeMenuTimer()

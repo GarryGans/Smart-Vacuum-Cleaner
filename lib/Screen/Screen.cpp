@@ -37,7 +37,7 @@ void Screen::showBlink(Timer &timer)
     }
     else
     {
-        print(timer.counter);
+        digAlign(timer.counter, 0, 43, center, false);
     }
 }
 
@@ -45,13 +45,14 @@ void Screen::escapeBar(Timer &timer)
 {
     if (!widthGet)
     {
-        blockWidth = screenWidth / timer.escapeCounter;
+        blockWidth = screenWidth / timer.maxEscapeCounter;
         widthGet = true;
     }
 
-    drawBox(0, 50, blockWidth * timer.escapeCounter, 10);
+    width = blockWidth * (timer.maxEscapeCounter+1 - timer.escapeCounter);
+    drawBox(0, 50, width, 10);
 
-    if (timer.escapeCounter == 0)
+    if (width == blockWidth * timer.maxEscapeCounter )
     {
         widthGet = false;
     }
@@ -97,6 +98,56 @@ void Screen::moveString(Timer &timer, byte deep_x, byte bottom_y, const char *st
     setCursor(bottom_x, bottom_y);
     print(string);
 }
+void Screen::digAlign(byte dig, const char *string, byte y, Position position, boolean digMix)
+{
+    if (digMix)
+    {
+        if (dig > 9)
+        {
+            digWidth = getStrWidth(string) * 3;
+        }
+        else
+        {
+            digWidth = getStrWidth(string) * 2;
+        }
+    }
+    
+    else 
+    {
+        if (dig > 9)
+        {
+            digWidth = getStrWidth(string) * 2;
+        }
+        else
+        {
+            digWidth = getStrWidth(string);
+        }
+    }
+    
+    
+
+    switch (position)
+    {
+    case left:
+        x = (screenWidth / 2 - digWidth) / 2;
+        break;
+
+    case right:
+        x = (screenWidth + (screenWidth / 2) - digWidth) / 2;
+        break;
+
+    case center:
+        x = (screenWidth - digWidth) / 2;
+        break;
+
+    default:
+        break;
+    }
+
+    setCursor(x, y);
+    print(dig);
+    print(string);
+}
 
 void Screen::textAlign(const char *string, byte y, Position position)
 {
@@ -114,11 +165,10 @@ void Screen::textAlign(const char *string, byte y, Position position)
         x = (screenWidth - getStrWidth(string)) / 2;
         break;
 
-    
     default:
         break;
     }
-    
+
     setCursor(x, y);
     print(string);
 }
@@ -128,14 +178,14 @@ void Screen::showTimerSet(Timer &timer)
     setFont(u8g2_font_crox2cb_tf);
     textAlign("Set Timer", 18, center);
 
-    if (timer.counter > 9)
-    {
-        setCursor(48, 43);
-    }
-    else
-    {
-        setCursor(57, 43);
-    }
+    // if (timer.counter > 9)
+    // {
+    //     setCursor(48, 43);
+    // }
+    // else
+    // {
+    //     setCursor(57, 43);
+    // }
     setFont(u8g2_font_courB18_tr);
     showBlink(timer);
 
@@ -200,16 +250,7 @@ void Screen::showVacuumState(Switchers &relayState, Buttons &buttonPlus, Timer &
         }
 
         setFont(u8g2_font_courB18_tr);
-        // if (timer.counter > 9)
-        // {
-        //     setCursor(60, 33);
-        // }
-        // else
-        // {
-        //     setCursor(75, 33);
-        // }
-        char time[] = (char)timer.counter;
-        textAlign(time, 33, right);
+        digAlign(timer.counter, "s", 33, right, true);
     }
 
     else
@@ -229,7 +270,7 @@ void Screen::showVacuumState(Switchers &relayState, Buttons &buttonPlus, Timer &
 
 void Screen::vacuumScreen(Switchers &relayState, Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer)
 {
-    if (!buttonMinus.setTimerFlag && !buttonPlus.setTimerFlag)
+    if (!buttonMinus.setTimerFlag && !buttonPlus.setTimerFlag && !widthGet)
     {
         firstPage();
         do

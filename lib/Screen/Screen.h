@@ -26,8 +26,11 @@ private:
     const byte deep_x = 30;
     byte bottom_x;
     byte bottom_y = 59;
+    byte digWidth;
 
-    byte x;
+    byte width;
+
+        byte x;
     byte blockWidth;
 
     enum Position
@@ -44,7 +47,7 @@ public:
     void showBlink(Timer &timer);
 
     void logo();
-
+    void digAlign(byte dig, const char *string, byte y, Position position, boolean digMix);
     void textAlign(const char *string, byte y, Position position);
     void showTimerSet(Timer &timer);
     void setTimerScreen(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer);

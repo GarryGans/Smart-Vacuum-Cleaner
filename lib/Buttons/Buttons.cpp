@@ -39,16 +39,7 @@ void Buttons::totalOFF(Buttons &motor, Buttons &buttonPlus, Timer &timer)
     }
 }
 
-void Buttons::startEscape(Timer &timer, boolean &blue, boolean &red)
-{
-    timer.escapeMenuTimer();
-    if (timer.escapeCounter == 0)
-    {
-        timer.writeTimer();
-        blue = false;
-        red = false;
-    }
-}
+
 
 void Buttons::blueButton(Buttons &motor, Buttons &buttonPlus, Timer &timer)
 {
@@ -58,7 +49,7 @@ void Buttons::blueButton(Buttons &motor, Buttons &buttonPlus, Timer &timer)
     {
         if (setTimerFlag || buttonPlus.setTimerFlag)
         {
-            startEscape(timer, setTimerFlag, buttonPlus.setTimerFlag);
+            timer.startEscape(setTimerFlag, buttonPlus.setTimerFlag);
         }
 
         if (isClick())
@@ -114,7 +105,7 @@ void Buttons::redButton(Buttons &buttonMinus, Buttons &buttonPlus, Buttons &moto
         tick();
         if (buttonMinus.setTimerFlag || setTimerFlag)
         {
-            startEscape(timer, buttonMinus.setTimerFlag, setTimerFlag);
+            timer.startEscape(buttonMinus.setTimerFlag, setTimerFlag);
         }
 
         if (isClick())
