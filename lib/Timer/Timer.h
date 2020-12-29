@@ -16,20 +16,20 @@ private:
     boolean move;
     boolean escape;
     boolean widthGet;
+    boolean counterHold;
 
-    byte escapeCounter = 8;
-    byte maxEscapeCounter = 8;
-
+    const byte maxEscapeCounter = 8;
+    byte escapeCounter = maxEscapeCounter;
     byte counter = 10;
     byte maxCounter;
-    byte counterHold;
+
     const byte defaultCounter = 10;
     const byte minSetCounter = 1;
     const byte maxSetCounter = 99;
 
-    unsigned long prewCounterMillis;
     const unsigned long secMillis = 1000;
     const unsigned long blinkMillis = 700;
+    unsigned long prewCounterMillis;
     unsigned long prewCursorMillis;
     unsigned long prewMoveMillis;
     unsigned long prewEscapeMillis;
@@ -42,12 +42,10 @@ public:
     boolean moveReady();
     boolean blinkReady();
     void startEscape(boolean &blue, boolean &red);
-
     void escapeMenuTimer();
     void changeTimer(boolean minus, boolean plus);
     void minusCounter();
     void timerReset();
-    byte getTimer();
     void readTimer();
     void writeTimer();
 };

@@ -52,7 +52,7 @@ void Screen::escapeBar(Timer &timer)
     width = blockWidth * (timer.maxEscapeCounter - timer.escapeCounter);
     drawBox(0, 50, width, 10);
 
-    if (width == blockWidth * timer.maxEscapeCounter )
+    if (width == blockWidth * timer.maxEscapeCounter)
     {
         timer.widthGet = false;
     }
@@ -98,6 +98,7 @@ void Screen::moveString(Timer &timer, byte deep_x, byte bottom_y, const char *st
     setCursor(bottom_x, bottom_y);
     print(string);
 }
+
 void Screen::digAlign(byte dig, const char *string, byte y, Position position, boolean digMix)
 {
     if (digMix)
@@ -111,8 +112,8 @@ void Screen::digAlign(byte dig, const char *string, byte y, Position position, b
             digWidth = getStrWidth(string) * 2;
         }
     }
-    
-    else 
+
+    else
     {
         if (dig > 9)
         {
@@ -123,8 +124,6 @@ void Screen::digAlign(byte dig, const char *string, byte y, Position position, b
             digWidth = getStrWidth(string);
         }
     }
-    
-    
 
     switch (position)
     {
@@ -181,14 +180,6 @@ void Screen::showTimerSet(Timer &timer)
     setFont(u8g2_font_crox2cb_tf);
     textAlign("Set Timer", 18, center);
 
-    // if (timer.counter > 9)
-    // {
-    //     setCursor(48, 43);
-    // }
-    // else
-    // {
-    //     setCursor(57, 43);
-    // }
     setFont(u8g2_font_courB18_tr);
     showBlink(timer);
 

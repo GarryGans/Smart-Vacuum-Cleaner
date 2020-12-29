@@ -8,12 +8,6 @@ Timer::~Timer()
 {
 }
 
-byte Timer::getTimer()
-{
-    EEPROM.get(couterAddr, counter);
-    return counter;
-}
-
 void Timer::readTimer()
 {
     EEPROM.get(couterAddr, counter);

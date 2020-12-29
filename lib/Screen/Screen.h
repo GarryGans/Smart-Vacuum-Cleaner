@@ -16,20 +16,19 @@ private:
     const byte screenHeight = 64;
 
     const char *vacState[2] = {"OFF", "ON"};
+
     boolean moveLeft;
     boolean moveRight;
     boolean difGet;
     boolean restart;
 
-    
     const byte deep_x = 30;
     byte bottom_x;
     byte bottom_y = 59;
+
     byte digWidth;
-
     byte width;
-
-        byte x;
+    byte x;
     byte blockWidth;
 
     enum Position
@@ -44,7 +43,6 @@ public:
     ~Screen();
 
     void showBlink(Timer &timer);
-
     void logo();
     void digAlign(byte dig, const char *string, byte y, Position position, boolean digMix);
     void textAlign(const char *string, byte y, Position position);
