@@ -24,16 +24,15 @@ void Timer::writeTimer()
 
 boolean Timer::moveReady()
 {
-    if (millis() - prewMoveMillis >= secMillis / 10)
+    if (millis() - prewMoveMillis >= secMillis / 20)
     {
+        prewMoveMillis = millis();
         move = true;
-        if (millis() - prewMoveMillis >= secMillis / 5)
-        {
-            prewMoveMillis = millis();
-            move = false;
-        }
     }
-
+    else
+    {
+        move = false;
+    }
     return move;
 }
 
@@ -42,13 +41,14 @@ boolean Timer::blinkReady()
     if (millis() - prewCursorMillis >= blinkMillis)
     {
         blink = true;
+
         if (millis() - prewCursorMillis >= blinkMillis * 2)
         {
             prewCursorMillis = millis();
             blink = false;
         }
     }
-
+    
     return blink;
 }
 
