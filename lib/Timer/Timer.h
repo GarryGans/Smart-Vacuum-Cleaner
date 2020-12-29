@@ -15,6 +15,7 @@ private:
     boolean blink;
     boolean move;
     boolean escape;
+    boolean widthGet;
 
     byte escapeCounter = 8;
     byte maxEscapeCounter = 8;

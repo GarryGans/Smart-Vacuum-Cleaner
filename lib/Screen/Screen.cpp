@@ -18,7 +18,7 @@ void Screen::logo()
         textAlign("vacuum cleaner", 38, center);
 
         setFont(u8g2_font_t0_12b_tf);
-        textAlign("2020", 59, center);
+        textAlign("Garik 2020", 59, center);
     } while (nextPage());
 }
 
@@ -37,24 +37,24 @@ void Screen::showBlink(Timer &timer)
     }
     else
     {
-        digAlign(timer.counter, 0, 43, center, false);
+        digAlign(timer.counter, "0", 43, center, false);
     }
 }
 
 void Screen::escapeBar(Timer &timer)
 {
-    if (!widthGet)
+    if (!timer.widthGet)
     {
         blockWidth = screenWidth / timer.maxEscapeCounter;
-        widthGet = true;
+        timer.widthGet = true;
     }
 
-    width = blockWidth * (timer.maxEscapeCounter+1 - timer.escapeCounter);
+    width = blockWidth * (timer.maxEscapeCounter - timer.escapeCounter);
     drawBox(0, 50, width, 10);
 
     if (width == blockWidth * timer.maxEscapeCounter )
     {
-        widthGet = false;
+        timer.widthGet = false;
     }
 }
 
@@ -146,7 +146,10 @@ void Screen::digAlign(byte dig, const char *string, byte y, Position position, b
 
     setCursor(x, y);
     print(dig);
-    print(string);
+    if (digMix)
+    {
+        print(string);
+    }
 }
 
 void Screen::textAlign(const char *string, byte y, Position position)
@@ -270,7 +273,7 @@ void Screen::showVacuumState(Switchers &relayState, Buttons &buttonPlus, Timer &
 
 void Screen::vacuumScreen(Switchers &relayState, Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer)
 {
-    if (!buttonMinus.setTimerFlag && !buttonPlus.setTimerFlag && !widthGet)
+    if (!buttonMinus.setTimerFlag && !buttonPlus.setTimerFlag && !timer.widthGet)
     {
         firstPage();
         do

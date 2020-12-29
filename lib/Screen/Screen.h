@@ -20,7 +20,6 @@ private:
     boolean moveRight;
     boolean difGet;
     boolean restart;
-    boolean widthGet;
 
     
     const byte deep_x = 30;

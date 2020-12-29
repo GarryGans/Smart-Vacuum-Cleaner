@@ -61,7 +61,7 @@ boolean Timer::blinkReady()
 void Timer::startEscape(boolean &blue, boolean &red)
 {
     escapeMenuTimer();
-    if (escapeCounter == 0)
+    if (escapeCounter == 0 && !widthGet)
     {
         writeTimer();
         blue = false;
