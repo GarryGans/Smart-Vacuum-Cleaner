@@ -24,15 +24,15 @@ void Screen::logo()
 
 void Screen::moveString(Timer &timer, byte deep_x, byte bottom_y, const char *string)
 {
-    if (!difGet)
+    if (!move)
     {
         bottom_x = (screenWidth - getStrWidth(string)) / 2;
-        difGet = true;
+        move = true;
         moveLeft = true;
         moveRight = false;
     }
 
-    if (difGet)
+    if (move)
     {
         if (timer.moveReady())
         {
@@ -89,23 +89,7 @@ void Screen::digAlign(byte dig, const char *string, byte y, Position position, b
         }
     }
 
-    switch (position)
-    {
-    case center:
-        x = (screenWidth - digWidth) / 2;
-        break;
-
-    case left:
-        x = (screenWidth / 2 - digWidth) / 2;
-        break;
-
-    case right:
-        x = (screenWidth + (screenWidth / 2) - digWidth) / 2;
-        break;
-
-    default:
-        break;
-    }
+    align(digWidth, position);
 
     setCursor(x, y);
     print(dig);
@@ -117,23 +101,7 @@ void Screen::digAlign(byte dig, const char *string, byte y, Position position, b
 
 void Screen::textAlign(const char *string, byte y, Position position)
 {
-    switch (position)
-    {
-    case center:
-        x = (screenWidth - getStrWidth(string)) / 2;
-        break;
-    case left:
-        x = (screenWidth / 2 - getStrWidth(string)) / 2;
-        break;
-
-    case right:
-        x = (screenWidth + (screenWidth / 2) - getStrWidth(string)) / 2;
-        break;
-
-    default:
-        break;
-    }
-
+    align(getStrWidth(string), position);
     setCursor(x, y);
     print(string);
 }
@@ -179,8 +147,6 @@ void Screen::showTimerSet(Timer &timer)
     setFont(u8g2_font_courB18_tr);
     showBlink(timer);
 
-  
-
     escapeBar(timer);
 }
 
@@ -196,29 +162,33 @@ void Screen::setTimerScreen(Buttons &buttonMinus, Buttons &buttonPlus, Timer &ti
     }
 }
 
-void Screen::iconAlign(int icon, byte iconWH, Position position)
+void Screen::align(byte WH, Position position)
 {
     switch (position)
     {
     case center:
-        x = (screenWidth - iconWH) / 2;
-        y = (screenHeight + iconWH) / 2;
+        x = (screenWidth - WH) / 2;
+        y = (screenHeight + WH) / 2;
         break;
 
     case left:
-        x = (screenWidth / 2 - iconWH) / 2;
-        y = (screenHeight + iconWH) / 2;
+        x = (screenWidth / 2 - WH) / 2;
+        y = (screenHeight + WH) / 2;
         break;
 
     case right:
-        x = screenWidth / 2 + (screenWidth / 2 - iconWH) / 2;
-        y = (screenHeight + iconWH) / 2;
+        x = (screenWidth + screenWidth / 2 - WH) / 2;
+        y = (screenHeight + WH) / 2;
         break;
 
     default:
         break;
     }
+}
 
+void Screen::iconAlign(int icon, byte iconWH, Position position)
+{
+    align(iconWH, position);
     drawGlyph(x, y, icon);
 }
 
@@ -241,7 +211,7 @@ void Screen::bottomLine(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer)
 
     if (buttonMinus.isClick() || buttonMinus.isHold() || buttonPlus.isClick() || buttonPlus.isHold())
     {
-        difGet = false;
+        move = false;
     }
 
     if (buttonPlus.manualSwitch)

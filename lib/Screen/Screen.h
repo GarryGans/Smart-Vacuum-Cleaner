@@ -19,7 +19,7 @@ private:
 
     boolean moveLeft;
     boolean moveRight;
-    boolean difGet;
+    boolean move;
     boolean restart;
 
     const byte deep_x = 30;
@@ -45,6 +45,7 @@ public:
 
     void showBlink(Timer &timer);
     void logo();
+    void align(byte WH, Position position);
     void iconAlign(int icon, byte iconWH, Position position);
     void digAlign(byte dig, const char *string, byte y, Position position, boolean digMix);
     void textAlign(const char *string, byte y, Position position);
