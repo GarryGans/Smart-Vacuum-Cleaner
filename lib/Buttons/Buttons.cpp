@@ -80,7 +80,7 @@ void Buttons::blueButton(Buttons &motor, Buttons &buttonPlus, Timer &timer)
 
         if (isRelease())
         {
-            timer.counterHold = false;
+            timer.blinkHold = false;
         }
 
         if (isHolded() && !(setTimerFlag || buttonPlus.setTimerFlag))
@@ -91,9 +91,21 @@ void Buttons::blueButton(Buttons &motor, Buttons &buttonPlus, Timer &timer)
     }
 
     else if (isHolded() && buttonLock)
-    {
-        buttonLock = false;
+    {   
+        unlock = true;
+        
     }
+    if (unlock)
+    {
+        timer.escapeTimer(timer.unblockCounter);
+        if (timer.unblockCounter == 0)
+        {
+            buttonLock = false;
+            unlock = false;
+            timer.unblockCounter = timer.maxUnblockCounter;
+        }
+    }
+    
 }
 
 void Buttons::redButton(Buttons &buttonMinus, Buttons &buttonPlus, Buttons &motor, Timer &timer)
@@ -174,7 +186,7 @@ void Buttons::redButton(Buttons &buttonMinus, Buttons &buttonPlus, Buttons &moto
         }
         if (isRelease())
         {
-            timer.counterHold = false;
+            timer.blinkHold = false;
         }
     }
 }

@@ -54,30 +54,31 @@ boolean Timer::blinkReady()
 
 void Timer::startEscape(boolean &blue, boolean &red)
 {
-    escapeMenuTimer();
+    escapeTimer(escapeCounter);
     if (escapeCounter == 0 && !widthGet)
     {
         writeTimer();
         blue = false;
         red = false;
+        resetEscapeCount();
     }
 }
 
-void Timer::escapeMenuTimer()
+void Timer::escapeTimer(byte &counter)
 {
     if (millis() - prewEscapeMillis >= blinkMillis)
     {
         prewEscapeMillis = millis();
-        if (escapeCounter > 0)
+        if (counter > 0)
         {
-            escapeCounter--;
+            counter--;
         }
     }
 }
 
 void Timer::resetEscapeCount()
 {
-    counterHold = true;
+    blinkHold = true;
     escapeCounter = maxEscapeCounter;
 }
 

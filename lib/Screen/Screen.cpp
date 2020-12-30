@@ -13,32 +13,13 @@ void Screen::logo()
     firstPage();
     do
     {
-        setFont(u8g2_font_pixelmordred_tf);
+        setFont(u8g2_font_nokiafc22_tr);
         textAlign("smart", 18, center);
         textAlign("vacuum cleaner", 38, center);
 
         setFont(u8g2_font_t0_12b_tf);
         textAlign("Garik 2020", 59, center);
     } while (nextPage());
-}
-
-void Screen::showBlink(Timer &timer)
-{
-    if (timer.blinkReady() && !timer.counterHold)
-    {
-        if (timer.counter > 9)
-        {
-            textAlign("__", 43, center);
-        }
-        else
-        {
-            textAlign("_", 43, center);
-        }
-    }
-    else
-    {
-        digAlign(timer.counter, "0", 43, center, false);
-    }
 }
 
 void Screen::moveString(Timer &timer, byte deep_x, byte bottom_y, const char *string)
@@ -110,16 +91,16 @@ void Screen::digAlign(byte dig, const char *string, byte y, Position position, b
 
     switch (position)
     {
+    case center:
+        x = (screenWidth - digWidth) / 2;
+        break;
+
     case left:
         x = (screenWidth / 2 - digWidth) / 2;
         break;
 
     case right:
         x = (screenWidth + (screenWidth / 2) - digWidth) / 2;
-        break;
-
-    case center:
-        x = (screenWidth - digWidth) / 2;
         break;
 
     default:
@@ -166,7 +147,7 @@ void Screen::escapeBar(Timer &timer)
     }
 
     width = blockWidth * (timer.maxEscapeCounter - timer.escapeCounter);
-    drawBox(0, 50, width, 10);
+    drawBox(0, 58, width, 6);
 
     if (width == blockWidth * timer.maxEscapeCounter)
     {
@@ -174,13 +155,32 @@ void Screen::escapeBar(Timer &timer)
     }
 }
 
+void Screen::showBlink(Timer &timer)
+{
+    if (timer.blinkReady() && !timer.blinkHold)
+    {
+        if (timer.counter > 9)
+        {
+            textAlign("__", 40, left);
+        }
+        else
+        {
+            textAlign("_", 40, left);
+        }
+    }
+    else
+    {
+        digAlign(timer.counter, "0", 40, left, false);
+    }
+}
+
 void Screen::showTimerSet(Timer &timer)
 {
-    setFont(u8g2_font_crox2cb_tf);
-    textAlign("Set Timer", 18, center);
-
     setFont(u8g2_font_courB18_tr);
     showBlink(timer);
+
+    setFont(u8g2_font_open_iconic_app_4x_t);
+    iconAlign(69, 32, right);
 
     escapeBar(timer);
 }
@@ -197,10 +197,43 @@ void Screen::setTimerScreen(Buttons &buttonMinus, Buttons &buttonPlus, Timer &ti
     }
 }
 
-void Screen::blockScreen()
+void Screen::iconAlign(int icon, byte iconWH, Position position)
 {
-    setFont(u8g2_font_HelvetiPixelOutline_tr);
-    textAlign("BLOCK !!!", 25, center);
+    switch (position)
+    {
+    case center:
+        x = (screenWidth - iconWH) / 2;
+        y = (screenHeight + iconWH) / 2;
+        break;
+
+    case left:
+        x = (screenWidth / 2 - iconWH) / 2;
+        y = (screenHeight + iconWH) / 2;
+        break;
+
+    case right:
+        x = screenWidth / 2 + (screenWidth / 2 - iconWH) / 2;
+        y = (screenHeight + iconWH) / 2;
+        break;
+
+    default:
+        break;
+    }
+
+    drawGlyph(x, y, icon);
+}
+
+void Screen::blockScreen(Buttons &buttonMinus)
+{
+    setFont(u8g2_font_open_iconic_thing_6x_t);
+    if (buttonMinus.buttonLock)
+    {
+        iconAlign(79, 48, center);
+    }
+    if (buttonMinus.unlock)
+    {
+        iconAlign(68, 48, center);
+    }
 }
 
 void Screen::bottomLine(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer)
@@ -216,16 +249,6 @@ void Screen::bottomLine(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer)
     {
         moveString(timer, deep_x, bottom_y, "manual mode");
     }
-
-    else if (buttonMinus.buttonLock)
-    {
-        moveString(timer, deep_x, bottom_y, "block mode ");
-    }
-
-    else
-    {
-        moveString(timer, deep_x, bottom_y, "auto mode ");
-    }
 }
 
 void Screen::showVacuumState(Switchers &relayState, Buttons &buttonPlus, Timer &timer)
@@ -235,15 +258,15 @@ void Screen::showVacuumState(Switchers &relayState, Buttons &buttonPlus, Timer &
         setFont(u8g2_font_HelvetiPixelOutline_tr);
         if (relayState.relaySW)
         {
-            textAlign(vacState[1], 30, left);
+            textAlign(vacState[1], 40, left);
         }
         else
         {
-            textAlign(vacState[0], 30, left);
+            textAlign(vacState[0], 40, left);
         }
 
         setFont(u8g2_font_courB18_tr);
-        digAlign(timer.counter, "s", 33, right, true);
+        digAlign(timer.counter, "s", 40, right, true);
     }
 
     else
@@ -251,11 +274,11 @@ void Screen::showVacuumState(Switchers &relayState, Buttons &buttonPlus, Timer &
         setFont(u8g2_font_HelvetiPixelOutline_tr);
         if (relayState.relaySW)
         {
-            textAlign(vacState[1], 30, center);
+            textAlign(vacState[1], 40, center);
         }
         else
         {
-            textAlign(vacState[0], 30, center);
+            textAlign(vacState[0], 40, center);
         }
     }
 }
@@ -269,7 +292,7 @@ void Screen::vacuumScreen(Switchers &relayState, Buttons &buttonMinus, Buttons &
         {
             if (buttonMinus.buttonLock)
             {
-                blockScreen();
+                blockScreen(buttonMinus);
             }
             else
             {

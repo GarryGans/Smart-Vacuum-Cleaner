@@ -16,10 +16,12 @@ private:
     boolean move;
     boolean escape;
     boolean widthGet;
-    boolean counterHold;
+    boolean blinkHold;
 
     const byte maxEscapeCounter = 5;
-    byte escapeCounter = maxEscapeCounter;
+    byte escapeCounter;
+    const byte maxUnblockCounter = 2;
+    byte unblockCounter = maxUnblockCounter;
     byte counter = 10;
     byte maxCounter;
 
@@ -39,10 +41,11 @@ public:
     ~Timer();
 
     void resetEscapeCount();
+    void escapeTimer(byte &counter);
+
     boolean moveReady();
     boolean blinkReady();
     void startEscape(boolean &blue, boolean &red);
-    void escapeMenuTimer();
     void changeTimer(boolean minus, boolean plus);
     void minusCounter();
     void timerReset();

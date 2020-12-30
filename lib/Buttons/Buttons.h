@@ -25,6 +25,7 @@ private:
     boolean minus;
     boolean plus;
     boolean buttonLock;
+    boolean unlock;
 
 public:
     Buttons(int8_t pin);
