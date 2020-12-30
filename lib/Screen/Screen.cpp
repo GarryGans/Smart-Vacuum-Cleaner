@@ -161,16 +161,16 @@ void Screen::showBlink(Timer &timer)
     {
         if (timer.counter > 9)
         {
-            textAlign("__", 40, left);
+            textAlign("__", 40, center);
         }
         else
         {
-            textAlign("_", 40, left);
+            textAlign("_", 40, center);
         }
     }
     else
     {
-        digAlign(timer.counter, "0", 40, left, false);
+        digAlign(timer.counter, "0", 40, center, false);
     }
 }
 
@@ -179,8 +179,7 @@ void Screen::showTimerSet(Timer &timer)
     setFont(u8g2_font_courB18_tr);
     showBlink(timer);
 
-    setFont(u8g2_font_open_iconic_app_4x_t);
-    iconAlign(69, 32, right);
+  
 
     escapeBar(timer);
 }
