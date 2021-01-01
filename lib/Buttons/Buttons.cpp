@@ -30,7 +30,6 @@ void Buttons::begin()
 void Buttons::totalOFF(Buttons &motor, Buttons &buttonPlus, Timer &timer)
 {
     buttonPlus.manualSwitch = false;
-    buttonPlus.vacuumState = swOFF;
     if (motor.motorSwitch)
     {
         motor.motorSwitch = false;
@@ -38,8 +37,6 @@ void Buttons::totalOFF(Buttons &motor, Buttons &buttonPlus, Timer &timer)
         timer.timerReset();
     }
 }
-
-
 
 void Buttons::blueButton(Buttons &motor, Buttons &buttonPlus, Timer &timer)
 {
@@ -91,9 +88,8 @@ void Buttons::blueButton(Buttons &motor, Buttons &buttonPlus, Timer &timer)
     }
 
     else if (isHolded() && buttonLock)
-    {   
+    {
         unlock = true;
-        
     }
     if (unlock)
     {
@@ -105,7 +101,6 @@ void Buttons::blueButton(Buttons &motor, Buttons &buttonPlus, Timer &timer)
             timer.unblockCounter = timer.maxUnblockCounter;
         }
     }
-    
 }
 
 void Buttons::redButton(Buttons &buttonMinus, Buttons &buttonPlus, Buttons &motor, Timer &timer)
@@ -143,37 +138,17 @@ void Buttons::redButton(Buttons &buttonMinus, Buttons &buttonPlus, Buttons &moto
             {
                 if (motor.motorSwitch)
                 {
+                    motor.motorSwitch = false;
                     motor.resetMotor = false;
                     timer.timerReset();
                 }
-
-                switch (vacuumState)
+                else if (!manualSwitch)
                 {
-                case swOFF:
-
-                    if (!motor.motorSwitch)
-                    {
-                        manualSwitch = true;
-                        vacuumState = swON;
-                    }
-                    else if (motor.motorSwitch)
-                    {
-                        motor.motorSwitch = false;
-                        vacuumState = swOFF;
-                    }
-                    break;
-
-                case swON:
+                    manualSwitch = true;
+                }
+                else if (manualSwitch)
+                {
                     manualSwitch = false;
-                    if (motor.motorSwitch)
-                    {
-                        motor.motorSwitch = false;
-                    }
-                    vacuumState = swOFF;
-                    break;
-
-                default:
-                    break;
                 }
             }
         }
@@ -198,19 +173,25 @@ void Buttons::motorCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &ti
         tick();
         if (isClick() || isHold())
         {
-            timer.widthGet = false;
+            timer.escBar = false;
             resetMotor = false;
             if (buttonMinus.setTimerFlag || buttonPlus.setTimerFlag)
             {
-                timer.writeTimer();
                 buttonMinus.setTimerFlag = false;
                 buttonPlus.setTimerFlag = false;
+                timer.writeTimer();
             }
-            timer.timerReset();
-            motorSwitch = true;
+            else
+            {
+                timer.timerReset();
+            }
 
-            buttonPlus.manualSwitch = false;
-            buttonPlus.vacuumState = swOFF;
+            if (buttonPlus.manualSwitch)
+            {
+                buttonPlus.manualSwitch = false;
+            }
+
+            motorSwitch = true;
         }
 
         if (isRelease() && !buttonPlus.manualSwitch && !resetMotor)
@@ -218,9 +199,10 @@ void Buttons::motorCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &ti
             resetMotor = true;
         }
 
-        else if (resetMotor)
+        if (resetMotor)
         {
             timer.minusCounter();
+            
             if (timer.counter == 0)
             {
                 motorSwitch = false;

@@ -11,12 +11,6 @@ class Buttons : public GButton
     friend class Screen;
 
 private:
-    enum VacuumState
-    {
-        swOFF,
-        swON
-    } vacuumState;
-
     boolean resetMotor;
     boolean manualSwitch;
     boolean motorSwitch;

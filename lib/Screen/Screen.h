@@ -18,13 +18,17 @@ private:
     const char *textCounter = "s";
     const char *vacState[2] = {"OFF", "ON"};
 
-    boolean moveLeft;
+    int icon;
+    byte WH;
+
+        boolean moveLeft;
     boolean moveRight;
     boolean move;
     boolean restart;
 
     const byte deep_x = 30;
-    byte bottom_x;
+    byte start_x;
+    byte move_x;
     byte bottom_y = 59;
 
     byte digWidth;
@@ -36,9 +40,10 @@ private:
 
     enum PositionX
     {
-        center,
+        centerX,
         left,
-        right
+        right,
+        customX
     } position_x;
 
     enum PositionY
@@ -47,7 +52,10 @@ private:
         up,
         down,
         custom,
-        centerFrame
+        centerFrame, 
+        upFrame,
+        downFrame, 
+        customY
     } position_y;
 
 public:
@@ -59,7 +67,7 @@ public:
     void align(byte WH, byte H, PositionX position_x, PositionY position_y);
     void frameAlign(byte W, byte H, PositionX position_x, PositionY position_y);
     void iconAlign(int icon, byte iconWH, PositionX position_x, PositionY position_y);
-    void digAlign(byte dig, const char *string, PositionX position_x, PositionY position_y, boolean digMix);
+    void digAlign(byte dig, const char *string, PositionX position_x, PositionY position_y);
     void textAlign(const char *string, PositionX position_x, PositionY position_y);
     void escapeBar(Timer &timer);
     void showTimerSet(Timer &timer);

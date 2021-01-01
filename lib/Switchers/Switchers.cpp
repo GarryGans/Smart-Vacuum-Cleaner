@@ -17,13 +17,14 @@ void Switchers::begin(byte vacuumPin)
 
 void Switchers::switcher(Buttons &button, Buttons &motor)
 {
-    if (button.vacuumState == 1 || motor.motorSwitch)
+    if (button.manualSwitch || motor.motorSwitch)
     {
         digitalWrite(vacuumPin, ON);
+        relaySW = true;
     }
     else 
     {
         digitalWrite(vacuumPin, OFF);
-    }
-    relaySW = digitalRead(vacuumPin);
+        relaySW = false;
+    } 
 }

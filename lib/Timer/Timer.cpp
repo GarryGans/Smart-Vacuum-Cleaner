@@ -55,11 +55,11 @@ boolean Timer::blinkReady()
 void Timer::startEscape(boolean &blue, boolean &red)
 {
     escapeTimer(escapeCounter);
-    if (escapeCounter == 0 && !widthGet)
+    if (escapeCounter == 0 && !escBar)
     {
-        writeTimer();
         blue = false;
         red = false;
+        writeTimer();
         resetEscapeCount();
     }
 }

@@ -15,7 +15,7 @@ private:
     boolean blink;
     boolean move;
     boolean escape;
-    boolean widthGet;
+    boolean escBar;
     boolean blinkHold;
 
     const byte maxEscapeCounter = 5;
