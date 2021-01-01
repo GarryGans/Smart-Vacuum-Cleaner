@@ -59,8 +59,8 @@ public:
     void align(byte WH, byte H, PositionX position_x, PositionY position_y);
     void frameAlign(byte W, byte H, PositionX position_x, PositionY position_y);
     void iconAlign(int icon, byte iconWH, PositionX position_x, PositionY position_y);
-    void digAlign(byte dig, const char *string, byte y, PositionX position_x, PositionY position_y, boolean digMix);
-    void textAlign(const char *string, byte y, PositionX position_x, PositionY position_y);
+    void digAlign(byte dig, const char *string, PositionX position_x, PositionY position_y, boolean digMix);
+    void textAlign(const char *string, PositionX position_x, PositionY position_y);
     void escapeBar(Timer &timer);
     void showTimerSet(Timer &timer);
     void setTimerScreen(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer);

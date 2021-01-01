@@ -14,11 +14,11 @@ void Screen::logo()
     do
     {
         setFont(u8g2_font_nokiafc22_tr);
-        textAlign("smart", 18, center, custom);
-        textAlign("vacuum cleaner", 38, center, custom);
+        textAlign("smart", center, up);
+        textAlign("vacuum cleaner", center, centerY);
 
         setFont(u8g2_font_t0_12b_tf);
-        textAlign("Garik 2020", 59, center, custom);
+        textAlign("Garik 2020", center, down);
     } while (nextPage());
 }
 
@@ -91,9 +91,12 @@ void Screen::align(byte W, byte H, PositionX position_x, PositionY position_y)
 
     case up:
 
+        y = (screenHeight / 2 - H) / 2 + H;
+
         break;
 
     case down:
+        y = (screenHeight + screenHeight / 2 - H) / 2 + H;
 
         break;
 
@@ -109,7 +112,7 @@ void Screen::align(byte W, byte H, PositionX position_x, PositionY position_y)
     }
 }
 
-void Screen::digAlign(byte dig, const char *string, byte y, PositionX position_x, PositionY position_y, boolean digMix)
+void Screen::digAlign(byte dig, const char *string, PositionX position_x, PositionY position_y, boolean digMix)
 {
     if (digMix)
     {
@@ -145,9 +148,9 @@ void Screen::digAlign(byte dig, const char *string, byte y, PositionX position_x
     }
 }
 
-void Screen::textAlign(const char *string, byte y, PositionX position_x, PositionY position_y)
+void Screen::textAlign(const char *string, PositionX position_x, PositionY position_y)
 {
-    align(getStrWidth(string), 0, position_x, position_y);
+    align(getStrWidth(string), getMaxCharWidth(), position_x, position_y);
     setCursor(x, y);
     print(string);
 }
@@ -181,12 +184,12 @@ void Screen::showBlink(Timer &timer)
     {
 
         frameAlign(digWidth + 10, getMaxCharWidth() + 10, center, centerFrame);
-        digAlign(timer.counter, "W", 40, center, custom, false);
+        digAlign(timer.counter, "W", center, centerY, false);
         // Serial.println(getMaxCharWidth());
     }
     else
     {
-        digAlign(timer.counter, "W", 40, center, custom, false);
+        digAlign(timer.counter, "W", center, centerY, false);
     }
 }
 
@@ -251,15 +254,15 @@ void Screen::showVacuumState(Switchers &relayState, Buttons &buttonPlus, Timer &
         setFont(u8g2_font_HelvetiPixelOutline_tr);
         if (relayState.relaySW)
         {
-            textAlign(vacState[1], 40, left, custom);
+            textAlign(vacState[1], left, centerY);
         }
         else
         {
-            textAlign(vacState[0], 40, left, custom);
+            textAlign(vacState[0], left, centerY);
         }
 
         setFont(u8g2_font_courB18_tr);
-        digAlign(timer.counter, textCounter, 40, right, custom, true);
+        digAlign(timer.counter, textCounter, right, centerY, true);
     }
 
     else
@@ -267,11 +270,11 @@ void Screen::showVacuumState(Switchers &relayState, Buttons &buttonPlus, Timer &
         setFont(u8g2_font_HelvetiPixelOutline_tr);
         if (relayState.relaySW)
         {
-            textAlign(vacState[1], 40, center, custom);
+            textAlign(vacState[1], center, centerY);
         }
         else
         {
-            textAlign(vacState[0], 40, center, custom);
+            textAlign(vacState[0], center, centerY);
         }
     }
 }
