@@ -15,6 +15,7 @@ private:
     const byte screenWidth = 128;
     const byte screenHeight = 64;
 
+    const char *textCounter = "s";
     const char *vacState[2] = {"OFF", "ON"};
 
     boolean moveLeft;
@@ -27,17 +28,27 @@ private:
     byte bottom_y = 59;
 
     byte digWidth;
+    byte digHeight;
     byte width;
     byte x;
     byte y;
     byte blockWidth;
 
-    enum Position
+    enum PositionX
     {
         center,
         left,
         right
-    } position;
+    } position_x;
+
+    enum PositionY
+    {
+        centerY,
+        up,
+        down,
+        custom,
+        centerFrame
+    } position_y;
 
 public:
     Screen(/* args */);
@@ -45,10 +56,11 @@ public:
 
     void showBlink(Timer &timer);
     void logo();
-    void align(byte WH, Position position);
-    void iconAlign(int icon, byte iconWH, Position position);
-    void digAlign(byte dig, const char *string, byte y, Position position, boolean digMix);
-    void textAlign(const char *string, byte y, Position position);
+    void align(byte WH, byte H, PositionX position_x, PositionY position_y);
+    void frameAlign(byte W, byte H, PositionX position_x, PositionY position_y);
+    void iconAlign(int icon, byte iconWH, PositionX position_x, PositionY position_y);
+    void digAlign(byte dig, const char *string, byte y, PositionX position_x, PositionY position_y, boolean digMix);
+    void textAlign(const char *string, byte y, PositionX position_x, PositionY position_y);
     void escapeBar(Timer &timer);
     void showTimerSet(Timer &timer);
     void setTimerScreen(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer);

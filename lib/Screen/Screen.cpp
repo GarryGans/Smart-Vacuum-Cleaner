@@ -14,11 +14,11 @@ void Screen::logo()
     do
     {
         setFont(u8g2_font_nokiafc22_tr);
-        textAlign("smart", 18, center);
-        textAlign("vacuum cleaner", 38, center);
+        textAlign("smart", 18, center, custom);
+        textAlign("vacuum cleaner", 38, center, custom);
 
         setFont(u8g2_font_t0_12b_tf);
-        textAlign("Garik 2020", 59, center);
+        textAlign("Garik 2020", 59, center, custom);
     } while (nextPage());
 }
 
@@ -63,23 +63,69 @@ void Screen::moveString(Timer &timer, byte deep_x, byte bottom_y, const char *st
     print(string);
 }
 
-void Screen::digAlign(byte dig, const char *string, byte y, Position position, boolean digMix)
+void Screen::align(byte W, byte H, PositionX position_x, PositionY position_y)
+{
+    switch (position_x)
+    {
+    case center:
+        x = (screenWidth - W) / 2;
+        break;
+
+    case left:
+        x = (screenWidth / 2 - W) / 2;
+        break;
+
+    case right:
+        x = (screenWidth + screenWidth / 2 - W) / 2;
+        break;
+
+    default:
+        break;
+    }
+
+    switch (position_y)
+    {
+    case centerY:
+        y = (screenHeight + H) / 2;
+        break;
+
+    case up:
+
+        break;
+
+    case down:
+
+        break;
+
+    case centerFrame:
+        y = (screenHeight - H) / 2;
+        break;
+
+    case custom:
+        break;
+
+    default:
+        break;
+    }
+}
+
+void Screen::digAlign(byte dig, const char *string, byte y, PositionX position_x, PositionY position_y, boolean digMix)
 {
     if (digMix)
     {
-        if (dig > 9)
+        if (dig > 9 && dig < 100)
         {
-            digWidth = getStrWidth(string) * 3;
+            digWidth = getStrWidth("W") * 2 + getStrWidth(string);
         }
         else
         {
-            digWidth = getStrWidth(string) * 2;
+            digWidth = getStrWidth("W") + getStrWidth(string);
         }
     }
 
     else
     {
-        if (dig > 9)
+        if (dig > 9 && dig < 100)
         {
             digWidth = getStrWidth(string) * 2;
         }
@@ -88,10 +134,10 @@ void Screen::digAlign(byte dig, const char *string, byte y, Position position, b
             digWidth = getStrWidth(string);
         }
     }
-
-    align(digWidth, position);
-
+    // Serial.println(getMaxCharWidth());
+    align(digWidth, getMaxCharWidth(), position_x, position_y);
     setCursor(x, y);
+
     print(dig);
     if (digMix)
     {
@@ -99,11 +145,17 @@ void Screen::digAlign(byte dig, const char *string, byte y, Position position, b
     }
 }
 
-void Screen::textAlign(const char *string, byte y, Position position)
+void Screen::textAlign(const char *string, byte y, PositionX position_x, PositionY position_y)
 {
-    align(getStrWidth(string), position);
+    align(getStrWidth(string), 0, position_x, position_y);
     setCursor(x, y);
     print(string);
+}
+
+void Screen::frameAlign(byte W, byte H, PositionX position_x, PositionY position_y)
+{
+    align(W, H, position_x, position_y);
+    drawFrame(x, y, W, H);
 }
 
 void Screen::escapeBar(Timer &timer)
@@ -127,18 +179,14 @@ void Screen::showBlink(Timer &timer)
 {
     if (timer.blinkReady() && !timer.blinkHold)
     {
-        if (timer.counter > 9)
-        {
-            textAlign("__", 40, center);
-        }
-        else
-        {
-            textAlign("_", 40, center);
-        }
+
+        frameAlign(digWidth + 10, getMaxCharWidth() + 10, center, centerFrame);
+        digAlign(timer.counter, "W", 40, center, custom, false);
+        // Serial.println(getMaxCharWidth());
     }
     else
     {
-        digAlign(timer.counter, "0", 40, center, false);
+        digAlign(timer.counter, "W", 40, center, custom, false);
     }
 }
 
@@ -162,33 +210,9 @@ void Screen::setTimerScreen(Buttons &buttonMinus, Buttons &buttonPlus, Timer &ti
     }
 }
 
-void Screen::align(byte WH, Position position)
+void Screen::iconAlign(int icon, byte iconWH, PositionX position_x, PositionY position_y)
 {
-    switch (position)
-    {
-    case center:
-        x = (screenWidth - WH) / 2;
-        y = (screenHeight + WH) / 2;
-        break;
-
-    case left:
-        x = (screenWidth / 2 - WH) / 2;
-        y = (screenHeight + WH) / 2;
-        break;
-
-    case right:
-        x = (screenWidth + screenWidth / 2 - WH) / 2;
-        y = (screenHeight + WH) / 2;
-        break;
-
-    default:
-        break;
-    }
-}
-
-void Screen::iconAlign(int icon, byte iconWH, Position position)
-{
-    align(iconWH, position);
+    align(iconWH, iconWH, position_x, position_y);
     drawGlyph(x, y, icon);
 }
 
@@ -197,11 +221,11 @@ void Screen::blockScreen(Buttons &buttonMinus)
     setFont(u8g2_font_open_iconic_thing_6x_t);
     if (buttonMinus.buttonLock)
     {
-        iconAlign(79, 48, center);
+        iconAlign(79, 48, center, centerY);
     }
     if (buttonMinus.unlock)
     {
-        iconAlign(68, 48, center);
+        iconAlign(68, 48, center, centerY);
     }
 }
 
@@ -227,15 +251,15 @@ void Screen::showVacuumState(Switchers &relayState, Buttons &buttonPlus, Timer &
         setFont(u8g2_font_HelvetiPixelOutline_tr);
         if (relayState.relaySW)
         {
-            textAlign(vacState[1], 40, left);
+            textAlign(vacState[1], 40, left, custom);
         }
         else
         {
-            textAlign(vacState[0], 40, left);
+            textAlign(vacState[0], 40, left, custom);
         }
 
         setFont(u8g2_font_courB18_tr);
-        digAlign(timer.counter, "s", 40, right, true);
+        digAlign(timer.counter, textCounter, 40, right, custom, true);
     }
 
     else
@@ -243,11 +267,11 @@ void Screen::showVacuumState(Switchers &relayState, Buttons &buttonPlus, Timer &
         setFont(u8g2_font_HelvetiPixelOutline_tr);
         if (relayState.relaySW)
         {
-            textAlign(vacState[1], 40, center);
+            textAlign(vacState[1], 40, center, custom);
         }
         else
         {
-            textAlign(vacState[0], 40, center);
+            textAlign(vacState[0], 40, center, custom);
         }
     }
 }

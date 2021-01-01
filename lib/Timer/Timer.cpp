@@ -66,7 +66,7 @@ void Timer::startEscape(boolean &blue, boolean &red)
 
 void Timer::escapeTimer(byte &counter)
 {
-    if (millis() - prewEscapeMillis >= blinkMillis)
+    if (millis() - prewEscapeMillis >= secMillis)
     {
         prewEscapeMillis = millis();
         if (counter > 0)

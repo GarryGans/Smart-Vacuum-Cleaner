@@ -18,7 +18,7 @@ Timer timer;
 
 void setup()
 {
-  // Serial.begin(9600);
+  Serial.begin(9600);
   timer.readTimer();
   timer.writeTimer();
 

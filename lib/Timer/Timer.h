@@ -30,7 +30,7 @@ private:
     const byte maxSetCounter = 99;
 
     const unsigned long secMillis = 1000;
-    const unsigned long blinkMillis = 700;
+    const unsigned long blinkMillis = 100;
     unsigned long prewCounterMillis;
     unsigned long prewCursorMillis;
     unsigned long prewMoveMillis;
