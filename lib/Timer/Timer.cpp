@@ -24,15 +24,14 @@ void Timer::writeTimer()
 
 boolean Timer::moveReady()
 {
+    move = false;
+
     if (millis() - prewMoveMillis >= secMillis / 20)
     {
         prewMoveMillis = millis();
         move = true;
     }
-    else
-    {
-        move = false;
-    }
+    
     return move;
 }
 

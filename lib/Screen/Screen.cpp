@@ -23,6 +23,28 @@ void Screen::logo()
     } while (nextPage());
 }
 
+void Screen::mover(byte &deep_x)
+{
+    if (move_x > (start_x - deep_x) && moveLeft)
+    {
+        move_x--;
+        if (move_x == start_x - deep_x)
+        {
+            moveRight = true;
+            moveLeft = false;
+        }
+    }
+    else if (move_x < (deep_x + start_x) && moveRight)
+    {
+        move_x++;
+        if (move_x == deep_x + start_x)
+        {
+            moveRight = false;
+            moveLeft = true;
+        }
+    }
+}
+
 void Screen::moveString(Timer &timer, byte deep_x, byte bottom_y, const char *string)
 {
     if (!move)
@@ -36,32 +58,11 @@ void Screen::moveString(Timer &timer, byte deep_x, byte bottom_y, const char *st
     setCursor(move_x, bottom_y);
     print(string);
 
-    if (move)
+    if (timer.moveReady())
     {
-        if (timer.moveReady())
-        {
-            start_x = (screenWidth - getStrWidth(string)) / 2;
-            deep_x = constrain(deep_x, 0, start_x);
-
-            if (move_x > (start_x - deep_x) && moveLeft)
-            {
-                move_x--;
-                if (move_x == start_x - deep_x)
-                {
-                    moveRight = true;
-                    moveLeft = false;
-                }
-            }
-            else if (move_x < (deep_x + start_x) && moveRight)
-            {
-                move_x++;
-                if (move_x == deep_x + start_x)
-                {
-                    moveRight = false;
-                    moveLeft = true;
-                }
-            }
-        }
+        start_x = (screenWidth - getStrWidth(string)) / 2;
+        deep_x = constrain(deep_x, 0, start_x);
+        mover(deep_x);
     }
 }
 
@@ -183,12 +184,9 @@ void Screen::showBlink(Timer &timer)
     if (timer.blinkReady() && !timer.blinkHold)
     {
         frameAlign(digWidth + 10, getMaxCharWidth() + 10, centerX, centerFrame);
-        digAlign(timer.counter, "", centerX, centerY);
     }
-    else
-    {
-        digAlign(timer.counter, "", centerX, centerY);
-    }
+
+    digAlign(timer.counter, "", centerX, centerY);
 }
 
 void Screen::showTimerSet(Timer &timer)
@@ -223,14 +221,13 @@ void Screen::blockScreen(Buttons &buttonMinus)
 
     if (buttonMinus.buttonLock)
     {
-        icon = 79;
+        icon = lock;
     }
     if (buttonMinus.unlock)
     {
-        icon = 68;
+        icon = unlock;
     }
 
-    WH = 48;
     iconAlign(icon, WH, centerX, centerY);
 }
 

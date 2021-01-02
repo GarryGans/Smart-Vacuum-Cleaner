@@ -19,7 +19,9 @@ private:
     const char *vacState[2] = {"OFF", "ON"};
 
     int icon;
-    byte WH;
+    int lock = 79;
+    int unlock = 68;
+    byte WH = 48;
 
         boolean moveLeft;
     boolean moveRight;
@@ -74,6 +76,7 @@ public:
     void setTimerScreen(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer);
     void blockScreen(Buttons &buttonMinus);
     void bottomLine(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer);
+    void mover(byte &deep_x);
     void moveString(Timer &timer, byte end_x, byte bottom_y, const char *string);
     void showVacuumState(Switchers &relayState, Buttons &buttonPlus, Timer &timer);
     void vacuumScreen(Switchers &relayState, Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer);
