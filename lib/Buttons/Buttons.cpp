@@ -27,14 +27,22 @@ void Buttons::begin()
     setDirection(NORM_OPEN);
 }
 
-void Buttons::totalOFF(Buttons &motor, Buttons &buttonPlus, Timer &timer)
+void Buttons::motorState(boolean &motorSwitch, boolean state, Timer &timer, boolean &resetMotor)
 {
-    buttonPlus.manualSwitch = false;
+    motorSwitch = state;
+    resetMotor = false;
+    timer.timerReset();
+}
+
+void Buttons::totalOFF(Buttons &motor, boolean &manualSwitch, Timer &timer)
+{
     if (motor.motorSwitch)
     {
-        motor.motorSwitch = false;
-        motor.resetMotor = false;
-        timer.timerReset();
+        motorState(motor.motorSwitch, false, timer, motor.resetMotor);
+    }
+    if (manualSwitch)
+    {
+        manualSwitch = false;
     }
 }
 
@@ -42,172 +50,131 @@ void Buttons::blueButton(Buttons &motor, Buttons &buttonPlus, Timer &timer)
 {
     tick();
 
-    if (!buttonLock)
+    if (!lock)
     {
-        if (setTimerFlag || buttonPlus.setTimerFlag)
+        if (!timer.setTimerFlag)
         {
-            timer.startEscape(setTimerFlag, buttonPlus.setTimerFlag);
+            if (isClick())
+            {
+                totalOFF(motor, buttonPlus.manualSwitch, timer);
+                timer.setTimerFlag = true;
+            }
         }
 
-        if (isClick())
+        else if (timer.setTimerFlag)
         {
-            timer.resetEscapeCount();
-
-            if (!setTimerFlag)
-            {
-                totalOFF(motor, buttonPlus, timer);
-                setTimerFlag = true;
-                buttonPlus.setTimerFlag = true;
-            }
-
-            else if (setTimerFlag)
+            if (isClick() || isHold())
             {
                 minus = true;
                 timer.changeTimer(minus, plus);
             }
+
+            if (isRelease())
+            {
+                timer.blinkHide = false;
+            }
+            timer.startEscape();
         }
 
-        if (isHold() && (setTimerFlag || buttonPlus.setTimerFlag))
+        if (isHolded() && !timer.setTimerFlag)
         {
-            timer.resetEscapeCount();
-
-            minus = true;
-            timer.changeTimer(minus, plus);
-        }
-
-        if (isRelease())
-        {
-            timer.blinkHold = false;
-        }
-
-        if (isHolded() && !(setTimerFlag || buttonPlus.setTimerFlag))
-        {
-            buttonLock = true;
-            totalOFF(motor, buttonPlus, timer);
+            lock = true;
+            totalOFF(motor, buttonPlus.manualSwitch, timer);
         }
     }
 
-    else if (isHolded() && buttonLock)
+    else if (lock)
     {
-        unlock = true;
+        if (isHolded())
+        {
+            unlock = true;
+        }
     }
+
     if (unlock)
     {
-        timer.escapeTimer(timer.unblockCounter);
-        if (timer.unblockCounter == 0)
+        if (timer.reduceTimer(timer.unblockCounter))
         {
-            buttonLock = false;
+            lock = false;
             unlock = false;
             timer.unblockCounter = timer.maxUnblockCounter;
         }
     }
 }
 
-void Buttons::redButton(Buttons &buttonMinus, Buttons &buttonPlus, Buttons &motor, Timer &timer)
+void Buttons::redButton(Buttons &buttonMinus, Buttons &motor, Timer &timer)
 {
-
-    if (!buttonMinus.buttonLock)
+    if (!buttonMinus.lock)
     {
         tick();
-        if (buttonMinus.setTimerFlag || setTimerFlag)
+
+        if (!timer.setTimerFlag)
         {
-            timer.startEscape(buttonMinus.setTimerFlag, setTimerFlag);
+            if (isClick())
+            {
+                totalOFF(motor, manualSwitch, timer);
+                timer.setTimerFlag = true;
+            }
         }
 
-        if (isClick())
+        else if (timer.setTimerFlag)
         {
-            timer.resetEscapeCount();
-
-            if (!buttonMinus.setTimerFlag || !setTimerFlag)
-            {
-                setTimerFlag = true;
-                buttonMinus.setTimerFlag = true;
-
-                totalOFF(motor, buttonPlus, timer);
-            }
-
-            else if (buttonMinus.setTimerFlag || setTimerFlag)
+            if (isClick() || isHold())
             {
                 plus = true;
                 timer.changeTimer(minus, plus);
             }
-        }
-        if (isHolded())
-        {
-            if (!buttonMinus.setTimerFlag && !setTimerFlag)
+            if (isRelease())
             {
-                if (motor.motorSwitch)
+                timer.blinkHide = false;
+            }
+            timer.startEscape();
+        }
+
+        if (isHolded() && !timer.setTimerFlag)
+        {
+            if (!(motor.isClick() || motor.isHold()))
+            {
+                if (motor.motorSwitch || manualSwitch)
                 {
-                    motor.motorSwitch = false;
-                    motor.resetMotor = false;
-                    timer.timerReset();
+                    totalOFF(motor, manualSwitch, timer);
                 }
                 else if (!manualSwitch)
                 {
                     manualSwitch = true;
                 }
-                else if (manualSwitch)
-                {
-                    manualSwitch = false;
-                }
             }
-        }
-        if (isHold() && (buttonMinus.setTimerFlag || setTimerFlag))
-        {
-            timer.resetEscapeCount();
-
-            plus = true;
-            timer.changeTimer(minus, plus);
-        }
-        if (isRelease())
-        {
-            timer.blinkHold = false;
         }
     }
 }
 
 void Buttons::motorCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer)
 {
-    if (!buttonMinus.buttonLock)
+    if (!buttonMinus.lock)
     {
         tick();
         if (isClick() || isHold())
         {
-            timer.escBar = false;
-            resetMotor = false;
-            if (buttonMinus.setTimerFlag || buttonPlus.setTimerFlag)
-            {
-                buttonMinus.setTimerFlag = false;
-                buttonPlus.setTimerFlag = false;
-                timer.writeTimer();
-            }
-            else
-            {
-                timer.timerReset();
-            }
+            timer.resetEscape();
+
+            motorState(motorSwitch, true, timer, resetMotor);
 
             if (buttonPlus.manualSwitch)
             {
                 buttonPlus.manualSwitch = false;
             }
-
-            motorSwitch = true;
         }
 
-        if (isRelease() && !buttonPlus.manualSwitch && !resetMotor)
+        if (isRelease() && !resetMotor)
         {
             resetMotor = true;
         }
 
         if (resetMotor)
         {
-            timer.minusCounter();
-            
-            if (timer.counter == 0)
+            if (timer.reduceTimer(timer.counter))
             {
-                motorSwitch = false;
-                resetMotor = false;
-                timer.timerReset();
+                motorState(motorSwitch, false, timer, resetMotor);
             }
         }
     }

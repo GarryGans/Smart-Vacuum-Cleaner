@@ -14,11 +14,10 @@ private:
     boolean resetMotor;
     boolean manualSwitch;
     boolean motorSwitch;
-    boolean setTimerFlag;
     boolean timerReset;
     boolean minus;
     boolean plus;
-    boolean buttonLock;
+    boolean lock;
     boolean unlock;
 
 public:
@@ -27,9 +26,12 @@ public:
     ~Buttons();
 
     void begin();
-    void totalOFF(Buttons &motor, Buttons &buttonPlus, Timer &timer);
+    void setTimer(boolean blue, boolean red);
+
+    void motorState(boolean &motorSwitch, boolean state, Timer &timer, boolean &resetMotor);
+    void totalOFF(Buttons &motor, boolean &manualSwitch, Timer &timer);
     void blueButton(Buttons &motor, Buttons &buttonPlus, Timer &timer);
-    void redButton(Buttons &buttonMinus, Buttons &buttonPlus, Buttons &motor, Timer &timer);
+    void redButton(Buttons &buttonMinus, Buttons &motor, Timer &timer);
     void motorCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer);
 };
 

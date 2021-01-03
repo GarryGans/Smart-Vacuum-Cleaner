@@ -31,58 +31,82 @@ boolean Timer::moveReady()
         prewMoveMillis = millis();
         move = true;
     }
-    
+
     return move;
 }
 
 boolean Timer::blinkReady()
 {
-    if (millis() - prewCursorMillis >= blinkMillis)
+    if (blinkHide)
     {
-        blink = true;
+        blink = false;
+    }
 
-        if (millis() - prewCursorMillis >= blinkMillis * 2)
+    else
+    {
+        if (millis() - prewCursorMillis >= blinkMillis)
         {
-            prewCursorMillis = millis();
             blink = false;
+
+            if (millis() - prewCursorMillis >= blinkMillis * 2)
+            {
+                prewCursorMillis = millis();
+                blink = true;
+            }
         }
     }
 
     return blink;
 }
 
-void Timer::startEscape(boolean &blue, boolean &red)
+void Timer::resetEscape()
 {
-    escapeTimer(escapeCounter);
-    if (escapeCounter == 0 && !escBar)
+    if (setTimerFlag)
     {
-        blue = false;
-        red = false;
+        setTimerFlag = false;
+        escBar = false;
+        maxEscape();
         writeTimer();
-        resetEscapeCount();
     }
 }
 
-void Timer::escapeTimer(byte &counter)
+void Timer::startEscape()
 {
-    if (millis() - prewEscapeMillis >= secMillis)
+    if (!blinkHide)
     {
-        prewEscapeMillis = millis();
+        if (reduceTimer(escapeCounter) && !escBar)
+        {
+            resetEscape();
+        }
+    }
+}
+
+boolean Timer::reduceTimer(byte &counter)
+{
+    if (millis() - prewCounterMillis >= secMillis)
+    {
+        prewCounterMillis = millis();
         if (counter > 0)
         {
             counter--;
         }
     }
+    if (counter == 0)
+    {
+        return true;
+    }
+    return false;
 }
 
-void Timer::resetEscapeCount()
+void Timer::maxEscape()
 {
-    blinkHold = true;
     escapeCounter = maxEscapeCounter;
 }
 
 void Timer::changeTimer(boolean minus, boolean plus)
 {
+    blinkHide = true;
+    maxEscape();
     if (minus)
     {
         counter--;
@@ -92,19 +116,6 @@ void Timer::changeTimer(boolean minus, boolean plus)
     {
         counter++;
         counter = constrain(counter, minSetCounter, maxSetCounter);
-    }
-}
-
-void Timer::minusCounter()
-{
-    if ((millis() - prewCounterMillis >= secMillis))
-    {
-        EEPROM.get(couterAddr, maxCounter);
-        prewCounterMillis = millis();
-        if (counter > 0)
-        {
-            counter--;
-        }
     }
 }
 

@@ -23,7 +23,7 @@ void Screen::logo()
     } while (nextPage());
 }
 
-void Screen::mover(byte &deep_x)
+void Screen::mover(byte deep_x)
 {
     if (move_x > (start_x - deep_x) && moveLeft)
     {
@@ -181,7 +181,7 @@ void Screen::escapeBar(Timer &timer)
 
 void Screen::showBlink(Timer &timer)
 {
-    if (timer.blinkReady() && !timer.blinkHold)
+    if (timer.blinkReady())
     {
         frameAlign(digWidth + 10, getMaxCharWidth() + 10, centerX, centerFrame);
     }
@@ -197,9 +197,9 @@ void Screen::showTimerSet(Timer &timer)
     escapeBar(timer);
 }
 
-void Screen::setTimerScreen(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer)
+void Screen::setTimerScreen(Timer &timer)
 {
-    if (buttonMinus.setTimerFlag || buttonPlus.setTimerFlag)
+    if (timer.setTimerFlag)
     {
         firstPage();
         do
@@ -219,7 +219,7 @@ void Screen::blockScreen(Buttons &buttonMinus)
 {
     setFont(u8g2_font_open_iconic_thing_6x_t);
 
-    if (buttonMinus.buttonLock)
+    if (buttonMinus.lock)
     {
         icon = lock;
     }
@@ -250,38 +250,36 @@ void Screen::showVacuumState(Switchers &relayState, Buttons &buttonPlus, Timer &
 {
     setFont(u8g2_font_HelvetiPixelOutline_tr);
 
-    if (relayState.relaySW)
+    if (relayState.relaySW && !buttonPlus.manualSwitch)
     {
-        if (!buttonPlus.manualSwitch)
-        {
-            textAlign(vacState[1], left, up);
+        position_x = left;
+        position_y = up;
 
-            setFont(u8g2_font_courB18_tr);
-            digAlign(timer.counter, textCounter, right, down);
-        }
-
-        else
-        {
-            textAlign(vacState[1], centerX, centerY);
-        }
+        setFont(u8g2_font_courB18_tr);
+        digAlign(timer.counter, textCounter, right, down);
     }
 
     else
     {
-        textAlign(vacState[0], centerX, centerY);
+        position_x = centerX;
+        position_y = centerY;
     }
+    textAlign(vacState[relayState.relaySW], position_x, position_y);
 }
 
 void Screen::vacuumScreen(Switchers &relayState, Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer)
 {
-    if (!buttonMinus.setTimerFlag && !buttonPlus.setTimerFlag && !timer.escBar)
-    {
+    
         firstPage();
         do
         {
-            if (buttonMinus.buttonLock)
+            if (buttonMinus.lock)
             {
                 blockScreen(buttonMinus);
+            }
+            else if(timer.setTimerFlag || timer.escBar)
+            {
+                setTimerScreen(timer);
             }
             else
             {
@@ -289,5 +287,5 @@ void Screen::vacuumScreen(Switchers &relayState, Buttons &buttonMinus, Buttons &
                 bottomLine(buttonMinus, buttonPlus, timer);
             }
         } while (nextPage());
-    }
+    
 }
