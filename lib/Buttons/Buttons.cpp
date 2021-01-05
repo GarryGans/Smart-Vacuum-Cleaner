@@ -31,7 +31,7 @@ void Buttons::motorState(boolean &motorSwitch, boolean state, Timer &timer, bool
 {
     motorSwitch = state;
     resetMotor = false;
-    timer.timerReset();
+    timer.readTimer();
 }
 
 void Buttons::totalOFF(Buttons &motor, boolean &manualSwitch, Timer &timer)
@@ -73,6 +73,7 @@ void Buttons::blueButton(Buttons &motor, Buttons &buttonPlus, Timer &timer)
             {
                 timer.blinkHide = false;
             }
+
             timer.startEscape();
         }
 
@@ -97,7 +98,7 @@ void Buttons::blueButton(Buttons &motor, Buttons &buttonPlus, Timer &timer)
         {
             lock = false;
             unlock = false;
-            timer.unblockCounter = timer.maxUnblockCounter;
+            timer.maxUnblock();
         }
     }
 }
@@ -124,10 +125,12 @@ void Buttons::redButton(Buttons &buttonMinus, Buttons &motor, Timer &timer)
                 plus = true;
                 timer.changeTimer(minus, plus);
             }
+            
             if (isRelease())
             {
                 timer.blinkHide = false;
             }
+
             timer.startEscape();
         }
 

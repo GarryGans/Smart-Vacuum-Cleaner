@@ -14,7 +14,6 @@ class Timer
 private:
     boolean blink;
     boolean move;
-    boolean escape;
     boolean escBar;
     boolean blinkHide;
     boolean setTimerFlag;
@@ -30,7 +29,7 @@ private:
     const byte maxSetCounter = 99;
 
     const unsigned long secMillis = 1000;
-    const unsigned long blinkMillis = 1000;
+    const unsigned long blinkMillis = 200;
     unsigned long prewCounterMillis;
     unsigned long prewCursorMillis;
     unsigned long prewMoveMillis;
@@ -41,15 +40,15 @@ public:
     ~Timer();
 
     void maxEscape();
+    void maxUnblock();
     boolean reduceTimer(byte &counter);
 
     boolean moveReady();
     boolean blinkReady();
     void resetEscape();
 
-        void startEscape();
+    void startEscape();
     void changeTimer(boolean minus, boolean plus);
-    void timerReset();
     void readTimer();
     void writeTimer();
 };

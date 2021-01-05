@@ -20,7 +20,7 @@ void setup()
 {
   // Serial.begin(9600);
   timer.readTimer();
-  timer.writeTimer();
+  // timer.writeTimer();
 
   buttonPlus.begin();
   buttonMinus.begin();
