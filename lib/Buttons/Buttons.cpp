@@ -135,6 +135,7 @@ void Buttons::redButton(Buttons &buttonMinus, Buttons &pedal, Timer &timer)
                 if (!manualSwitch)
                 {
                     timer.setTimerFlag = true;
+                    
                     if (pedal.pedalSwitch)
                     {
                         motorState(pedal.pedalSwitch, true, timer, pedal.resetMotor);
