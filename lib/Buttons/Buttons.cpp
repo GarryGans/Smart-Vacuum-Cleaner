@@ -48,64 +48,67 @@ void Buttons::totalOFF(Buttons &motor, boolean &manualSwitch, Timer &timer)
 
 void Buttons::blueButton(Buttons &motor, Buttons &buttonPlus, Timer &timer)
 {
-    tick();
-
-    if (!lock)
+    if (!(motor.isClick() || motor.isHold()))
     {
-        if (!timer.setTimerFlag)
+        tick();
+
+        if (!lock)
         {
-            if (isClick())
+            if (!timer.setTimerFlag)
             {
+                if (isClick())
+                {
+                    totalOFF(motor, buttonPlus.manualSwitch, timer);
+                    timer.setTimerFlag = true;
+                }
+            }
+
+            else if (timer.setTimerFlag)
+            {
+                if (isClick() || isHold())
+                {
+                    minus = true;
+                    timer.changeTimer(minus, plus);
+                }
+
+                if (isRelease())
+                {
+                    timer.blinkHide = false;
+                }
+
+                timer.startEscape();
+            }
+
+            if (isHolded() && !timer.setTimerFlag )
+            {
+                lock = true;
                 totalOFF(motor, buttonPlus.manualSwitch, timer);
-                timer.setTimerFlag = true;
             }
         }
 
-        else if (timer.setTimerFlag)
+        else if (lock)
         {
-            if (isClick() || isHold())
+            if (isHolded())
             {
-                minus = true;
-                timer.changeTimer(minus, plus);
+                unlock = true;
             }
+        }
 
-            if (isRelease())
+        if (unlock)
+        {
+            if (timer.reduceTimer(timer.unblockCounter))
             {
-                timer.blinkHide = false;
+                lock = false;
+                unlock = false;
+                timer.maxUnblock();
             }
-
-            timer.startEscape();
-        }
-
-        if (isHolded() && !timer.setTimerFlag)
-        {
-            lock = true;
-            totalOFF(motor, buttonPlus.manualSwitch, timer);
-        }
-    }
-
-    else if (lock)
-    {
-        if (isHolded())
-        {
-            unlock = true;
-        }
-    }
-
-    if (unlock)
-    {
-        if (timer.reduceTimer(timer.unblockCounter))
-        {
-            lock = false;
-            unlock = false;
-            timer.maxUnblock();
         }
     }
 }
 
 void Buttons::redButton(Buttons &buttonMinus, Buttons &motor, Timer &timer)
 {
-    if (!buttonMinus.lock)
+    if (!buttonMinus.lock && !(motor.isClick() || motor.isHold()))
     {
         tick();
 
@@ -125,7 +128,7 @@ void Buttons::redButton(Buttons &buttonMinus, Buttons &motor, Timer &timer)
                 plus = true;
                 timer.changeTimer(minus, plus);
             }
-            
+
             if (isRelease())
             {
                 timer.blinkHide = false;
@@ -136,16 +139,13 @@ void Buttons::redButton(Buttons &buttonMinus, Buttons &motor, Timer &timer)
 
         if (isHolded() && !timer.setTimerFlag)
         {
-            if (!(motor.isClick() || motor.isHold()))
+            if (motor.motorSwitch || manualSwitch)
             {
-                if (motor.motorSwitch || manualSwitch)
-                {
-                    totalOFF(motor, manualSwitch, timer);
-                }
-                else if (!manualSwitch)
-                {
-                    manualSwitch = true;
-                }
+                totalOFF(motor, manualSwitch, timer);
+            }
+            else if (!manualSwitch)
+            {
+                manualSwitch = true;
             }
         }
     }
