@@ -54,15 +54,26 @@ void Buttons::blueButton(Buttons &pedal, Buttons &buttonPlus, Timer &timer)
 
         if (!lock)
         {
+
             if (!timer.setTimerFlag)
             {
-                if (isClick() && !buttonPlus.manualSwitch)
+
+                if (isClick())
                 {
-                    timer.setTimerFlag = true;
-                }
-                else if (isClick() && buttonPlus.manualSwitch)
-                {
-                    totalOFF(pedal, buttonPlus.manualSwitch, timer);
+                    if (!buttonPlus.manualSwitch)
+                    {
+                        timer.setTimerFlag = true;
+                        if (pedal.pedalSwitch)
+                        {
+                            motorState(pedal.pedalSwitch, true, timer, pedal.resetMotor);
+                        }
+                        
+                    }
+                
+                    else if (buttonPlus.manualSwitch)
+                    {
+                        buttonPlus.manualSwitch = false;
+                    }
                 }
             }
 
@@ -80,6 +91,11 @@ void Buttons::blueButton(Buttons &pedal, Buttons &buttonPlus, Timer &timer)
                 }
 
                 timer.startEscape();
+
+                if (pedal.pedalSwitch)
+                {
+                    pedal.resetMotor = true;
+                }
             }
 
             if (isHolded() && !timer.setTimerFlag)
@@ -89,12 +105,9 @@ void Buttons::blueButton(Buttons &pedal, Buttons &buttonPlus, Timer &timer)
             }
         }
 
-        else if (lock)
+        else if (lock && isHolded())
         {
-            if (isHolded())
-            {
-                unlock = true;
-            }
+            unlock = true;
         }
 
         if (unlock)
@@ -117,13 +130,21 @@ void Buttons::redButton(Buttons &buttonMinus, Buttons &pedal, Timer &timer)
 
         if (!timer.setTimerFlag)
         {
-            if (isClick() && !manualSwitch)
+            if (isClick())
             {
-                timer.setTimerFlag = true;
-            }
-            else if (isClick() && manualSwitch)
-            {
-                totalOFF(pedal, manualSwitch, timer);
+                if (!manualSwitch)
+                {
+                    timer.setTimerFlag = true;
+                    if (pedal.pedalSwitch)
+                    {
+                        motorState(pedal.pedalSwitch, true, timer, pedal.resetMotor);
+                    }
+                }
+
+                else if (manualSwitch)
+                {
+                    manualSwitch = false;
+                }
             }
         }
 
@@ -141,13 +162,23 @@ void Buttons::redButton(Buttons &buttonMinus, Buttons &pedal, Timer &timer)
             }
 
             timer.startEscape();
+
+            if (pedal.pedalSwitch)
+            {
+                pedal.resetMotor = true;
+            }
+            
         }
 
         if (isHolded() && !timer.setTimerFlag)
         {
-            if (pedal.pedalSwitch || !manualSwitch)
+            if (!manualSwitch && !pedal.pedalSwitch)
             {
                 manualSwitch = true;
+            }
+
+            else if (pedal.pedalSwitch)
+            {
                 motorState(pedal.pedalSwitch, false, timer, resetMotor);
             }
         }
