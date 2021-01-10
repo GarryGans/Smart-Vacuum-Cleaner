@@ -46,7 +46,7 @@ void Buttons::totalOFF(Buttons &pedal, boolean &manualSwitch, Timer &timer)
     }
 }
 
-void Buttons::callSetOrOff(boolean &manualSwitch, Timer &timer, Buttons &pedal, MP state)
+void Buttons::SetOrOff(boolean &manualSwitch, Timer &timer, Buttons &pedal, MP state)
 {
     if (!timer.setTimerFlag)
     {
@@ -112,7 +112,7 @@ void Buttons::blueButton(Buttons &pedal, Buttons &buttonPlus, Timer &timer)
 
         if (!lock)
         {
-            callSetOrOff(buttonPlus.manualSwitch, timer, pedal, decrease);
+            SetOrOff(buttonPlus.manualSwitch, timer, pedal, decrease);
 
             if (isHolded() && !timer.setTimerFlag)
             {
@@ -144,7 +144,7 @@ void Buttons::redButton(Buttons &buttonMinus, Buttons &pedal, Timer &timer)
     {
         tick();
 
-        callSetOrOff(manualSwitch, timer, pedal, increase);
+        SetOrOff(manualSwitch, timer, pedal, increase);
 
         if (isHolded() && !timer.setTimerFlag)
         {
