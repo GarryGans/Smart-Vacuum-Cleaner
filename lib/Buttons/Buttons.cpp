@@ -46,6 +46,64 @@ void Buttons::totalOFF(Buttons &pedal, boolean &manualSwitch, Timer &timer)
     }
 }
 
+void Buttons::callSetOrOff(boolean &manualSwitch, Timer &timer, Buttons &pedal, MP state)
+{
+    if (!timer.setTimerFlag)
+    {
+        if (isClick())
+        {
+            if (!manualSwitch)
+            {
+                timer.setTimerFlag = true;
+
+                if (pedal.pedalSwitch)
+                {
+                    motorState(pedal.pedalSwitch, true, timer, pedal.resetMotor);
+                }
+            }
+
+            else if (manualSwitch)
+            {
+                manualSwitch = false;
+            }
+        }
+    }
+
+    else if (timer.setTimerFlag)
+    {
+        if (isClick() || isHold())
+        {
+            switch (state)
+            {
+            case decrease:
+                minus = true;
+                break;
+
+            case increase:
+                plus = true;
+                break;
+
+            default:
+                break;
+            }
+
+            timer.changeTimer(minus, plus);
+        }
+
+        if (isRelease())
+        {
+            timer.blinkHide = false;
+        }
+
+        timer.startEscape();
+
+        if (pedal.pedalSwitch)
+        {
+            pedal.resetMotor = true;
+        }
+    }
+}
+
 void Buttons::blueButton(Buttons &pedal, Buttons &buttonPlus, Timer &timer)
 {
     if (!(pedal.isClick() || pedal.isHold()))
@@ -54,49 +112,7 @@ void Buttons::blueButton(Buttons &pedal, Buttons &buttonPlus, Timer &timer)
 
         if (!lock)
         {
-
-            if (!timer.setTimerFlag)
-            {
-
-                if (isClick())
-                {
-                    if (!buttonPlus.manualSwitch)
-                    {
-                        timer.setTimerFlag = true;
-                        if (pedal.pedalSwitch)
-                        {
-                            motorState(pedal.pedalSwitch, true, timer, pedal.resetMotor);
-                        }
-                        
-                    }
-                
-                    else if (buttonPlus.manualSwitch)
-                    {
-                        buttonPlus.manualSwitch = false;
-                    }
-                }
-            }
-
-            else if (timer.setTimerFlag)
-            {
-                if (isClick() || isHold())
-                {
-                    minus = true;
-                    timer.changeTimer(minus, plus);
-                }
-
-                if (isRelease())
-                {
-                    timer.blinkHide = false;
-                }
-
-                timer.startEscape();
-
-                if (pedal.pedalSwitch)
-                {
-                    pedal.resetMotor = true;
-                }
-            }
+            callSetOrOff(buttonPlus.manualSwitch, timer, pedal, decrease);
 
             if (isHolded() && !timer.setTimerFlag)
             {
@@ -128,48 +144,7 @@ void Buttons::redButton(Buttons &buttonMinus, Buttons &pedal, Timer &timer)
     {
         tick();
 
-        if (!timer.setTimerFlag)
-        {
-            if (isClick())
-            {
-                if (!manualSwitch)
-                {
-                    timer.setTimerFlag = true;
-                    
-                    if (pedal.pedalSwitch)
-                    {
-                        motorState(pedal.pedalSwitch, true, timer, pedal.resetMotor);
-                    }
-                }
-
-                else if (manualSwitch)
-                {
-                    manualSwitch = false;
-                }
-            }
-        }
-
-        else if (timer.setTimerFlag)
-        {
-            if (isClick() || isHold())
-            {
-                plus = true;
-                timer.changeTimer(minus, plus);
-            }
-
-            if (isRelease())
-            {
-                timer.blinkHide = false;
-            }
-
-            timer.startEscape();
-
-            if (pedal.pedalSwitch)
-            {
-                pedal.resetMotor = true;
-            }
-            
-        }
+        callSetOrOff(manualSwitch, timer, pedal, increase);
 
         if (isHolded() && !timer.setTimerFlag)
         {

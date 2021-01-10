@@ -20,16 +20,21 @@ private:
     boolean lock;
     boolean unlock;
 
+    enum MP
+    {
+        decrease,
+        increase
+    } mp;
+
 public:
     Buttons(int8_t pin);
     Buttons();
     ~Buttons();
 
     void begin();
-    void setTimer(boolean blue, boolean red);
-
     void motorState(boolean &pedalSwitch, boolean state, Timer &timer, boolean &resetMotor);
     void totalOFF(Buttons &pedal, boolean &manualSwitch, Timer &timer);
+    void callSetOrOff(boolean &manualSwitch, Timer &timer, Buttons &pedal, MP state);
     void blueButton(Buttons &pedal, Buttons &buttonPlus, Timer &timer);
     void redButton(Buttons &buttonMinus, Buttons &pedal, Timer &timer);
     void pedalCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer);
