@@ -27,18 +27,18 @@ void Buttons::begin()
     setDirection(NORM_OPEN);
 }
 
-void Buttons::motorState(boolean &motorSwitch, boolean state, Timer &timer, boolean &resetMotor)
+void Buttons::motorState(boolean &pedalSwitch, boolean state, Timer &timer, boolean &resetMotor)
 {
-    motorSwitch = state;
+    pedalSwitch = state;
     resetMotor = false;
     timer.readTimer();
 }
 
-void Buttons::totalOFF(Buttons &motor, boolean &manualSwitch, Timer &timer)
+void Buttons::totalOFF(Buttons &pedal, boolean &manualSwitch, Timer &timer)
 {
-    if (motor.motorSwitch)
+    if (pedal.pedalSwitch)
     {
-        motorState(motor.motorSwitch, false, timer, motor.resetMotor);
+        motorState(pedal.pedalSwitch, false, timer, pedal.resetMotor);
     }
     if (manualSwitch)
     {
@@ -46,9 +46,9 @@ void Buttons::totalOFF(Buttons &motor, boolean &manualSwitch, Timer &timer)
     }
 }
 
-void Buttons::blueButton(Buttons &motor, Buttons &buttonPlus, Timer &timer)
+void Buttons::blueButton(Buttons &pedal, Buttons &buttonPlus, Timer &timer)
 {
-    if (!(motor.isClick() || motor.isHold()))
+    if (!(pedal.isClick() || pedal.isHold()))
     {
         tick();
 
@@ -56,10 +56,13 @@ void Buttons::blueButton(Buttons &motor, Buttons &buttonPlus, Timer &timer)
         {
             if (!timer.setTimerFlag)
             {
-                if (isClick())
+                if (isClick() && !buttonPlus.manualSwitch)
                 {
-                    totalOFF(motor, buttonPlus.manualSwitch, timer);
                     timer.setTimerFlag = true;
+                }
+                else if (isClick() && buttonPlus.manualSwitch)
+                {
+                    totalOFF(pedal, buttonPlus.manualSwitch, timer);
                 }
             }
 
@@ -79,10 +82,10 @@ void Buttons::blueButton(Buttons &motor, Buttons &buttonPlus, Timer &timer)
                 timer.startEscape();
             }
 
-            if (isHolded() && !timer.setTimerFlag )
+            if (isHolded() && !timer.setTimerFlag)
             {
                 lock = true;
-                totalOFF(motor, buttonPlus.manualSwitch, timer);
+                totalOFF(pedal, buttonPlus.manualSwitch, timer);
             }
         }
 
@@ -106,18 +109,21 @@ void Buttons::blueButton(Buttons &motor, Buttons &buttonPlus, Timer &timer)
     }
 }
 
-void Buttons::redButton(Buttons &buttonMinus, Buttons &motor, Timer &timer)
+void Buttons::redButton(Buttons &buttonMinus, Buttons &pedal, Timer &timer)
 {
-    if (!buttonMinus.lock && !(motor.isClick() || motor.isHold()))
+    if (!buttonMinus.lock && !(pedal.isClick() || pedal.isHold()))
     {
         tick();
 
         if (!timer.setTimerFlag)
         {
-            if (isClick())
+            if (isClick() && !manualSwitch)
             {
-                totalOFF(motor, manualSwitch, timer);
                 timer.setTimerFlag = true;
+            }
+            else if (isClick() && manualSwitch)
+            {
+                totalOFF(pedal, manualSwitch, timer);
             }
         }
 
@@ -139,19 +145,16 @@ void Buttons::redButton(Buttons &buttonMinus, Buttons &motor, Timer &timer)
 
         if (isHolded() && !timer.setTimerFlag)
         {
-            if (motor.motorSwitch || manualSwitch)
-            {
-                totalOFF(motor, manualSwitch, timer);
-            }
-            else if (!manualSwitch)
+            if (pedal.pedalSwitch || !manualSwitch)
             {
                 manualSwitch = true;
+                motorState(pedal.pedalSwitch, false, timer, resetMotor);
             }
         }
     }
 }
 
-void Buttons::motorCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer)
+void Buttons::pedalCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer)
 {
     if (!buttonMinus.lock)
     {
@@ -160,7 +163,7 @@ void Buttons::motorCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &ti
         {
             timer.resetEscape();
 
-            motorState(motorSwitch, true, timer, resetMotor);
+            motorState(pedalSwitch, true, timer, resetMotor);
 
             if (buttonPlus.manualSwitch)
             {
@@ -177,7 +180,7 @@ void Buttons::motorCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &ti
         {
             if (timer.reduceTimer(timer.counter))
             {
-                motorState(motorSwitch, false, timer, resetMotor);
+                motorState(pedalSwitch, false, timer, resetMotor);
             }
         }
     }

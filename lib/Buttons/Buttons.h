@@ -13,7 +13,7 @@ class Buttons : public GButton
 private:
     boolean resetMotor;
     boolean manualSwitch;
-    boolean motorSwitch;
+    boolean pedalSwitch;
     boolean timerReset;
     boolean minus;
     boolean plus;
@@ -28,11 +28,11 @@ public:
     void begin();
     void setTimer(boolean blue, boolean red);
 
-    void motorState(boolean &motorSwitch, boolean state, Timer &timer, boolean &resetMotor);
-    void totalOFF(Buttons &motor, boolean &manualSwitch, Timer &timer);
-    void blueButton(Buttons &motor, Buttons &buttonPlus, Timer &timer);
-    void redButton(Buttons &buttonMinus, Buttons &motor, Timer &timer);
-    void motorCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer);
+    void motorState(boolean &pedalSwitch, boolean state, Timer &timer, boolean &resetMotor);
+    void totalOFF(Buttons &pedal, boolean &manualSwitch, Timer &timer);
+    void blueButton(Buttons &pedal, Buttons &buttonPlus, Timer &timer);
+    void redButton(Buttons &buttonMinus, Buttons &pedal, Timer &timer);
+    void pedalCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer);
 };
 
 #endif

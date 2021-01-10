@@ -1,6 +1,6 @@
 #define plusPin 5
 #define minusPin 4
-#define motorPin 2
+#define pedalPin 2
 #define vacPin 3
 
 #include <Arduino.h>
@@ -11,7 +11,7 @@
 
 Buttons buttonPlus(plusPin);
 Buttons buttonMinus(minusPin);
-Buttons motor(motorPin);
+Buttons pedal(pedalPin);
 Switchers switchers;
 Screen screen;
 Timer timer;
@@ -24,7 +24,7 @@ void setup()
 
   buttonPlus.begin();
   buttonMinus.begin();
-  motor.begin();
+  pedal.begin();
   delay(100);
 
   switchers.begin(vacPin);
@@ -38,11 +38,11 @@ void setup()
 
 void loop()
 {
-  buttonMinus.blueButton(motor, buttonPlus, timer);
-  buttonPlus.redButton(buttonMinus, motor, timer);
-  motor.motorCommands(buttonMinus, buttonPlus, timer);
+  buttonMinus.blueButton(pedal, buttonPlus, timer);
+  buttonPlus.redButton(buttonMinus, pedal, timer);
+  pedal.pedalCommands(buttonMinus, buttonPlus, timer);
 
-  switchers.switcher(buttonPlus, motor);
+  switchers.switcher(buttonPlus, pedal);
 
   screen.vacuumScreen(switchers, buttonMinus, buttonPlus, timer);
   
