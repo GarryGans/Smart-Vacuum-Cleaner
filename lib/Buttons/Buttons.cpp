@@ -148,7 +148,7 @@ void Buttons::redButton(Buttons &buttonMinus, Buttons &pedal, Timer &timer)
 
         if (isHolded() && !timer.setTimerFlag)
         {
-            if (!manualSwitch && !pedal.pedalSwitch)
+            if (!manualSwitch)
             {
                 manualSwitch = true;
             }

@@ -11,6 +11,7 @@ Timer::~Timer()
 void Timer::readTimer()
 {
     EEPROM.get(couterAddr, counter);
+    
     if (counter == 255)
     {
         counter = defaultCounter;
@@ -101,10 +102,12 @@ boolean Timer::reduceTimer(byte &counter)
             counter--;
         }
     }
+
     if (counter == 0)
     {
         return true;
     }
+
     return false;
 }
 
