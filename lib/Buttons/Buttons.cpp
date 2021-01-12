@@ -27,10 +27,10 @@ void Buttons::begin()
     setDirection(NORM_OPEN);
 }
 
-void Buttons::motorState(boolean &pedalSwitch, boolean state, Timer &timer, boolean &resetMotor)
+void Buttons::motorState(boolean &pedalSwitch, boolean state, Timer &timer, boolean &startTimer)
 {
     pedalSwitch = state;
-    resetMotor = false;
+    startTimer = false;
     timer.readTimer();
 }
 
@@ -38,7 +38,7 @@ void Buttons::totalOFF(Buttons &pedal, boolean &manualSwitch, Timer &timer)
 {
     if (pedal.pedalSwitch)
     {
-        motorState(pedal.pedalSwitch, false, timer, pedal.resetMotor);
+        motorState(pedal.pedalSwitch, false, timer, pedal.startTimer);
     }
     if (manualSwitch)
     {
@@ -58,7 +58,7 @@ void Buttons::SetOrOff(boolean &manualSwitch, Timer &timer, Buttons &pedal, MP s
 
                 if (pedal.pedalSwitch)
                 {
-                    motorState(pedal.pedalSwitch, true, timer, pedal.resetMotor);
+                    motorState(pedal.pedalSwitch, true, timer, pedal.startTimer);
                 }
             }
 
@@ -99,7 +99,7 @@ void Buttons::SetOrOff(boolean &manualSwitch, Timer &timer, Buttons &pedal, MP s
 
         if (pedal.pedalSwitch)
         {
-            pedal.resetMotor = true;
+            pedal.startTimer = true;
         }
     }
 }
@@ -155,7 +155,7 @@ void Buttons::redButton(Buttons &buttonMinus, Buttons &pedal, Timer &timer)
 
             else if (pedal.pedalSwitch)
             {
-                motorState(pedal.pedalSwitch, false, timer, resetMotor);
+                motorState(pedal.pedalSwitch, false, timer, startTimer);
             }
         }
     }
@@ -170,7 +170,7 @@ void Buttons::pedalCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &ti
         {
             timer.resetEscape();
 
-            motorState(pedalSwitch, true, timer, resetMotor);
+            motorState(pedalSwitch, true, timer, startTimer);
 
             if (buttonPlus.manualSwitch)
             {
@@ -178,16 +178,16 @@ void Buttons::pedalCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &ti
             }
         }
 
-        if (isRelease() && !resetMotor)
+        if (isRelease() && !startTimer)
         {
-            resetMotor = true;
+            startTimer = true;
         }
 
-        if (resetMotor)
+        if (startTimer)
         {
             if (timer.reduceTimer(timer.counter))
             {
-                motorState(pedalSwitch, false, timer, resetMotor);
+                motorState(pedalSwitch, false, timer, startTimer);
             }
         }
     }
