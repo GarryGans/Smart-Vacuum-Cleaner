@@ -11,7 +11,7 @@ class Buttons : public GButton
     friend class Screen;
 
 private:
-    boolean resetMotor;
+    boolean startTimer;
     boolean manualSwitch;
     boolean pedalSwitch;
     boolean timerReset;
