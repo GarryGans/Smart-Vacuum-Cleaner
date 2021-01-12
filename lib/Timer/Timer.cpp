@@ -11,16 +11,16 @@ Timer::~Timer()
 void Timer::readTimer()
 {
     EEPROM.get(couterAddr, counter);
-    
+
     if (counter == 255)
     {
         counter = defaultCounter;
     }
 }
 
-void Timer::writeTimer()
+void Timer::maxUnblock()
 {
-    EEPROM.put(couterAddr, counter);
+    unblockCounter = maxUnblockCounter;
 }
 
 boolean Timer::moveReady()
@@ -60,15 +60,17 @@ boolean Timer::blinkReady()
     return blink;
 }
 
+void Timer::writeTimer()
+{
+    EEPROM.put(couterAddr, counter);
+}
+
 void Timer::maxEscape()
 {
     escapeCounter = maxEscapeCounter;
 }
 
-void Timer::maxUnblock()
-{
-    unblockCounter = maxUnblockCounter;
-}
+
 
 void Timer::resetEscape()
 {
@@ -111,8 +113,6 @@ boolean Timer::reduceTimer(byte &counter)
     return false;
 }
 
-
-
 void Timer::changeTimer(boolean minus, boolean plus)
 {
     blinkHide = true;
@@ -130,4 +130,3 @@ void Timer::changeTimer(boolean minus, boolean plus)
 
     counter = constrain(counter, minSetCounter, maxSetCounter);
 }
-
