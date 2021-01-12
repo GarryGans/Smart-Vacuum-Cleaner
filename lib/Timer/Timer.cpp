@@ -70,8 +70,6 @@ void Timer::maxEscape()
     escapeCounter = maxEscapeCounter;
 }
 
-
-
 void Timer::resetEscape()
 {
     if (setTimerFlag)
@@ -80,17 +78,6 @@ void Timer::resetEscape()
         escBar = false;
         maxEscape();
         writeTimer();
-    }
-}
-
-void Timer::startEscape()
-{
-    if (!blinkHide)
-    {
-        if (reduceTimer(escapeCounter) && !escBar)
-        {
-            resetEscape();
-        }
     }
 }
 
@@ -111,6 +98,17 @@ boolean Timer::reduceTimer(byte &counter)
     }
 
     return false;
+}
+
+void Timer::startEscape()
+{
+    if (!blinkHide)
+    {
+        if (reduceTimer(escapeCounter) && !escBar)
+        {
+            resetEscape();
+        }
+    }
 }
 
 void Timer::changeTimer(boolean minus, boolean plus)
