@@ -34,7 +34,7 @@ public:
     void begin();
     void motorState(boolean &pedalSwitch, boolean state, Timer &timer, boolean &resetMotor);
     void totalOFF(Buttons &pedal, boolean &manualSwitch, Timer &timer);
-    void setTimer(boolean &manualSwitch, Timer &timer, Buttons &pedal, MP state);
+    void setTimer(boolean manualSwitch, Timer &timer, Buttons &pedal, MP state);
     void blueButton(Buttons &pedal, Buttons &buttonPlus, Timer &timer);
     void redButton(Buttons &buttonMinus, Buttons &pedal, Timer &timer);
     void pedalCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer);
