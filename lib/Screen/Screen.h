@@ -23,7 +23,7 @@ private:
     int unlock = 68;
     byte WH = 48;
 
-        boolean moveLeft;
+    boolean moveLeft;
     boolean moveRight;
     boolean move;
     boolean restart;

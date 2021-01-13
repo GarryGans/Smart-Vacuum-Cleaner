@@ -8,64 +8,6 @@ Screen::~Screen()
 {
 }
 
-void Screen::logo()
-{
-    firstPage();
-    do
-    {
-        setFont(u8g2_font_nokiafc22_tr);
-        textAlign("smart", centerX, up);
-
-        textAlign("vacuum cleaner", centerX, centerY);
-
-        setFont(u8g2_font_t0_12b_tf);
-        textAlign("Garik 2020", centerX, down);
-    } while (nextPage());
-}
-
-void Screen::mover(byte deep_x)
-{
-    if (move_x > (start_x - deep_x) && moveLeft)
-    {
-        move_x--;
-        if (move_x == start_x - deep_x)
-        {
-            moveRight = true;
-            moveLeft = false;
-        }
-    }
-    else if (move_x < (deep_x + start_x) && moveRight)
-    {
-        move_x++;
-        if (move_x == deep_x + start_x)
-        {
-            moveRight = false;
-            moveLeft = true;
-        }
-    }
-}
-
-void Screen::moveString(Timer &timer, byte deep_x, byte bottom_y, const char *string)
-{
-    if (!move)
-    {
-        move_x = (screenWidth - getStrWidth(string)) / 2;
-        move = true;
-        moveLeft = true;
-        moveRight = false;
-    }
-
-    setCursor(move_x, bottom_y);
-    print(string);
-
-    if (timer.moveReady())
-    {
-        start_x = (screenWidth - getStrWidth(string)) / 2;
-        deep_x = constrain(deep_x, 0, start_x);
-        mover(deep_x);
-    }
-}
-
 void Screen::align(byte W, byte H, PositionX position_x, PositionY position_y)
 {
     switch (position_x)
@@ -123,6 +65,71 @@ void Screen::align(byte W, byte H, PositionX position_x, PositionY position_y)
     }
 }
 
+void Screen::textAlign(const char *string, PositionX position_x, PositionY position_y)
+{
+    align(getStrWidth(string), getMaxCharWidth(), position_x, position_y);
+    setCursor(x, y);
+    print(string);
+}
+
+void Screen::logo()
+{
+    firstPage();
+    do
+    {
+        setFont(u8g2_font_nokiafc22_tr);
+        textAlign("smart", centerX, up);
+
+        textAlign("vacuum cleaner", centerX, centerY);
+
+        setFont(u8g2_font_t0_12b_tf);
+        textAlign("Garik 2020", centerX, down);
+    } while (nextPage());
+}
+
+void Screen::mover(byte deep_x)
+{
+    if (move_x > (start_x - deep_x) && moveLeft)
+    {
+        move_x--;
+        if (move_x == start_x - deep_x)
+        {
+            moveLeft = false;
+            moveRight = true;
+        }
+    }
+    else if (move_x < (deep_x + start_x) && moveRight)
+    {
+        move_x++;
+        if (move_x == deep_x + start_x)
+        {
+            moveRight = false;
+            moveLeft = true;
+        }
+    }
+}
+
+void Screen::moveString(Timer &timer, byte deep_x, byte bottom_y, const char *string)
+{
+    if (!move)
+    {
+        move_x = (screenWidth - getStrWidth(string)) / 2;
+        move = true;
+        moveLeft = true;
+        moveRight = false;
+    }
+
+    setCursor(move_x, bottom_y);
+    print(string);
+
+    if (timer.moveReady())
+    {
+        start_x = (screenWidth - getStrWidth(string)) / 2;
+        deep_x = constrain(deep_x, 0, start_x);
+        mover(deep_x);
+    }
+}
+
 void Screen::digAlign(byte dig, const char *string, PositionX position_x, PositionY position_y)
 {
     if (dig > 9 && dig < 100)
@@ -147,13 +154,6 @@ void Screen::digAlign(byte dig, const char *string, PositionX position_x, Positi
     {
         print(string);
     }
-}
-
-void Screen::textAlign(const char *string, PositionX position_x, PositionY position_y)
-{
-    align(getStrWidth(string), getMaxCharWidth(), position_x, position_y);
-    setCursor(x, y);
-    print(string);
 }
 
 void Screen::frameAlign(byte W, byte H, PositionX position_x, PositionY position_y)
@@ -269,23 +269,22 @@ void Screen::showVacuumState(Switchers &relayState, Buttons &buttonPlus, Timer &
 
 void Screen::vacuumScreen(Switchers &relayState, Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer)
 {
-    
-        firstPage();
-        do
+
+    firstPage();
+    do
+    {
+        if (buttonMinus.lock)
         {
-            if (buttonMinus.lock)
-            {
-                blockScreen(buttonMinus);
-            }
-            else if(timer.setTimerFlag || timer.escBar)
-            {
-                setTimerScreen(timer);
-            }
-            else
-            {
-                showVacuumState(relayState, buttonPlus, timer);
-                bottomLine(buttonMinus, buttonPlus, timer);
-            }
-        } while (nextPage());
-    
+            blockScreen(buttonMinus);
+        }
+        else if (timer.setTimerFlag || timer.escBar)
+        {
+            setTimerScreen(timer);
+        }
+        else
+        {
+            showVacuumState(relayState, buttonPlus, timer);
+            bottomLine(buttonMinus, buttonPlus, timer);
+        }
+    } while (nextPage());
 }
