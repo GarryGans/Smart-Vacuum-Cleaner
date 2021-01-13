@@ -48,11 +48,11 @@ void Buttons::totalOFF(Buttons &pedal, boolean &manualSwitch, Timer &timer)
 
 void Buttons::setTimer(boolean manualSwitch, Timer &timer, Buttons &pedal, MP state)
 {
-    if (!manualSwitch)
+    if (!timer.setTimerFlag)
     {
-        if (!timer.setTimerFlag)
+        if (isClick())
         {
-            if (isClick())
+            if (!manualSwitch)
             {
                 timer.setTimerFlag = true;
 
@@ -62,39 +62,39 @@ void Buttons::setTimer(boolean manualSwitch, Timer &timer, Buttons &pedal, MP st
                 }
             }
         }
+    }
 
-        else if (timer.setTimerFlag)
+    else if (timer.setTimerFlag)
+    {
+        if (isClick() || isHold())
         {
-            if (isClick() || isHold())
+            switch (state)
             {
-                switch (state)
-                {
-                case decrease:
-                    minus = true;
-                    break;
+            case decrease:
+                minus = true;
+                break;
 
-                case increase:
-                    plus = true;
-                    break;
+            case increase:
+                plus = true;
+                break;
 
-                default:
-                    break;
-                }
-
-                timer.changeTimer(minus, plus);
+            default:
+                break;
             }
 
-            if (isRelease())
-            {
-                timer.blinkHide = false;
-            }
+            timer.changeTimer(minus, plus);
+        }
 
-            timer.startEscSet();
+        if (isRelease())
+        {
+            timer.blinkHide = false;
+        }
 
-            if (pedal.pedalSwitch)
-            {
-                pedal.startTimer = true;
-            }
+        timer.startEscSet();
+
+        if (pedal.pedalSwitch)
+        {
+            pedal.startTimer = true;
         }
     }
 }
