@@ -46,7 +46,7 @@ void Buttons::totalOFF(Buttons &pedal, boolean &manualSwitch, Timer &timer)
     }
 }
 
-void Buttons::SetOrOff(boolean &manualSwitch, Timer &timer, Buttons &pedal, MP state)
+void Buttons::setTimer(boolean &manualSwitch, Timer &timer, Buttons &pedal, MP state)
 {
     if (!timer.setTimerFlag)
     {
@@ -60,11 +60,6 @@ void Buttons::SetOrOff(boolean &manualSwitch, Timer &timer, Buttons &pedal, MP s
                 {
                     motorState(pedal.pedalSwitch, true, timer, pedal.startTimer);
                 }
-            }
-
-            else if (manualSwitch)
-            {
-                manualSwitch = false;
             }
         }
     }
@@ -95,7 +90,7 @@ void Buttons::SetOrOff(boolean &manualSwitch, Timer &timer, Buttons &pedal, MP s
             timer.blinkHide = false;
         }
 
-        timer.startEscape();
+        timer.startEscSet();
 
         if (pedal.pedalSwitch)
         {
@@ -112,7 +107,7 @@ void Buttons::blueButton(Buttons &pedal, Buttons &buttonPlus, Timer &timer)
 
         if (!lock)
         {
-            SetOrOff(buttonPlus.manualSwitch, timer, pedal, decrease);
+            setTimer(buttonPlus.manualSwitch, timer, pedal, decrease);
 
             if (isHolded() && !timer.setTimerFlag)
             {
@@ -144,18 +139,23 @@ void Buttons::redButton(Buttons &buttonMinus, Buttons &pedal, Timer &timer)
     {
         tick();
 
-        SetOrOff(manualSwitch, timer, pedal, increase);
+        setTimer(manualSwitch, timer, pedal, increase);
 
         if (isHolded() && !timer.setTimerFlag)
         {
-            if (!manualSwitch)
+            if (pedal.pedalSwitch)
+            {
+                motorState(pedal.pedalSwitch, false, timer, pedal.startTimer);
+            }
+
+            else if (!manualSwitch)
             {
                 manualSwitch = true;
             }
 
-            else if (pedal.pedalSwitch)
+            else if (manualSwitch)
             {
-                motorState(pedal.pedalSwitch, false, timer, startTimer);
+                manualSwitch = false;
             }
         }
     }

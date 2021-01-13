@@ -18,9 +18,9 @@ void Timer::readTimer()
     }
 }
 
-void Timer::maxUnblock()
+void Timer::writeTimer()
 {
-    unblockCounter = maxUnblockCounter;
+    EEPROM.put(couterAddr, counter);
 }
 
 boolean Timer::moveReady()
@@ -60,14 +60,14 @@ boolean Timer::blinkReady()
     return blink;
 }
 
-void Timer::writeTimer()
-{
-    EEPROM.put(couterAddr, counter);
-}
-
 void Timer::maxEscape()
 {
     escapeCounter = maxEscapeCounter;
+}
+
+void Timer::maxUnblock()
+{
+    unblockCounter = maxUnblockCounter;
 }
 
 void Timer::resetEscape()
@@ -100,7 +100,7 @@ boolean Timer::reduceTimer(byte &counter)
     return false;
 }
 
-void Timer::startEscape()
+void Timer::startEscSet()
 {
     if (!blinkHide)
     {
