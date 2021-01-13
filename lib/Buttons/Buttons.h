@@ -20,11 +20,18 @@ private:
     boolean lock;
     boolean unlock;
 
-    enum MP
+    enum Operator
     {
         decrease,
         increase
-    } mp;
+    };
+
+    enum Choice
+    {
+        treadle,
+        manual,
+        off
+    } choice;
 
 public:
     Buttons(int8_t pin);
@@ -33,8 +40,8 @@ public:
 
     void begin();
     void motorState(boolean &pedalSwitch, boolean state, Timer &timer, boolean &resetMotor);
-    void totalOFF(Buttons &pedal, boolean &manualSwitch, Timer &timer);
-    void setTimer(boolean manualSwitch, Timer &timer, Buttons &pedal, MP state);
+    void choicePedalManual(boolean &pedalSwitch, boolean &startTimer, boolean &manualSwitch, Timer &timer, Choice choice);
+    void setTimer(boolean manualSwitch, Timer &timer, Buttons &pedal, Operator state);
     void blueButton(Buttons &pedal, Buttons &buttonPlus, Timer &timer);
     void redButton(Buttons &buttonMinus, Buttons &pedal, Timer &timer);
     void pedalCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer);

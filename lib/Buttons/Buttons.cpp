@@ -34,19 +34,31 @@ void Buttons::motorState(boolean &pedalSwitch, boolean state, Timer &timer, bool
     timer.readTimer();
 }
 
-void Buttons::totalOFF(Buttons &pedal, boolean &manualSwitch, Timer &timer)
+void Buttons::choicePedalManual(boolean &pedalSwitch, boolean &startTimer, boolean &manualSwitch, Timer &timer, Choice choice)
 {
-    if (pedal.pedalSwitch)
+    switch (choice)
     {
-        motorState(pedal.pedalSwitch, false, timer, pedal.startTimer);
-    }
-    if (manualSwitch)
-    {
+    case treadle:
+        motorState(pedalSwitch, true, timer, startTimer);
         manualSwitch = false;
+        break;
+
+    case manual:
+        manualSwitch = true;
+        motorState(pedalSwitch, false, timer, startTimer);
+        break;
+
+    case off:
+        motorState(pedalSwitch, false, timer, startTimer);
+        manualSwitch = false;
+        break;
+
+    default:
+        break;
     }
 }
 
-void Buttons::setTimer(boolean manualSwitch, Timer &timer, Buttons &pedal, MP state)
+void Buttons::setTimer(boolean manualSwitch, Timer &timer, Buttons &pedal, Operator state)
 {
     if (!timer.setTimerFlag)
     {
@@ -112,7 +124,7 @@ void Buttons::blueButton(Buttons &pedal, Buttons &buttonPlus, Timer &timer)
             if (isHolded() && !timer.setTimerFlag)
             {
                 lock = true;
-                totalOFF(pedal, buttonPlus.manualSwitch, timer);
+                choicePedalManual(pedal.pedalSwitch, pedal.startTimer, buttonPlus.manualSwitch, timer, off);
             }
         }
 
@@ -169,13 +181,7 @@ void Buttons::pedalCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &ti
         if (isClick() || isHold())
         {
             timer.resetEscape();
-
-            motorState(pedalSwitch, true, timer, startTimer);
-
-            if (buttonPlus.manualSwitch)
-            {
-                buttonPlus.manualSwitch = false;
-            }
+            choicePedalManual(pedalSwitch, startTimer, buttonPlus.manualSwitch, timer, treadle);
         }
 
         if (isRelease() && !startTimer)
