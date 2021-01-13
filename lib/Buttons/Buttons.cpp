@@ -42,7 +42,7 @@ void Buttons::choicePedalManual(boolean &pedalSwitch, boolean &startTimer, boole
         motorState(pedalSwitch, true, timer, startTimer);
         manualSwitch = false;
         break;
-        
+
     case off:
         motorState(pedalSwitch, false, timer, startTimer);
         manualSwitch = false;
@@ -65,7 +65,8 @@ void Buttons::setTimer(boolean manualSwitch, Timer &timer, Buttons &pedal, Opera
 
                 if (pedal.pedalSwitch)
                 {
-                    motorState(pedal.pedalSwitch, true, timer, pedal.startTimer);
+                    pedal.startTimer = false;
+                    timer.readTimer();
                 }
             }
         }
