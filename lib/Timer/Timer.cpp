@@ -81,6 +81,12 @@ void Timer::resetEscape()
     }
 }
 
+void Timer::resetTimer()
+{
+    startTimer = false;
+    readTimer();
+}
+
 boolean Timer::reduceTimer(byte &counter)
 {
     if (millis() - prewCounterMillis >= secMillis)

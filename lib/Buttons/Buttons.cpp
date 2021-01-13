@@ -27,24 +27,23 @@ void Buttons::begin()
     setDirection(NORM_OPEN);
 }
 
-void Buttons::motorState(boolean &pedalSwitch, boolean state, Timer &timer, boolean &startTimer)
+void Buttons::motorState(boolean &pedalSwitch, boolean state, Timer &timer)
 {
     pedalSwitch = state;
-    startTimer = false;
-    timer.readTimer();
+    timer.resetTimer();
 }
 
-void Buttons::choicePedalManual(boolean &pedalSwitch, boolean &startTimer, boolean &manualSwitch, Timer &timer, Choice choice)
+void Buttons::choicePedalManual(boolean &pedalSwitch, boolean &manualSwitch, Timer &timer, Choice choice)
 {
     switch (choice)
     {
     case treadle:
-        motorState(pedalSwitch, true, timer, startTimer);
+        motorState(pedalSwitch, true, timer);
         manualSwitch = false;
         break;
 
     case off:
-        motorState(pedalSwitch, false, timer, startTimer);
+        motorState(pedalSwitch, false, timer);
         manualSwitch = false;
         break;
 
@@ -65,8 +64,7 @@ void Buttons::setTimer(boolean manualSwitch, Timer &timer, Buttons &pedal, Opera
 
                 if (pedal.pedalSwitch)
                 {
-                    pedal.startTimer = false;
-                    timer.readTimer();
+                    timer.resetTimer();
                 }
             }
         }
@@ -102,7 +100,7 @@ void Buttons::setTimer(boolean manualSwitch, Timer &timer, Buttons &pedal, Opera
 
         if (pedal.pedalSwitch)
         {
-            pedal.startTimer = true;
+            timer.startTimer = true;
         }
     }
 }
@@ -120,7 +118,7 @@ void Buttons::blueButton(Buttons &pedal, Buttons &buttonPlus, Timer &timer)
             if (isHolded() && !timer.setTimerFlag)
             {
                 lock = true;
-                choicePedalManual(pedal.pedalSwitch, pedal.startTimer, buttonPlus.manualSwitch, timer, off);
+                choicePedalManual(pedal.pedalSwitch, buttonPlus.manualSwitch, timer, off);
             }
         }
 
@@ -153,7 +151,7 @@ void Buttons::redButton(Buttons &buttonMinus, Buttons &pedal, Timer &timer)
         {
             if (pedal.pedalSwitch || manualSwitch)
             {
-                choicePedalManual(pedal.pedalSwitch, pedal.startTimer, manualSwitch, timer, off);
+                choicePedalManual(pedal.pedalSwitch, manualSwitch, timer, off);
             }
 
             else if (!manualSwitch)
@@ -172,19 +170,19 @@ void Buttons::pedalCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &ti
         if (isClick() || isHold())
         {
             timer.resetEscape();
-            choicePedalManual(pedalSwitch, startTimer, buttonPlus.manualSwitch, timer, treadle);
+            choicePedalManual(pedalSwitch, buttonPlus.manualSwitch, timer, treadle);
         }
 
-        if (isRelease() && !startTimer)
+        if (isRelease() && !timer.startTimer)
         {
-            startTimer = true;
+            timer.startTimer = true;
         }
 
-        if (startTimer)
+        if (timer.startTimer)
         {
             if (timer.reduceTimer(timer.counter))
             {
-                motorState(pedalSwitch, false, timer, startTimer);
+                motorState(pedalSwitch, false, timer);
             }
         }
     }

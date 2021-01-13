@@ -17,6 +17,7 @@ private:
     boolean escBar;
     boolean blinkHide;
     boolean setTimerFlag;
+    boolean startTimer;
 
     const byte maxEscapeCounter = 5;
     byte escapeCounter = maxEscapeCounter;
@@ -41,12 +42,13 @@ public:
 
     void maxEscape();
     void maxUnblock();
-    boolean reduceTimer(byte &counter);
+    
 
     boolean moveReady();
     boolean blinkReady();
     void resetEscape();
-
+    void resetTimer();
+    boolean reduceTimer(byte &counter);
     void startEscSet();
     void changeTimer(boolean minus, boolean plus);
     void readTimer();

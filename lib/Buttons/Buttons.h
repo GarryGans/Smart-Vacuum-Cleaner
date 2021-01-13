@@ -11,10 +11,8 @@ class Buttons : public GButton
     friend class Screen;
 
 private:
-    boolean startTimer;
     boolean manualSwitch;
     boolean pedalSwitch;
-    boolean timerReset;
     boolean minus;
     boolean plus;
     boolean lock;
@@ -38,8 +36,8 @@ public:
     ~Buttons();
 
     void begin();
-    void motorState(boolean &pedalSwitch, boolean state, Timer &timer, boolean &resetMotor);
-    void choicePedalManual(boolean &pedalSwitch, boolean &startTimer, boolean &manualSwitch, Timer &timer, Choice choice);
+    void motorState(boolean &pedalSwitch, boolean state, Timer &timer);
+    void choicePedalManual(boolean &pedalSwitch, boolean &manualSwitch, Timer &timer, Choice choice);
     void setTimer(boolean manualSwitch, Timer &timer, Buttons &pedal, Operator state);
     void blueButton(Buttons &pedal, Buttons &buttonPlus, Timer &timer);
     void redButton(Buttons &buttonMinus, Buttons &pedal, Timer &timer);
