@@ -167,6 +167,7 @@ void Buttons::pedalCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &ti
     if (!buttonMinus.lock)
     {
         tick();
+        
         if (isClick() || isHold())
         {
             timer.resetEscape();
