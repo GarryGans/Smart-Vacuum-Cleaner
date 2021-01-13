@@ -22,7 +22,7 @@ private:
     byte escapeCounter = maxEscapeCounter;
     const byte maxUnblockCounter = 2;
     byte unblockCounter = maxUnblockCounter;
-    
+    byte counter = 10;
 
     const byte defaultCounter = 10;
     const byte minSetCounter = 1;
@@ -36,8 +36,6 @@ private:
     unsigned long prewEscapeMillis;
 
 public:
-    byte counter = 10;
-
     Timer(/* args */);
     ~Timer();
 
