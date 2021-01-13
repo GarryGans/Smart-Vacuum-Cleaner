@@ -155,19 +155,14 @@ void Buttons::redButton(Buttons &buttonMinus, Buttons &pedal, Timer &timer)
 
         if (isHolded() && !timer.setTimerFlag)
         {
-            if (pedal.pedalSwitch)
+            if (pedal.pedalSwitch || manualSwitch)
             {
-                motorState(pedal.pedalSwitch, false, timer, pedal.startTimer);
+                choicePedalManual(pedal.pedalSwitch, pedal.startTimer, manualSwitch, timer, off);
             }
 
             else if (!manualSwitch)
             {
                 manualSwitch = true;
-            }
-
-            else if (manualSwitch)
-            {
-                manualSwitch = false;
             }
         }
     }
