@@ -223,6 +223,7 @@ void Screen::blockScreen(Buttons &buttonMinus)
     {
         icon = lock;
     }
+
     if (buttonMinus.unlock)
     {
         icon = unlock;
@@ -235,14 +236,14 @@ void Screen::bottomLine(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer)
 {
     setFont(u8g2_font_pixelmordred_tf);
 
-    if (buttonMinus.isClick() || buttonMinus.isHold() || buttonPlus.isClick() || buttonPlus.isHold())
-    {
-        move = false;
-    }
-
     if (buttonPlus.manualSwitch)
     {
         moveString(timer, deep_x, bottom_y, "manual mode");
+    }
+
+    else
+    {
+        move = false;
     }
 }
 
@@ -264,6 +265,7 @@ void Screen::showVacuumState(Switchers &relayState, Buttons &buttonPlus, Timer &
         position_x = centerX;
         position_y = centerY;
     }
+
     textAlign(vacState[relayState.relaySW], position_x, position_y);
 }
 
@@ -277,10 +279,12 @@ void Screen::vacuumScreen(Switchers &relayState, Buttons &buttonMinus, Buttons &
         {
             blockScreen(buttonMinus);
         }
+
         else if (timer.setTimerFlag || timer.escBar)
         {
             setTimerScreen(timer);
         }
+        
         else
         {
             showVacuumState(relayState, buttonPlus, timer);
