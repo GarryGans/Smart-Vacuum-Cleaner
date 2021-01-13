@@ -42,12 +42,7 @@ void Buttons::choicePedalManual(boolean &pedalSwitch, boolean &startTimer, boole
         motorState(pedalSwitch, true, timer, startTimer);
         manualSwitch = false;
         break;
-
-    case manual:
-        manualSwitch = true;
-        motorState(pedalSwitch, false, timer, startTimer);
-        break;
-
+        
     case off:
         motorState(pedalSwitch, false, timer, startTimer);
         manualSwitch = false;

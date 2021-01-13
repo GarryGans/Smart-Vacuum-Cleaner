@@ -29,7 +29,6 @@ private:
     enum Choice
     {
         treadle,
-        manual,
         off
     } choice;
 
