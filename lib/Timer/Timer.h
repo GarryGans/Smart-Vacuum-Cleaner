@@ -23,7 +23,7 @@ private:
     byte escapeCounter = maxEscapeCounter;
     const byte maxUnblockCounter = 2;
     byte unblockCounter = maxUnblockCounter;
-    byte counter = 10;
+    byte counter;
 
     const byte defaultCounter = 10;
     const byte minSetCounter = 1;
