@@ -105,7 +105,7 @@ void Buttons::setTimer(boolean manualSwitch, Timer &timer, Buttons &pedal, Opera
     }
 }
 
-void Buttons::blueButton(Buttons &pedal, Buttons &buttonPlus, Timer &timer)
+void Buttons::blueButton(Buttons &buttonPlus, Buttons &pedal, Timer &timer)
 {
     if (!(pedal.isClick() || pedal.isHold()))
     {
@@ -167,7 +167,7 @@ void Buttons::pedalCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &ti
     if (!buttonMinus.lock)
     {
         tick();
-        
+
         if (isClick() || isHold())
         {
             timer.resetEscape();

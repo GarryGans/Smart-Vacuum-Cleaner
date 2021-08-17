@@ -38,7 +38,7 @@ void setup()
 
 void loop()
 {
-  buttonMinus.blueButton(pedal, buttonPlus, timer);
+  buttonMinus.blueButton(buttonPlus, pedal, timer);
   buttonPlus.redButton(buttonMinus, pedal, timer);
   pedal.pedalCommands(buttonMinus, buttonPlus, timer);
 

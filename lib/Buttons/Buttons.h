@@ -39,7 +39,7 @@ public:
     void motorState(boolean &pedalSwitch, boolean state, Timer &timer);
     void choicePedalManual(boolean &pedalSwitch, boolean &manualSwitch, Timer &timer, Choice choice);
     void setTimer(boolean manualSwitch, Timer &timer, Buttons &pedal, Operator state);
-    void blueButton(Buttons &pedal, Buttons &buttonPlus, Timer &timer);
+    void blueButton(Buttons &buttonPlus, Buttons &pedal, Timer &timer);
     void redButton(Buttons &buttonMinus, Buttons &pedal, Timer &timer);
     void pedalCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer);
 };
