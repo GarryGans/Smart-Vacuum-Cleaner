@@ -26,7 +26,6 @@ private:
     boolean moveLeft;
     boolean moveRight;
     boolean move;
-    boolean restart;
 
     const byte deep_x = 30;
     byte start_x;
