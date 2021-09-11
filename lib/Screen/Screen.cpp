@@ -1,6 +1,6 @@
 #include "Screen.h"
 
-Screen::Screen(/* args */) : U8G2_SH1106_128X64_NONAME_1_HW_I2C(U8G2_R0, /* reset=*/U8X8_PIN_NONE)
+Screen::Screen() : U8G2_SH1106_128X64_NONAME_1_HW_I2C(U8G2_R0, /* reset=*/U8X8_PIN_NONE)
 {
 }
 
@@ -193,19 +193,10 @@ void Screen::textAlign(const char *str, PosX pos_x, PosY pos_y)
     print(str);
 }
 
-void Screen::logo()
+void Screen::iconAlign(int icon, byte iconWH, PosX pos_x, PosY pos_y)
 {
-    firstPage();
-    do
-    {
-        setFont(u8g2_font_nokiafc22_tr);
-        textAlign("Smart", PosX::center, PosY::upHalf);
-
-        textAlign("Vacuum Cleaner", PosX::center, PosY::center);
-
-        setFont(u8g2_font_t0_12b_tf);
-        textAlign("Garik 2020", PosX::center, PosY::downSpace);
-    } while (nextPage());
+    align(iconWH, iconWH, pos_x, pos_y);
+    drawGlyph(x, y, icon);
 }
 
 void Screen::escapeBar(Timer &timer)
@@ -233,26 +224,29 @@ void Screen::blinkFrame(Timer &timer)
     }
 }
 
-void Screen::setTimerScreen(Timer &timer)
+void Screen::logo()
 {
-    if (timer.setTimerFlag)
+    firstPage();
+    do
     {
-        firstPage();
-        do
-        {
-            setFont(u8g2_font_courB18_tr);
-            blinkFrame(timer);
-            digAlign(timer.counter, PosX::center, PosY::center);
+        setFont(u8g2_font_nokiafc22_tr);
+        textAlign("Smart", PosX::center, PosY::upHalf);
 
-            escapeBar(timer);
-        } while (nextPage());
-    }
+        textAlign("Vacuum Cleaner", PosX::center, PosY::center);
+
+        setFont(u8g2_font_t0_12b_tf);
+        textAlign("Garik 2020", PosX::center, PosY::downSpace);
+    } while (nextPage());
 }
 
-void Screen::iconAlign(int icon, byte iconWH, PosX pos_x, PosY pos_y)
+void Screen::setTimerScreen(Timer &timer)
 {
-    align(iconWH, iconWH, pos_x, pos_y);
-    drawGlyph(x, y, icon);
+    setFont(u8g2_font_courB18_tr);
+
+    blinkFrame(timer);
+    digAlign(timer.counter, PosX::center, PosY::center);
+
+    escapeBar(timer);
 }
 
 void Screen::bottomLine(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer)
@@ -270,17 +264,17 @@ void Screen::bottomLine(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer)
     }
 }
 
-void Screen::showVacuumState(Switchers &relayState, Buttons &buttonPlus, Timer &timer)
+void Screen::vacuumState(Switchers &relayState, Buttons &buttonPlus, Timer &timer)
 {
     setFont(u8g2_font_HelvetiPixelOutline_tr);
 
     if (relayState.relaySW && !buttonPlus.manualSwitch)
     {
-        pos_x = PosX::leftSpace;
-        pos_y = PosY::upSpace;
+        pos_x = PosX::leftHalf;
+        pos_y = PosY::upHalf;
 
         setFont(u8g2_font_courB18_tr);
-        digStringAlign(timer.counter, textCounter, PosX::rightSpace, PosY::downSpace);
+        digStringAlign(timer.counter, textCounter, PosX::rightHalf, PosY::downHalf);
     }
 
     else
@@ -292,19 +286,19 @@ void Screen::showVacuumState(Switchers &relayState, Buttons &buttonPlus, Timer &
     textAlign(vacState[relayState.relaySW], pos_x, pos_y);
 }
 
-void Screen::vacuumScreen(Switchers &relayState, Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer)
+void Screen::screens(Switchers &relayState, Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer)
 {
     firstPage();
     do
     {
-        if (timer.setTimerFlag || timer.escBar)
+        if (timer.setTimerFlag)
         {
             setTimerScreen(timer);
         }
 
         else
         {
-            showVacuumState(relayState, buttonPlus, timer);
+            vacuumState(relayState, buttonPlus, timer);
             bottomLine(buttonMinus, buttonPlus, timer);
         }
     } while (nextPage());

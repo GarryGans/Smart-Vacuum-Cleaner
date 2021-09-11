@@ -43,5 +43,5 @@ void loop()
 
   switchers.switcher(buttonPlus, pedal);
 
-  screen.vacuumScreen(switchers, buttonMinus, buttonPlus, timer);
+  screen.screens(switchers, buttonMinus, buttonPlus, timer);
 }

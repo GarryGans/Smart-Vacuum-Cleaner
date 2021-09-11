@@ -17,7 +17,7 @@ private:
     boolean relaySW;
 
 public:
-    Switchers(/* args */);
+    Switchers();
     ~Switchers();
 
     void begin(byte vacuumPin);

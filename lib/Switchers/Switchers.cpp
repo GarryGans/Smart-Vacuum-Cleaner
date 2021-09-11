@@ -1,6 +1,6 @@
 #include "Switchers.h"
 
-Switchers::Switchers(/* args */)
+Switchers::Switchers()
 {
 }
 

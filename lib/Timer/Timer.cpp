@@ -1,6 +1,6 @@
 #include "Timer.h"
 
-Timer::Timer(/* args */)
+Timer::Timer()
 {
 }
 
@@ -77,18 +77,18 @@ void Timer::resetTimer()
     readTimer();
 }
 
-boolean Timer::reduceTimer()
+boolean Timer::reduceTimer(byte &counter)
 {
     if (millis() - prewCounterMillis >= secMillis)
     {
         prewCounterMillis = millis();
-        if (escapeCounter > 0)
+        if (counter > 0)
         {
-            escapeCounter--;
+            counter--;
         }
     }
 
-    if (escapeCounter == 0)
+    if (counter == 0)
     {
         return true;
     }
@@ -100,7 +100,7 @@ void Timer::startEscSet()
 {
     if (!blinkHide)
     {
-        if (reduceTimer() && !escBar)
+        if (reduceTimer(escapeCounter) && !escBar)
         {
             resetEscape();
         }

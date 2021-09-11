@@ -4,10 +4,6 @@ Buttons::Buttons(int8_t pin) : GButton(pin)
 {
 }
 
-Buttons::Buttons()
-{
-}
-
 Buttons::~Buttons()
 {
 }
@@ -15,7 +11,7 @@ Buttons::~Buttons()
 void Buttons::begin()
 {
     setDebounce(50);      // настройка антидребезга (по умолчанию 80 мс)
-    setTimeout(1000);     // настройка таймаута на удержание (по умолчанию 500 мс)
+    setTimeout(300);      // настройка таймаута на удержание (по умолчанию 500 мс)
     setClickTimeout(200); // настройка таймаута между кликами (по умолчанию 300 мс)
 
     // HIGH_PULL - кнопка подключена к GND, пин подтянут к VCC (PIN --- КНОПКА --- GND)
@@ -100,7 +96,7 @@ void Buttons::redButton(Buttons &buttonMinus, Buttons &pedal, Timer &timer)
 
         setTimer(manualSwitch, timer, pedal, increase);
 
-        if (isClick() && buttonMinus.isClick() && !manualSwitch)
+        if (buttonMinus.isHold() && isHold() && !manualSwitch)
         {
             manualSwitch = true;
             pedal.pedalSwitch = false;
@@ -115,14 +111,14 @@ void Buttons::pedalCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &ti
     if (isClick() || isHold())
     {
         pedalSwitch = true;
-        
+
         timer.resetEscape();
 
         timer.resetTimer();
 
-        if (manualSwitch)
+        if (buttonPlus.manualSwitch)
         {
-            manualSwitch = false;
+            buttonPlus.manualSwitch = false;
         }
     }
 
@@ -133,7 +129,7 @@ void Buttons::pedalCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &ti
 
     if (timer.startTimer)
     {
-        if (timer.reduceTimer())
+        if (timer.reduceTimer(timer.counter))
         {
             pedalSwitch = false;
             timer.resetTimer();

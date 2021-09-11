@@ -24,7 +24,6 @@ private:
 
 public:
     Buttons(int8_t pin);
-    Buttons();
     ~Buttons();
 
     void begin();

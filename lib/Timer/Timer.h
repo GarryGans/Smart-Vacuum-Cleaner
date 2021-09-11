@@ -36,14 +36,14 @@ private:
     unsigned long prewEscapeMillis;
 
 public:
-    Timer(/* args */);
+    Timer();
     ~Timer();
 
     boolean moveReady();
     boolean blinkReady();
     void resetEscape();
     void resetTimer();
-    boolean reduceTimer();
+    boolean reduceTimer(byte &counter);
     void startEscSet();
     void changeTimer(boolean minus, boolean plus);
     void readTimer();
