@@ -137,7 +137,7 @@ void Buttons::pedalCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &ti
 
     if (timer.startTimer)
     {
-        if (timer.reduceTimer(timer.counter))
+        if (timer.reduceTimer())
         {
             motorState(pedalSwitch, false, timer);
         }

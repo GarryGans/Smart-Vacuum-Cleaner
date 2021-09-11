@@ -87,18 +87,18 @@ void Timer::resetTimer()
     readTimer();
 }
 
-boolean Timer::reduceTimer(byte &counter)
+boolean Timer::reduceTimer()
 {
     if (millis() - prewCounterMillis >= secMillis)
     {
         prewCounterMillis = millis();
-        if (counter > 0)
+        if (escapeCounter > 0)
         {
-            counter--;
+            escapeCounter--;
         }
     }
 
-    if (counter == 0)
+    if (escapeCounter == 0)
     {
         return true;
     }
@@ -110,7 +110,7 @@ void Timer::startEscSet()
 {
     if (!blinkHide)
     {
-        if (reduceTimer(escapeCounter) && !escBar)
+        if (reduceTimer() && !escBar)
         {
             resetEscape();
         }
