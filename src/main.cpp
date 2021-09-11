@@ -32,7 +32,7 @@ void setup()
   screen.begin();
   delay(100);
   screen.logo();
-  delay(3000);
+  delay(500);
 }
 
 void loop()
