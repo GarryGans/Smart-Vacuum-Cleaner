@@ -60,23 +60,13 @@ boolean Timer::blinkReady()
     return blink;
 }
 
-void Timer::maxEscape()
-{
-    escapeCounter = maxEscapeCounter;
-}
-
-void Timer::maxUnblock()
-{
-    unblockCounter = maxUnblockCounter;
-}
-
 void Timer::resetEscape()
 {
     if (setTimerFlag)
     {
         setTimerFlag = false;
         escBar = false;
-        maxEscape();
+        escapeCounter = maxEscapeCounter;
         writeTimer();
     }
 }
@@ -120,7 +110,7 @@ void Timer::startEscSet()
 void Timer::changeTimer(boolean minus, boolean plus)
 {
     blinkHide = true;
-    maxEscape();
+    escapeCounter = maxEscapeCounter;
 
     if (minus)
     {

@@ -21,8 +21,7 @@ private:
 
     const byte maxEscapeCounter = 5;
     byte escapeCounter = maxEscapeCounter;
-    const byte maxUnblockCounter = 2;
-    byte unblockCounter = maxUnblockCounter;
+
     byte counter;
 
     const byte defaultCounter = 10;
@@ -39,10 +38,6 @@ private:
 public:
     Timer(/* args */);
     ~Timer();
-
-    void maxEscape();
-    void maxUnblock();
-    
 
     boolean moveReady();
     boolean blinkReady();

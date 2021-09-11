@@ -28,7 +28,6 @@ public:
     ~Buttons();
 
     void begin();
-    void motorState(boolean &pedalSwitch, boolean state, Timer &timer);
     void setTimer(boolean &manualSwitch, Timer &timer, Buttons &pedal, Operator state);
     void blueButton(Buttons &buttonPlus, Buttons &pedal, Timer &timer);
     void redButton(Buttons &buttonMinus, Buttons &pedal, Timer &timer);

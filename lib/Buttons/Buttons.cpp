@@ -27,12 +27,6 @@ void Buttons::begin()
     setDirection(NORM_OPEN);
 }
 
-void Buttons::motorState(boolean &pedalSwitch, boolean state, Timer &timer)
-{
-    pedalSwitch = state;
-    timer.resetTimer();
-}
-
 void Buttons::setTimer(boolean &manualSwitch, Timer &timer, Buttons &pedal, Operator state)
 {
     if (manualSwitch)
@@ -120,9 +114,11 @@ void Buttons::pedalCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &ti
 
     if (isClick() || isHold())
     {
+        pedalSwitch = true;
+        
         timer.resetEscape();
 
-        motorState(pedalSwitch, true, timer);
+        timer.resetTimer();
 
         if (manualSwitch)
         {
@@ -139,7 +135,8 @@ void Buttons::pedalCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &ti
     {
         if (timer.reduceTimer())
         {
-            motorState(pedalSwitch, false, timer);
+            pedalSwitch = false;
+            timer.resetTimer();
         }
     }
 }
