@@ -8,56 +8,98 @@ Screen::~Screen()
 {
 }
 
-void Screen::align(byte W, byte H, PositionX position_x, PositionY position_y)
+void Screen::align(byte W, byte H, PosX pos_x, PosY pos_y)
 {
-    switch (position_x)
+    switch (pos_x)
     {
-    case centerX:
+    case PosX::center:
         x = (screenWidth - W) / 2;
         break;
 
-    case left:
+    case PosX::left:
+        x = 0;
+        break;
+
+    case PosX::leftSpace:
+        x = W / 8;
+        break;
+
+    case PosX::leftHalf:
         x = (screenWidth / 2 - W) / 2;
         break;
 
-    case right:
+    case PosX::right:
+        x = screenWidth - W;
+        break;
+
+    case PosX::rightSpace:
+        x = screenWidth - (W + W / 8);
+        break;
+
+    case PosX::rightHalf:
         x = (screenWidth + screenWidth / 2 - W) / 2;
         break;
 
-    case customX:
+    case PosX::custom:
+        x = setX;
         break;
 
     default:
         break;
     }
 
-    switch (position_y)
+    switch (pos_y)
     {
-    case centerY:
+    case PosY::center:
         y = (screenHeight + H) / 2;
         break;
 
-    case up:
+    case PosY::up:
+        y = H;
+        break;
+
+    case PosY::upSpace:
+        y = H + H / 4;
+        break;
+
+    case PosY::upHalf:
         y = (screenHeight / 2 - H) / 2 + H;
         break;
 
-    case down:
+    case PosY::down:
+        y = screenHeight;
+        break;
+
+    case PosY::downSpace:
+        y = screenHeight - H / 4;
+        break;
+
+    case PosY::downHalf:
         y = (screenHeight + screenHeight / 2 - H) / 2 + H;
         break;
 
-    case upFrame:
-        y = (screenHeight / 2 - H) / 2;
-        break;
-
-    case downFrame:
-        y = (screenHeight + screenHeight / 2 - H) / 2;
-        break;
-
-    case centerFrame:
+    case PosY::centerFrame:
         y = (screenHeight - H) / 2;
         break;
 
-    case customY:
+    case PosY::upFrame:
+        y = 0;
+        break;
+
+    case PosY::upFrameHalf:
+        y = (screenHeight / 2 - H) / 2;
+        break;
+
+    case PosY::downFrame:
+        y = screenHeight - H;
+        break;
+
+    case PosY::downFrameHalf:
+        y = (screenHeight + screenHeight / 2 - H) / 2;
+        break;
+
+    case PosY::custom:
+        y = setY;
         break;
 
     default:
@@ -65,9 +107,9 @@ void Screen::align(byte W, byte H, PositionX position_x, PositionY position_y)
     }
 }
 
-void Screen::textAlign(const char *string, PositionX position_x, PositionY position_y)
+void Screen::textAlign(const char *string, PosX pos_x, PosY pos_y)
 {
-    align(getStrWidth(string), getMaxCharWidth(), position_x, position_y);
+    align(getStrWidth(string), getMaxCharWidth(), pos_x, pos_y);
     setCursor(x, y);
     print(string);
 }
@@ -130,7 +172,7 @@ void Screen::moveString(Timer &timer, byte deep_x, byte bottom_y, const char *st
     }
 }
 
-void Screen::digAlign(byte dig, const char *string, PositionX position_x, PositionY position_y)
+void Screen::digAlign(byte dig, const char *string, PosX pos_x, PosY pos_y)
 {
     if (dig > 9 && dig < 100)
     {
@@ -146,7 +188,7 @@ void Screen::digAlign(byte dig, const char *string, PositionX position_x, Positi
         digWidth += getStrWidth(string);
     }
 
-    align(digWidth, getMaxCharWidth(), position_x, position_y);
+    align(digWidth, getMaxCharWidth(), pos_x, pos_y);
     setCursor(x, y);
 
     print(dig);
@@ -156,9 +198,9 @@ void Screen::digAlign(byte dig, const char *string, PositionX position_x, Positi
     }
 }
 
-void Screen::frameAlign(byte W, byte H, PositionX position_x, PositionY position_y)
+void Screen::frameAlign(byte W, byte H, PosX pos_x, PosY pos_y)
 {
-    align(W, H, position_x, position_y);
+    align(W, H, pos_x, pos_y);
     drawFrame(x, y, W, H);
 }
 
@@ -209,9 +251,9 @@ void Screen::setTimerScreen(Timer &timer)
     }
 }
 
-void Screen::iconAlign(int icon, byte iconWH, PositionX position_x, PositionY position_y)
+void Screen::iconAlign(int icon, byte iconWH, PosX pos_x, PosY pos_y)
 {
-    align(iconWH, iconWH, position_x, position_y);
+    align(iconWH, iconWH, pos_x, pos_y);
     drawGlyph(x, y, icon);
 }
 
@@ -236,8 +278,8 @@ void Screen::showVacuumState(Switchers &relayState, Buttons &buttonPlus, Timer &
 
     if (relayState.relaySW && !buttonPlus.manualSwitch)
     {
-        position_x = left;
-        position_y = up;
+        pos_x = left;
+        pos_y = up;
 
         setFont(u8g2_font_courB18_tr);
         digAlign(timer.counter, textCounter, right, down);
@@ -245,11 +287,11 @@ void Screen::showVacuumState(Switchers &relayState, Buttons &buttonPlus, Timer &
 
     else
     {
-        position_x = centerX;
-        position_y = centerY;
+        pos_x = centerX;
+        pos_y = centerY;
     }
 
-    textAlign(vacState[relayState.relaySW], position_x, position_y);
+    textAlign(vacState[relayState.relaySW], pos_x, pos_y);
 }
 
 void Screen::vacuumScreen(Switchers &relayState, Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer)

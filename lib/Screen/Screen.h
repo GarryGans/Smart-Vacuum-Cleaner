@@ -32,27 +32,38 @@ private:
     byte width;
     byte x;
     byte y;
+    byte setX;
+    byte setY;
     byte blockWidth;
 
-    enum PositionX
+    enum class PosX
     {
-        centerX,
+        center,
         left,
+        leftSpace,
+        leftHalf,
         right,
-        customX
-    } position_x;
+        rightSpace,
+        rightHalf,
+        custom
+    } pos_x;
 
-    enum PositionY
+    enum class PosY
     {
-        centerY,
+        center,
         up,
+        upSpace,
+        upHalf,
         down,
-        custom,
-        centerFrame, 
+        downSpace,
+        downHalf,
+        centerFrame,
         upFrame,
-        downFrame, 
-        customY
-    } position_y;
+        upFrameHalf,
+        downFrame,
+        downFrameHalf,
+        custom
+    } pos_y;
 
 public:
     Screen(/* args */);
@@ -60,11 +71,11 @@ public:
 
     void showBlink(Timer &timer);
     void logo();
-    void align(byte WH, byte H, PositionX position_x, PositionY position_y);
-    void frameAlign(byte W, byte H, PositionX position_x, PositionY position_y);
-    void iconAlign(int icon, byte iconWH, PositionX position_x, PositionY position_y);
-    void digAlign(byte dig, const char *string, PositionX position_x, PositionY position_y);
-    void textAlign(const char *string, PositionX position_x, PositionY position_y);
+    void align(byte WH, byte H, PosX pos_x, PosY pos_y);
+    void frameAlign(byte W, byte H, PosX pos_x, PosY pos_y);
+    void iconAlign(int icon, byte iconWH, PosX pos_x, PosY pos_y);
+    void digAlign(byte dig, const char *string, PosX pos_x, PosY pos_y);
+    void textAlign(const char *string, PosX pos_x, PosY pos_y);
     void escapeBar(Timer &timer);
     void showTimerSet(Timer &timer);
     void setTimerScreen(Timer &timer);
