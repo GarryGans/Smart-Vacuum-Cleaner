@@ -215,23 +215,6 @@ void Screen::iconAlign(int icon, byte iconWH, PositionX position_x, PositionY po
     drawGlyph(x, y, icon);
 }
 
-void Screen::blockScreen(Buttons &buttonMinus)
-{
-    setFont(u8g2_font_open_iconic_thing_6x_t);
-
-    if (buttonMinus.lock)
-    {
-        icon = lock;
-    }
-
-    if (buttonMinus.unlock)
-    {
-        icon = unlock;
-    }
-
-    iconAlign(icon, WH, centerX, centerY);
-}
-
 void Screen::bottomLine(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer)
 {
     setFont(u8g2_font_pixelmordred_tf);
@@ -271,20 +254,14 @@ void Screen::showVacuumState(Switchers &relayState, Buttons &buttonPlus, Timer &
 
 void Screen::vacuumScreen(Switchers &relayState, Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer)
 {
-
     firstPage();
     do
     {
-        if (buttonMinus.lock)
-        {
-            blockScreen(buttonMinus);
-        }
-
-        else if (timer.setTimerFlag || timer.escBar)
+        if (timer.setTimerFlag || timer.escBar)
         {
             setTimerScreen(timer);
         }
-        
+
         else
         {
             showVacuumState(relayState, buttonPlus, timer);

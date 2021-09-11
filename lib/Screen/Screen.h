@@ -18,10 +18,6 @@ private:
     const char *textCounter = "s";
     const char *vacState[2] = {"OFF", "ON"};
 
-    int icon;
-    int lock = 79;
-    int unlock = 68;
-    byte WH = 48;
 
     boolean moveLeft;
     boolean moveRight;
@@ -33,7 +29,6 @@ private:
     byte bottom_y = 59;
 
     byte digWidth;
-    byte digHeight;
     byte width;
     byte x;
     byte y;
@@ -73,7 +68,6 @@ public:
     void escapeBar(Timer &timer);
     void showTimerSet(Timer &timer);
     void setTimerScreen(Timer &timer);
-    void blockScreen(Buttons &buttonMinus);
     void bottomLine(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer);
     void mover(byte deep_x);
     void moveString(Timer &timer, byte end_x, byte bottom_y, const char *string);

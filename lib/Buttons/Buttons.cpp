@@ -52,25 +52,27 @@ void Buttons::choicePedalManual(boolean &pedalSwitch, boolean &manualSwitch, Tim
     }
 }
 
-void Buttons::setTimer(boolean manualSwitch, Timer &timer, Buttons &pedal, Operator state)
+void Buttons::setTimer(boolean &manualSwitch, Timer &timer, Buttons &pedal, Operator state)
 {
+    if (manualSwitch)
+    {
+        manualSwitch = false;
+    }
+
     if (!timer.setTimerFlag)
     {
-        if (isClick())
+        if (isClick() || isHold())
         {
-            if (!manualSwitch)
-            {
-                timer.setTimerFlag = true;
+            timer.setTimerFlag = true;
 
-                if (pedal.pedalSwitch)
-                {
-                    timer.resetTimer();
-                }
+            if (pedal.pedalSwitch)
+            {
+                timer.resetTimer();
             }
         }
     }
 
-    else if (timer.setTimerFlag)
+    if (timer.setTimerFlag)
     {
         if (isClick() || isHold())
         {
@@ -107,84 +109,49 @@ void Buttons::setTimer(boolean manualSwitch, Timer &timer, Buttons &pedal, Opera
 
 void Buttons::blueButton(Buttons &buttonPlus, Buttons &pedal, Timer &timer)
 {
-    if (!(pedal.isClick() || pedal.isHold()))
+    if (!pedal.isClick() || !pedal.isHold())
     {
         tick();
 
-        if (!lock)
-        {
-            setTimer(buttonPlus.manualSwitch, timer, pedal, decrease);
-
-            if (isHolded() && !timer.setTimerFlag)
-            {
-                lock = true;
-                choicePedalManual(pedal.pedalSwitch, buttonPlus.manualSwitch, timer, off);
-            }
-        }
-
-        else if (lock && isHolded())
-        {
-            unlock = true;
-        }
-
-        if (unlock)
-        {
-            if (timer.reduceTimer(timer.unblockCounter))
-            {
-                lock = false;
-                unlock = false;
-                timer.maxUnblock();
-            }
-        }
+        setTimer(buttonPlus.manualSwitch, timer, pedal, decrease);
     }
 }
 
 void Buttons::redButton(Buttons &buttonMinus, Buttons &pedal, Timer &timer)
 {
-    if (!buttonMinus.lock && !(pedal.isClick() || pedal.isHold()))
+    if (!pedal.isClick() || !pedal.isHold())
     {
         tick();
 
         setTimer(manualSwitch, timer, pedal, increase);
 
-        if (isHolded() && !timer.setTimerFlag)
+        if (isClick() && buttonMinus.isClick() && !manualSwitch)
         {
-            if (pedal.pedalSwitch || manualSwitch)
-            {
-                choicePedalManual(pedal.pedalSwitch, manualSwitch, timer, off);
-            }
-
-            else if (!manualSwitch)
-            {
-                manualSwitch = true;
-            }
+            manualSwitch = true;
         }
     }
 }
 
 void Buttons::pedalCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer)
 {
-    if (!buttonMinus.lock)
+    tick();
+
+    if (isClick() || isHold())
     {
-        tick();
+        timer.resetEscape();
+        choicePedalManual(pedalSwitch, buttonPlus.manualSwitch, timer, treadle);
+    }
 
-        if (isClick() || isHold())
-        {
-            timer.resetEscape();
-            choicePedalManual(pedalSwitch, buttonPlus.manualSwitch, timer, treadle);
-        }
+    if (isRelease() && !timer.startTimer)
+    {
+        timer.startTimer = true;
+    }
 
-        if (isRelease() && !timer.startTimer)
+    if (timer.startTimer)
+    {
+        if (timer.reduceTimer(timer.counter))
         {
-            timer.startTimer = true;
-        }
-
-        if (timer.startTimer)
-        {
-            if (timer.reduceTimer(timer.counter))
-            {
-                motorState(pedalSwitch, false, timer);
-            }
+            motorState(pedalSwitch, false, timer);
         }
     }
 }

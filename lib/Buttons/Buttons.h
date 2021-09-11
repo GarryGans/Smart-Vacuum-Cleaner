@@ -15,8 +15,6 @@ private:
     boolean pedalSwitch;
     boolean minus;
     boolean plus;
-    boolean lock;
-    boolean unlock;
 
     enum Operator
     {
@@ -38,7 +36,7 @@ public:
     void begin();
     void motorState(boolean &pedalSwitch, boolean state, Timer &timer);
     void choicePedalManual(boolean &pedalSwitch, boolean &manualSwitch, Timer &timer, Choice choice);
-    void setTimer(boolean manualSwitch, Timer &timer, Buttons &pedal, Operator state);
+    void setTimer(boolean &manualSwitch, Timer &timer, Buttons &pedal, Operator state);
     void blueButton(Buttons &buttonPlus, Buttons &pedal, Timer &timer);
     void redButton(Buttons &buttonMinus, Buttons &pedal, Timer &timer);
     void pedalCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer);
