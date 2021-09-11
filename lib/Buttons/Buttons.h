@@ -22,12 +22,6 @@ private:
         increase
     };
 
-    enum Choice
-    {
-        treadle,
-        off
-    } choice;
-
 public:
     Buttons(int8_t pin);
     Buttons();

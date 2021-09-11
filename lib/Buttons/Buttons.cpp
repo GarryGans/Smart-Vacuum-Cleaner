@@ -33,25 +33,6 @@ void Buttons::motorState(boolean &pedalSwitch, boolean state, Timer &timer)
     timer.resetTimer();
 }
 
-void Buttons::choicePedalManual(boolean &pedalSwitch, boolean &manualSwitch, Timer &timer, Choice choice)
-{
-    switch (choice)
-    {
-    case treadle:
-        motorState(pedalSwitch, true, timer);
-        manualSwitch = false;
-        break;
-
-    case off:
-        motorState(pedalSwitch, false, timer);
-        manualSwitch = false;
-        break;
-
-    default:
-        break;
-    }
-}
-
 void Buttons::setTimer(boolean &manualSwitch, Timer &timer, Buttons &pedal, Operator state)
 {
     if (manualSwitch)
@@ -128,6 +109,7 @@ void Buttons::redButton(Buttons &buttonMinus, Buttons &pedal, Timer &timer)
         if (isClick() && buttonMinus.isClick() && !manualSwitch)
         {
             manualSwitch = true;
+            pedal.pedalSwitch = false;
         }
     }
 }
@@ -139,7 +121,13 @@ void Buttons::pedalCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &ti
     if (isClick() || isHold())
     {
         timer.resetEscape();
-        choicePedalManual(pedalSwitch, buttonPlus.manualSwitch, timer, treadle);
+
+        motorState(pedalSwitch, true, timer);
+
+        if (manualSwitch)
+        {
+            manualSwitch = false;
+        }
     }
 
     if (isRelease() && !timer.startTimer)
