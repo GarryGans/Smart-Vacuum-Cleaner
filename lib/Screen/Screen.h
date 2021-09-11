@@ -71,10 +71,13 @@ public:
 
     void showBlink(Timer &timer);
     void logo();
+
+    byte getDigWidth(byte value);
     void align(byte WH, byte H, PosX pos_x, PosY pos_y);
     void frameAlign(byte W, byte H, PosX pos_x, PosY pos_y);
     void iconAlign(int icon, byte iconWH, PosX pos_x, PosY pos_y);
-    void digAlign(byte dig, const char *string, PosX pos_x, PosY pos_y);
+    void digStringAlign(byte dig, const char *string, PosX pos_x, PosY pos_y);
+    void digAlign(byte dig, PosX pos_x, PosY pos_y);
     void textAlign(const char *string, PosX pos_x, PosY pos_y);
     void escapeBar(Timer &timer);
     void showTimerSet(Timer &timer);

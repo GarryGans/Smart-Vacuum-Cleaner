@@ -120,12 +120,12 @@ void Screen::logo()
     do
     {
         setFont(u8g2_font_nokiafc22_tr);
-        textAlign("smart", centerX, up);
+        textAlign("Smart", PosX::center, PosY::upHalf);
 
-        textAlign("vacuum cleaner", centerX, centerY);
+        textAlign("Vacuum Cleaner", PosX::center, PosY::center);
 
         setFont(u8g2_font_t0_12b_tf);
-        textAlign("Garik 2020", centerX, down);
+        textAlign("Garik 2020", PosX::center, PosY::downSpace);
     } while (nextPage());
 }
 
@@ -172,30 +172,30 @@ void Screen::moveString(Timer &timer, byte deep_x, byte bottom_y, const char *st
     }
 }
 
-void Screen::digAlign(byte dig, const char *string, PosX pos_x, PosY pos_y)
+byte Screen::getDigWidth(byte value)
 {
-    if (dig > 9 && dig < 100)
-    {
-        digWidth = getStrWidth("W") * 2;
-    }
-    else
-    {
-        digWidth = getStrWidth("W");
-    }
+    char val[4];
+    String(value).toCharArray(val, 4);
 
-    if (string != 0)
-    {
-        digWidth += getStrWidth(string);
-    }
+    return getStrWidth(val);
+}
 
-    align(digWidth, getMaxCharWidth(), pos_x, pos_y);
+void Screen::digStringAlign(byte dig, const char *string, PosX pos_x, PosY pos_y)
+{
+    align(getDigWidth(dig) + getStrWidth(string), getMaxCharWidth(), pos_x, pos_y);
+
     setCursor(x, y);
 
     print(dig);
-    if (string != 0)
-    {
-        print(string);
-    }
+    print(string);
+}
+
+void Screen::digAlign(byte dig, PosX pos_x, PosY pos_y)
+{
+    align(getDigWidth(dig), getMaxCharWidth(), pos_x, pos_y);
+
+    setCursor(x, y);
+    print(dig);
 }
 
 void Screen::frameAlign(byte W, byte H, PosX pos_x, PosY pos_y)
@@ -225,10 +225,10 @@ void Screen::showBlink(Timer &timer)
 {
     if (timer.blinkReady())
     {
-        frameAlign(digWidth + 10, getMaxCharWidth() + 10, centerX, centerFrame);
+        frameAlign(digWidth + 10, getMaxCharWidth() + 10, PosX::center, PosY::centerFrame);
     }
 
-    digAlign(timer.counter, "", centerX, centerY);
+    digAlign(timer.counter, PosX::center, PosY::center);
 }
 
 void Screen::showTimerSet(Timer &timer)
@@ -278,17 +278,17 @@ void Screen::showVacuumState(Switchers &relayState, Buttons &buttonPlus, Timer &
 
     if (relayState.relaySW && !buttonPlus.manualSwitch)
     {
-        pos_x = left;
-        pos_y = up;
+        pos_x = PosX::leftSpace;
+        pos_y = PosY::upSpace;
 
         setFont(u8g2_font_courB18_tr);
-        digAlign(timer.counter, textCounter, right, down);
+        digAlign(timer.counter, textCounter, PosX::rightSpace, PosY::downSpace);
     }
 
     else
     {
-        pos_x = centerX;
-        pos_y = centerY;
+        pos_x = PosX::center;
+        pos_y = PosY::center;
     }
 
     textAlign(vacState[relayState.relaySW], pos_x, pos_y);
