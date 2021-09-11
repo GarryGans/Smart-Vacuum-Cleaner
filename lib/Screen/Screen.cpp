@@ -129,22 +129,22 @@ void Screen::mover(byte deep_x)
     }
 }
 
-void Screen::moveString(Timer &timer, byte deep_x, byte bottom_y, const char *string)
+void Screen::moveString(Timer &timer, byte deep_x, byte bottom_y, const char *str)
 {
     if (!move)
     {
-        move_x = (screenWidth - getStrWidth(string)) / 2;
+        move_x = (screenWidth - getStrWidth(str)) / 2;
         move = true;
         moveLeft = true;
         moveRight = false;
     }
 
     setCursor(move_x, bottom_y);
-    print(string);
+    print(str);
 
     if (timer.moveReady())
     {
-        start_x = (screenWidth - getStrWidth(string)) / 2;
+        start_x = (screenWidth - getStrWidth(str)) / 2;
         deep_x = constrain(deep_x, 0, start_x);
         mover(deep_x);
     }
@@ -158,14 +158,14 @@ byte Screen::getDigWidth(byte value)
     return getStrWidth(val);
 }
 
-void Screen::digStringAlign(byte dig, const char *string, PosX pos_x, PosY pos_y)
+void Screen::digStringAlign(byte dig, const char *str, PosX pos_x, PosY pos_y)
 {
-    align(getDigWidth(dig) + getStrWidth(string), getMaxCharWidth(), pos_x, pos_y);
+    align(getDigWidth(dig) + getStrWidth(str), getMaxCharWidth(), pos_x, pos_y);
 
     setCursor(x, y);
 
     print(dig);
-    print(string);
+    print(str);
 }
 
 void Screen::digAlign(byte dig, PosX pos_x, PosY pos_y)
@@ -178,15 +178,19 @@ void Screen::digAlign(byte dig, PosX pos_x, PosY pos_y)
 
 void Screen::frameAlign(byte W, byte H, PosX pos_x, PosY pos_y)
 {
+    W += W / 4;
+    H += H / 2;
+
     align(W, H, pos_x, pos_y);
     drawFrame(x, y, W, H);
 }
 
-void Screen::textAlign(const char *string, PosX pos_x, PosY pos_y)
+void Screen::textAlign(const char *str, PosX pos_x, PosY pos_y)
 {
-    align(getStrWidth(string), getMaxCharWidth(), pos_x, pos_y);
+    align(getStrWidth(str), getMaxCharWidth(), pos_x, pos_y);
+
     setCursor(x, y);
-    print(string);
+    print(str);
 }
 
 void Screen::logo()
@@ -221,22 +225,12 @@ void Screen::escapeBar(Timer &timer)
     }
 }
 
-void Screen::showBlink(Timer &timer)
+void Screen::blinkFrame(Timer &timer)
 {
     if (timer.blinkReady())
     {
-        frameAlign(digWidth + 10, getMaxCharWidth() + 10, PosX::center, PosY::centerFrame);
+        frameAlign(getDigWidth(timer.counter), getMaxCharWidth(), PosX::center, PosY::centerFrame);
     }
-
-    digAlign(timer.counter, PosX::center, PosY::center);
-}
-
-void Screen::showTimerSet(Timer &timer)
-{
-    setFont(u8g2_font_courB18_tr);
-    showBlink(timer);
-
-    escapeBar(timer);
 }
 
 void Screen::setTimerScreen(Timer &timer)
@@ -246,7 +240,11 @@ void Screen::setTimerScreen(Timer &timer)
         firstPage();
         do
         {
-            showTimerSet(timer);
+            setFont(u8g2_font_courB18_tr);
+            blinkFrame(timer);
+            digAlign(timer.counter, PosX::center, PosY::center);
+
+            escapeBar(timer);
         } while (nextPage());
     }
 }
@@ -282,7 +280,7 @@ void Screen::showVacuumState(Switchers &relayState, Buttons &buttonPlus, Timer &
         pos_y = PosY::upSpace;
 
         setFont(u8g2_font_courB18_tr);
-        digAlign(timer.counter, textCounter, PosX::rightSpace, PosY::downSpace);
+        digStringAlign(timer.counter, textCounter, PosX::rightSpace, PosY::downSpace);
     }
 
     else

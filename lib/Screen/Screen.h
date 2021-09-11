@@ -78,7 +78,7 @@ public:
     void iconAlign(int icon, byte iconWH, PosX pos_x, PosY pos_y);
     void digStringAlign(byte dig, const char *str, PosX pos_x, PosY pos_y);
     void digAlign(byte dig, PosX pos_x, PosY pos_y);
-    void textAlign(const char *string, PosX pos_x, PosY pos_y);
+    void textAlign(const char *str, PosX pos_x, PosY pos_y);
     void escapeBar(Timer &timer);
     void showTimerSet(Timer &timer);
     void setTimerScreen(Timer &timer);
