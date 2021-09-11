@@ -48,7 +48,7 @@ public:
     boolean blinkReady();
     void resetEscape();
     void resetTimer();
-    boolean reduceTimer(byte &counter);
+    boolean reduceTimer();
     void startEscSet();
     void changeTimer(boolean minus, boolean plus);
     void readTimer();
