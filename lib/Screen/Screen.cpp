@@ -107,28 +107,6 @@ void Screen::align(byte W, byte H, PosX pos_x, PosY pos_y)
     }
 }
 
-void Screen::textAlign(const char *string, PosX pos_x, PosY pos_y)
-{
-    align(getStrWidth(string), getMaxCharWidth(), pos_x, pos_y);
-    setCursor(x, y);
-    print(string);
-}
-
-void Screen::logo()
-{
-    firstPage();
-    do
-    {
-        setFont(u8g2_font_nokiafc22_tr);
-        textAlign("Smart", PosX::center, PosY::upHalf);
-
-        textAlign("Vacuum Cleaner", PosX::center, PosY::center);
-
-        setFont(u8g2_font_t0_12b_tf);
-        textAlign("Garik 2020", PosX::center, PosY::downSpace);
-    } while (nextPage());
-}
-
 void Screen::mover(byte deep_x)
 {
     if (move_x > (start_x - deep_x) && moveLeft)
@@ -202,6 +180,28 @@ void Screen::frameAlign(byte W, byte H, PosX pos_x, PosY pos_y)
 {
     align(W, H, pos_x, pos_y);
     drawFrame(x, y, W, H);
+}
+
+void Screen::textAlign(const char *string, PosX pos_x, PosY pos_y)
+{
+    align(getStrWidth(string), getMaxCharWidth(), pos_x, pos_y);
+    setCursor(x, y);
+    print(string);
+}
+
+void Screen::logo()
+{
+    firstPage();
+    do
+    {
+        setFont(u8g2_font_nokiafc22_tr);
+        textAlign("Smart", PosX::center, PosY::upHalf);
+
+        textAlign("Vacuum Cleaner", PosX::center, PosY::center);
+
+        setFont(u8g2_font_t0_12b_tf);
+        textAlign("Garik 2020", PosX::center, PosY::downSpace);
+    } while (nextPage());
 }
 
 void Screen::escapeBar(Timer &timer)
