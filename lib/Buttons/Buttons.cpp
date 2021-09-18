@@ -47,11 +47,6 @@ void Buttons::setTimer(boolean &manualSwitch, Timer &timer, Buttons &pedal, Oper
     {
         if (isClick() || isHold())
         {
-            if (manualSwitch)
-            {
-                manualSwitch = false;
-            }
-
             switch (state)
             {
             case decrease:
@@ -75,30 +70,25 @@ void Buttons::setTimer(boolean &manualSwitch, Timer &timer, Buttons &pedal, Oper
         }
 
         timer.startEscSet();
-
-        if (pedal.pedalSwitch)
-        {
-            timer.startTimer = true;
-        }
     }
 }
 
 void Buttons::blueButton(Buttons &buttonPlus, Buttons &pedal, Timer &timer)
 {
+    tick();
+
     if (!pedal.isClick() || !pedal.isHold())
     {
-        tick();
-
         setTimer(buttonPlus.manualSwitch, timer, pedal, decrease);
     }
 }
 
 void Buttons::redButton(Buttons &buttonMinus, Buttons &pedal, Timer &timer)
 {
+    tick();
+
     if (!pedal.isClick() || !pedal.isHold())
     {
-        tick();
-
         setTimer(manualSwitch, timer, pedal, increase);
 
         if (buttonMinus.isHold() && isHold() && !manualSwitch)
