@@ -3,83 +3,24 @@
 
 #include <Arduino.h>
 #include <Wire.h>
-#include <U8g2lib.h>
+#include <EFX.h>
 
 #include <Switchers.h>
 #include <Buttons.h>
 #include <Timer.h>
 
-class Screen : public U8G2_SH1106_128X64_NONAME_1_HW_I2C
+class Screen : public EFX
 {
 private:
     const byte screenWidth = 128;
     const byte screenHeight = 64;
 
     const char *textCounter = "s";
-    const char *vacState[2] = {"OFF", "ON"};
-
-    boolean moveLeft;
-    boolean moveRight;
-    boolean move;
-
-    const byte deep_x = 30;
-    byte start_x;
-    byte move_x;
-    byte bottom_y = 59;
-
-    byte width;
-    byte x;
-    byte y;
-    byte setX;
-    byte setY;
-    byte blockWidth;
-
-    enum class PosX
-    {
-        center,
-        left,
-        leftSpace,
-        leftHalf,
-        right,
-        rightSpace,
-        rightHalf,
-        custom
-    } pos_x;
-
-    enum class PosY
-    {
-        center,
-        up,
-        upSpace,
-        upHalf,
-        down,
-        downSpace,
-        downHalf,
-        centerFrame,
-        upFrame,
-        upFrameHalf,
-        downFrame,
-        downFrameHalf,
-        custom
-    } pos_y;
+    const char *vacState[2] = {"OFF", "ON"}; 
 
 public:
     Screen();
     ~Screen();
-
-    byte getDigWidth(byte value);
-
-    void align(byte WH, byte H, PosX pos_x, PosY pos_y);
-    void frameAlign(byte W, byte H, PosX pos_x, PosY pos_y);
-    void iconAlign(int icon, byte iconWH, PosX pos_x, PosY pos_y);
-    void digStringAlign(byte dig, const char *str, PosX pos_x, PosY pos_y);
-    void digAlign(byte dig, PosX pos_x, PosY pos_y);
-    void textAlign(const char *str, PosX pos_x, PosY pos_y);
-
-    void blinkFrame(Timer &timer);
-    void mover(byte deep_x);
-    void moveString(Timer &timer, byte end_x, byte bottom_y, const char *string);
-    void escapeBar(Timer &timer);
 
     void logo();
     void setTimerScreen(Timer &timer);

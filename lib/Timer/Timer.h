@@ -10,6 +10,7 @@ class Timer
 {
     friend class Screen;
     friend class Buttons;
+    friend class EFX;
 
 private:
     boolean blink;
