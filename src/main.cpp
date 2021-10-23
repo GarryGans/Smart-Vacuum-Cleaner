@@ -9,7 +9,6 @@
 #include <Switchers.h>
 #include <Timer.h>
 
-
 Buttons buttonPlus(plusPin);
 Buttons buttonMinus(minusPin);
 Buttons pedal(pedalPin);
@@ -24,8 +23,6 @@ void setup()
   buttonPlus.begin();
   buttonMinus.begin();
   pedal.begin();
-
-  
 
   delay(100);
 
@@ -46,5 +43,5 @@ void loop()
 
   switchers.switcher(buttonPlus, pedal);
 
-  screen.screens(switchers, buttonMinus, buttonPlus, timer);
+  screen.screens(switchers, pedal, buttonMinus, buttonPlus, timer);
 }

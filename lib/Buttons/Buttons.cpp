@@ -40,6 +40,28 @@ void Buttons::writeTimer()
     EEPROM.put(couterAddr, counter);
 }
 
+void Buttons::resetTimer()
+{
+    startTimer = false;
+    readTimer();
+}
+
+void Buttons::maxEscape()
+{
+    escapeCounter = maxEscapeCounter;
+}
+
+void Buttons::resetEscape()
+{
+    if (setTimerFlag)
+    {
+        setTimerFlag = false;
+        escBar = false;
+        maxEscape();
+        writeTimer();
+    }
+}
+
 void Buttons::startEscSet()
 {
     if (!blinkHide)
@@ -146,27 +168,7 @@ void Buttons::redButton(Buttons &buttonMinus, Buttons &pedal, Timer &timer)
     }
 }
 
-void Buttons::resetTimer()
-{
-    startTimer = false;
-    readTimer();
-}
 
-void Buttons::resetEscape()
-{
-    if (setTimerFlag)
-    {
-        setTimerFlag = false;
-        escBar = false;
-        maxEscape();
-        writeTimer();
-    }
-}
-
-void Buttons::maxEscape()
-{
-    escapeCounter = maxEscapeCounter;
-}
 
 void Buttons::pedalCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer)
 {

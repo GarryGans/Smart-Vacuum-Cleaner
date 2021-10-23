@@ -16,17 +16,17 @@ private:
     const byte screenHeight = 64;
 
     const char *textCounter = "s";
-    const char *vacState[2] = {"OFF", "ON"}; 
+    const char *vacState[2] = {"OFF", "ON"};
 
 public:
     Screen();
     ~Screen();
 
     void logo();
-    void setTimerScreen(Timer &timer);
+    void setTimerScreen(Buttons &pedal);
     void bottomLine(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer);
     void vacuumState(Switchers &relayState, Buttons &buttonPlus, Timer &timer);
-    void screens(Switchers &relayState, Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer);
+    void screens(Switchers &relayState, Buttons &pedal, Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer);
 };
 
 #endif

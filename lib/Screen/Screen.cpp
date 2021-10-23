@@ -23,12 +23,12 @@ void Screen::logo()
     } while (nextPage());
 }
 
-void Screen::setTimerScreen(Timer &timer)
+void Screen::setTimerScreen(Buttons &pedal)
 {
     setHeight(u8g2_font_courB18_tr);
 
-    // digAlign(timer.counter, PosX::center, PosY::center);
-    // blinkFrame(timer.counter, false, PosX::center, PosY::centerFrame, timer);
+    digAlign(pedal.counter, PosX::center, PosY::center);
+    blinkFrame(pedal.counter, false, PosX::center, PosY::centerFrame, pedal.blinkHide);
 
     escapeBar();
 }
@@ -39,7 +39,8 @@ void Screen::bottomLine(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer)
     {
         setHeight(u8g2_font_pixelmordred_tf);
 
-        moveString("manual mode", PosX::center, PosY::downSpace, 0);
+        static EFX efx;
+        efx.moveString("manual mode", PosX::center, PosY::downSpace);
     }
 }
 
@@ -65,14 +66,14 @@ void Screen::vacuumState(Switchers &relayState, Buttons &buttonPlus, Timer &time
     textAlign(vacState[relayState.relaySW], pos_x, pos_y);
 }
 
-void Screen::screens(Switchers &relayState, Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer)
+void Screen::screens(Switchers &relayState, Buttons &pedal, Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer)
 {
     firstPage();
     do
     {
         if (buttonMinus.setTimerFlag || buttonPlus.setTimerFlag)
         {
-            setTimerScreen(timer);
+            setTimerScreen(pedal);
         }
 
         else

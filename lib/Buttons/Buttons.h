@@ -51,10 +51,7 @@ public:
     Buttons(int8_t pin);
     ~Buttons();
 
-    void maxEscape();
-
-    void readTimer();
-    void writeTimer();
+    
 
     void begin();
     void setTimer(boolean &manualSwitch, Timer &timer, Buttons &pedal, Operator state);
@@ -62,12 +59,15 @@ public:
     void redButton(Buttons &buttonMinus, Buttons &pedal, Timer &timer);
     void pedalCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer);
 
-    void startEscSet();
     void changeTimer(boolean minus, boolean plus);
 
+    void startEscSet();
     void resetTimer();
-
     void resetEscape();
+    void maxEscape();
+
+    void readTimer();
+    void writeTimer();
 };
 
 #endif

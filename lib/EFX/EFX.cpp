@@ -366,58 +366,61 @@ void EFX::blinkFrame(const char *format, byte digAmount, PosX pos_x, PosY pos_y,
     }
 }
 
-void EFX::mover(byte &move_x, byte deep_x, byte id)
+void EFX::mover(byte &move_x, byte deep_x)
 {
-    if (moveLeft[id])
+    if (moveLeft)
     {
         move_x--;
-        if (move_x == start_x[id] - deep_x)
+        if (move_x == start_x - deep_x)
         {
-            moveLeft[id] = false;
-            moveRight[id] = true;
+            moveLeft = false;
+            moveRight = true;
         }
     }
-    else if (moveRight[id])
+    else if (moveRight)
     {
         move_x++;
-        if (move_x == deep_x + start_x[id])
+        if (move_x == deep_x + start_x)
         {
-            moveRight[id] = false;
-            moveLeft[id] = true;
+            moveRight = false;
+            moveLeft = true;
         }
     }
 }
 
-void EFX::moveString(const char *string, PosX pos_x, PosY pos_y, byte id)
+void EFX::moveString(const char *string, PosX pos_x, PosY pos_y)
 {
+
     setPosition(string, pos_x, pos_y);
 
-    if (!move[id])
+    if (!move)
     {
-        move[id] = true;
-        move_x[id] = start_x[id] = x;
-        moveLeft[id] = true;
-        moveRight[id] = false;
+        move = true;
+        move_x = start_x = x;
+        moveLeft = true;
+        moveRight = false;
     }
 
-    if (start_x[id] != x)
+    if (start_x != x)
     {
-        start_x[id] = x;
+        start_x = x;
 
-        if (move_x[id] > 2 * start_x[id])
+        if (move_x > 2 * start_x)
         {
-            move_x[id] = 2 * start_x[id];
-            moveRight[id] = false;
-            moveLeft[id] = true;
+            move_x = 2 * start_x;
+            moveRight = false;
+            moveLeft = true;
         }
     }
 
-    setCursor(move_x[id], y);
+    setCursor(move_x, y);
     print(string);
 
-    if (run[id].wait(50))
+    static Timer run;
+
+    if (run.wait(50))
     {
-        mover(move_x[id], start_x[id], id);
+        mover(move_x, start_x);
     }
 }
 
