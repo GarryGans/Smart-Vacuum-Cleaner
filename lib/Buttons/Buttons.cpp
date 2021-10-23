@@ -46,7 +46,7 @@ void Buttons::startEscSet()
     {
         if (timer.ready(escapeCounter) && !escBar)
         {
-            // resetEscape();
+            resetEscape();
         }
     }
 }
@@ -54,7 +54,7 @@ void Buttons::startEscSet()
 void Buttons::changeTimer(boolean minus, boolean plus)
 {
     blinkHide = true;
-    // maxEscape();
+    maxEscape();
 
     if (minus)
     {
@@ -84,7 +84,7 @@ void Buttons::setTimer(boolean &manualSwitch, Timer &timer, Buttons &pedal, Oper
 
             else if (pedal.pedalSwitch)
             {
-                counter = defaultCounter;
+                resetTimer();
             }
         }
     }
@@ -107,15 +107,15 @@ void Buttons::setTimer(boolean &manualSwitch, Timer &timer, Buttons &pedal, Oper
                 break;
             }
 
-            // timer.changeTimer(minus, plus);
+            changeTimer(minus, plus);
         }
 
         if (isRelease())
         {
-            // timer.blinkHide = false;
+            blinkHide = false;
         }
 
-        // timer.startEscSet();
+        startEscSet();
     }
 }
 
@@ -139,7 +139,7 @@ void Buttons::redButton(Buttons &buttonMinus, Buttons &pedal, Timer &timer)
 
         if (buttonMinus.isHold() && isHold() && !manualSwitch)
         {
-            // timer.resetEscape();
+            resetEscape();
             manualSwitch = true;
             pedal.pedalSwitch = false;
         }
@@ -176,9 +176,9 @@ void Buttons::pedalCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &ti
     {
         pedalSwitch = true;
 
-        // timer.resetEscape();
+        resetEscape();
 
-        // resetTimer();
+        resetTimer();
 
         if (buttonPlus.manualSwitch)
         {
@@ -196,7 +196,7 @@ void Buttons::pedalCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &ti
         if (timer.ready(counter))
         {
             pedalSwitch = false;
-            // timer.resetTimer();
+            resetTimer();
         }
     }
 }
