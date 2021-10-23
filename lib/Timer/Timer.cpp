@@ -8,119 +8,71 @@ Timer::~Timer()
 {
 }
 
-void Timer::readTimer()
+boolean Timer::minusCounter(byte &counter)
 {
-    EEPROM.get(couterAddr, counter);
-
-    if (counter == 255)
+    if (wait(sec))
     {
-        counter = defaultCounter;
-    }
-}
-
-void Timer::writeTimer()
-{
-    EEPROM.put(couterAddr, counter);
-}
-
-boolean Timer::moveReady()
-{
-    move = false;
-
-    if (millis() - prewMoveMillis >= secMillis / 20)
-    {
-        prewMoveMillis = millis();
-        move = true;
-    }
-
-    return move;
-}
-
-boolean Timer::blinkReady()
-{
-    if (blinkHide)
-    {
-        blink = false;
-    }
-
-    else
-    {
-        if (millis() - prewCursorMillis >= blinkMillis)
-        {
-            blink = false;
-
-            if (millis() - prewCursorMillis >= blinkMillis * 2)
-            {
-                prewCursorMillis = millis();
-                blink = true;
-            }
-        }
-    }
-
-    return blink;
-}
-
-void Timer::resetEscape()
-{
-    if (setTimerFlag)
-    {
-        setTimerFlag = false;
-        escBar = false;
-        escapeCounter = maxEscapeCounter;
-        writeTimer();
-    }
-}
-
-void Timer::resetTimer()
-{
-    startTimer = false;
-    readTimer();
-}
-
-boolean Timer::reduceTimer(byte &counter)
-{
-    if (millis() - prewCounterMillis >= secMillis)
-    {
-        prewCounterMillis = millis();
         if (counter > 0)
         {
             counter--;
         }
     }
-
     if (counter == 0)
     {
+        return true;
+    }
+    return false;
+}
+
+boolean Timer::ready(byte counter, boolean reset)
+{
+    static byte count;
+    static boolean first;
+
+    if (reset || !first)
+    {
+        count = counter;
+        first = true;
+    }
+
+    if (minusCounter(count))
+    {
+        count = counter;
+        first = false;
         return true;
     }
 
     return false;
 }
 
-void Timer::startEscSet()
+boolean Timer::wait(unsigned long set)
 {
-    if (!blinkHide)
+    static unsigned long prew;
+    static boolean first;
+
+    if (!first)
     {
-        if (reduceTimer(escapeCounter) && !escBar)
-        {
-            resetEscape();
-        }
+        first = true;
+        prew = millis();
     }
+
+    if (millis() - prew >= set)
+    {
+        first = false;
+        return true;
+    }
+
+    return false;
 }
 
-void Timer::changeTimer(boolean minus, boolean plus)
+boolean Timer::alternation(unsigned long set)
 {
-    blinkHide = true;
-    escapeCounter = maxEscapeCounter;
+    static boolean blink;
 
-    if (minus)
+    if (wait(set))
     {
-        counter--;
+        blink = wait(set * 2);
     }
 
-    else if (plus)
-    {
-        counter++;
-    }
-
-    counter = constrain(counter, minSetCounter, maxSetCounter);
+    return blink;
 }

@@ -27,10 +27,10 @@ void Screen::setTimerScreen(Timer &timer)
 {
     setHeight(u8g2_font_courB18_tr);
 
-    digAlign(timer.counter, PosX::center, PosY::center);
-    blinkFrame(timer.counter, false, PosX::center, PosY::centerFrame, timer);
+    // digAlign(timer.counter, PosX::center, PosY::center);
+    // blinkFrame(timer.counter, false, PosX::center, PosY::centerFrame, timer);
 
-    escapeBar(timer);
+    escapeBar();
 }
 
 void Screen::bottomLine(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer)
@@ -39,7 +39,7 @@ void Screen::bottomLine(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer)
     {
         setHeight(u8g2_font_pixelmordred_tf);
 
-        moveString("manual mode", PosX::center, PosY::downSpace, timer, 0);
+        moveString("manual mode", PosX::center, PosY::downSpace, 0);
     }
 }
 
@@ -51,7 +51,7 @@ void Screen::vacuumState(Switchers &relayState, Buttons &buttonPlus, Timer &time
         pos_y = PosY::upHalf;
 
         setHeight(u8g2_font_courB18_tr);
-        digStringAlign(timer.counter, textCounter, PosX::rightHalf, PosY::downHalf);
+        digStringAlign(buttonPlus.counter, textCounter, PosX::rightHalf, PosY::downHalf);
     }
 
     else
@@ -70,7 +70,7 @@ void Screen::screens(Switchers &relayState, Buttons &buttonMinus, Buttons &butto
     firstPage();
     do
     {
-        if (timer.setTimerFlag)
+        if (buttonMinus.setTimerFlag || buttonPlus.setTimerFlag)
         {
             setTimerScreen(timer);
         }
@@ -80,5 +80,6 @@ void Screen::screens(Switchers &relayState, Buttons &buttonMinus, Buttons &butto
             vacuumState(relayState, buttonPlus, timer);
             bottomLine(buttonMinus, buttonPlus, timer);
         }
+
     } while (nextPage());
 }

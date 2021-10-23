@@ -9,6 +9,7 @@
 #include <Switchers.h>
 #include <Timer.h>
 
+
 Buttons buttonPlus(plusPin);
 Buttons buttonMinus(minusPin);
 Buttons pedal(pedalPin);
@@ -19,11 +20,13 @@ Timer timer;
 void setup()
 {
   // Serial.begin(9600);
-  timer.readTimer();
 
   buttonPlus.begin();
   buttonMinus.begin();
   pedal.begin();
+
+  
+
   delay(100);
 
   switchers.begin(vacPin);

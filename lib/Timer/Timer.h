@@ -1,54 +1,36 @@
 #ifndef TIMER_H
 #define TIMER_H
 
-#define couterAddr 0
-
 #include <Arduino.h>
-#include <EEPROM.h>
 
 class Timer
 {
     friend class Screen;
-    friend class Buttons;
     friend class EFX;
 
 private:
-    boolean blink;
-    boolean move;
-    boolean escBar;
-    boolean blinkHide;
-    boolean setTimerFlag;
-    boolean startTimer;
+    unsigned long sec = 1000;
+
+    unsigned long display = 3000;
+
+    unsigned int autoEsc = 5000;
 
     const byte maxEscapeCounter = 5;
     byte escapeCounter = maxEscapeCounter;
 
-    byte counter;
-
-    const byte defaultCounter = 10;
-    const byte minSetCounter = 1;
-    const byte maxSetCounter = 99;
-
-    const unsigned long secMillis = 1000;
-    const unsigned long blinkMillis = 200;
-    unsigned long prewCounterMillis;
-    unsigned long prewCursorMillis;
-    unsigned long prewMoveMillis;
-    unsigned long prewEscapeMillis;
+    boolean escBar;
+    boolean move;
 
 public:
     Timer();
     ~Timer();
 
-    boolean moveReady();
-    boolean blinkReady();
-    void resetEscape();
-    void resetTimer();
-    boolean reduceTimer(byte &counter);
-    void startEscSet();
-    void changeTimer(boolean minus, boolean plus);
-    void readTimer();
-    void writeTimer();
+    boolean minusCounter(byte &counter);
+    boolean wait(unsigned long set);
+
+    boolean alternation(unsigned long set = 500);
+
+    boolean ready(byte counter = 5, boolean reset = false);
 };
 
 #endif

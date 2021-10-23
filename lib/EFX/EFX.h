@@ -8,14 +8,17 @@
 #include <Timer.h>
 
 // class EFX : public U8G2_SSD1306_128X64_NONAME_1_HW_I2C
-
 class EFX : public U8G2_SH1106_128X64_NONAME_1_HW_I2C
+
 {
 private:
+    Timer timer;
     Timer run[10];
 
-    const byte screenWidth = 128;
-    const byte screenHeight = 64;
+    unsigned long blinkMil = 500;
+
+    byte screenWidth = getWidth();
+    byte screenHeight = getHeight();
 
     byte borderW;
     byte borderH;
@@ -25,8 +28,7 @@ private:
 
     byte x;
     byte y;
-    byte setX;
-    byte setY;
+
     byte blockWidth;
 
     byte move_x[10];
@@ -42,6 +44,9 @@ private:
     byte WH = 48;
 
 public:
+    byte setX;
+    byte setY;
+
     enum class PosX
     {
         center,
@@ -54,7 +59,8 @@ public:
         centerFrame,
         rightFrameSide,
         rightFrameHalfSide,
-        custom
+        custom,
+        customFrame
     } pos_x;
 
     enum class PosY
@@ -78,24 +84,36 @@ public:
     EFX();
     ~EFX();
 
-    byte getDigWidth(byte value);
+    byte nextY(byte num, byte id);
+
+    template <typename type>
+    byte getDigWidth(type value);
 
     void alignSimbols(byte WH, byte H, PosX pos_x, PosY pos_y);
     void frameAlign(byte W, byte H, PosX pos_x, PosY pos_y);
     void iconAlign(int icon, byte iconWH, PosX pos_x, PosY pos_y);
     void digStringAlign(byte dig, const char *string, PosX pos_x, PosY pos_y);
+    void strDigAlign(const char *string, byte dig, PosX pos_x, PosY pos_y);
+    void strDigAlign(const String string, byte dig, PosX pos_x, PosY pos_y);
+
+    template <typename type>
+    void digAlign(type dig, PosX pos_x, PosY pos_y);
     void digAlign(byte dig, PosX pos_x, PosY pos_y);
+
     void setPosition(const char *format, PosX pos_x, PosY pos_y);
     void textAlign(const char *string, PosX pos_x, PosY pos_y);
-    void stringAlign(String str, byte size, PosX pos_x, PosY pos_y);
+
+    void stringAlign(String str, PosX pos_x, PosY pos_y);
+
     void setHeight(const uint8_t *font);
 
     void mover(byte &move_x, byte deep_x, byte id);
-    void moveString(const char *string, PosX pos_x, PosY pos_y, Timer &timer, byte id);
-    void escapeBar(Timer &timer);
+    void moveString(const char *string, PosX pos_x, PosY pos_y, byte id);
+    void escapeBar();
 
-    void blinkFrame(byte value, boolean dig, PosX pos_x, PosY pos_y, Timer &timer);
-    void blinkFrame(const char *format, byte digAmount, PosX pos_x, PosY pos_y, Timer &timer);
+    void blinkFrame(int value, boolean dig, PosX pos_x, PosY pos_y, boolean tempBlock);
+
+    void blinkFrame(const char *format, byte digAmount, PosX pos_x, PosY pos_y, boolean tempBlock);
 };
 
 #endif

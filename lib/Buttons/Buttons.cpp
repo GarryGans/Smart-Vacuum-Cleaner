@@ -21,29 +21,75 @@ void Buttons::begin()
     // NORM_OPEN - нормально-разомкнутая кнопка
     // NORM_CLOSE - нормально-замкнутая кнопка
     setDirection(NORM_OPEN);
+
+    readTimer();
+}
+
+void Buttons::readTimer()
+{
+    EEPROM.get(couterAddr, counter);
+
+    if (counter == 255)
+    {
+        counter = defaultCounter;
+    }
+}
+
+void Buttons::writeTimer()
+{
+    EEPROM.put(couterAddr, counter);
+}
+
+void Buttons::startEscSet()
+{
+    if (!blinkHide)
+    {
+        if (timer.ready(escapeCounter) && !escBar)
+        {
+            // resetEscape();
+        }
+    }
+}
+
+void Buttons::changeTimer(boolean minus, boolean plus)
+{
+    blinkHide = true;
+    // maxEscape();
+
+    if (minus)
+    {
+        counter--;
+    }
+
+    else if (plus)
+    {
+        counter++;
+    }
+
+    counter = constrain(counter, minSetCounter, maxSetCounter);
 }
 
 void Buttons::setTimer(boolean &manualSwitch, Timer &timer, Buttons &pedal, Operator state)
 {
-    if (!timer.setTimerFlag)
+    if (!setTimerFlag)
     {
         if (isClick() || isHold())
         {
-            if (manualSwitch)
+            if (manualSwitch && timer.wait(secMillis))
             {
                 manualSwitch = false;
+
+                setTimerFlag = true;
             }
 
-            timer.setTimerFlag = true;
-
-            if (pedal.pedalSwitch)
+            else if (pedal.pedalSwitch)
             {
-                timer.resetTimer();
+                counter = defaultCounter;
             }
         }
     }
 
-    if (timer.setTimerFlag)
+    if (setTimerFlag)
     {
         if (isClick() || isHold())
         {
@@ -61,15 +107,15 @@ void Buttons::setTimer(boolean &manualSwitch, Timer &timer, Buttons &pedal, Oper
                 break;
             }
 
-            timer.changeTimer(minus, plus);
+            // timer.changeTimer(minus, plus);
         }
 
         if (isRelease())
         {
-            timer.blinkHide = false;
+            // timer.blinkHide = false;
         }
 
-        timer.startEscSet();
+        // timer.startEscSet();
     }
 }
 
@@ -93,11 +139,33 @@ void Buttons::redButton(Buttons &buttonMinus, Buttons &pedal, Timer &timer)
 
         if (buttonMinus.isHold() && isHold() && !manualSwitch)
         {
-            timer.resetEscape();
+            // timer.resetEscape();
             manualSwitch = true;
             pedal.pedalSwitch = false;
         }
     }
+}
+
+void Buttons::resetTimer()
+{
+    startTimer = false;
+    readTimer();
+}
+
+void Buttons::resetEscape()
+{
+    if (setTimerFlag)
+    {
+        setTimerFlag = false;
+        escBar = false;
+        maxEscape();
+        writeTimer();
+    }
+}
+
+void Buttons::maxEscape()
+{
+    escapeCounter = maxEscapeCounter;
 }
 
 void Buttons::pedalCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer)
@@ -108,9 +176,9 @@ void Buttons::pedalCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &ti
     {
         pedalSwitch = true;
 
-        timer.resetEscape();
+        // timer.resetEscape();
 
-        timer.resetTimer();
+        // resetTimer();
 
         if (buttonPlus.manualSwitch)
         {
@@ -118,17 +186,17 @@ void Buttons::pedalCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &ti
         }
     }
 
-    if (isRelease() && !timer.startTimer)
+    if (isRelease() && !startTimer)
     {
-        timer.startTimer = true;
+        startTimer = true;
     }
 
-    if (timer.startTimer)
+    if (startTimer)
     {
-        if (timer.reduceTimer(timer.counter))
+        if (timer.ready(counter))
         {
             pedalSwitch = false;
-            timer.resetTimer();
+            // timer.resetTimer();
         }
     }
 }

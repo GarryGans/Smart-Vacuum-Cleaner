@@ -1,6 +1,5 @@
 #include "EFX.h"
 
-
 // EFX::EFX() : U8G2_SSD1306_128X64_NONAME_1_HW_I2C(U8G2_R0, /* reset=*/U8X8_PIN_NONE)
 EFX::EFX() : U8G2_SH1106_128X64_NONAME_1_HW_I2C(U8G2_R0, /* reset=*/U8X8_PIN_NONE)
 {
@@ -56,6 +55,10 @@ void EFX::alignSimbols(byte W, byte H, PosX pos_x, PosY pos_y)
 
     case PosX::custom:
         x = setX;
+        break;
+
+    case PosX::customFrame:
+        x = setX - borderW / 2;
         break;
 
     default:
@@ -125,10 +128,31 @@ void EFX::alignSimbols(byte W, byte H, PosX pos_x, PosY pos_y)
     }
 }
 
-byte EFX::getDigWidth(byte value)
+byte EFX::nextY(byte num, byte id)
 {
-    char val[4];
-    String(value).toCharArray(val, 4);
+    byte Y;
+
+    Y = (screenHeight / num + height) / 2 + (screenHeight / num) * id;
+
+    return Y;
+}
+
+template <typename type>
+byte EFX::getDigWidth(type value)
+{
+    byte count;
+
+    if (value == 0)
+    {
+        count = 1;
+    }
+    else
+    {
+        count = byte(log10(value) + 1);
+    }
+
+    char val[count];
+    String(value).toCharArray(val, count);
 
     return getStrWidth(val);
 }
@@ -179,11 +203,11 @@ void EFX::textAlign(const char *string, PosX pos_x, PosY pos_y)
     print(string);
 }
 
-void EFX::stringAlign(String str, byte size, PosX pos_x, PosY pos_y)
+void EFX::stringAlign(String str, PosX pos_x, PosY pos_y)
 {
-    char light[size];
+    char light[str.length() + 1];
 
-    String(str).toCharArray(light, size);
+    String(str).toCharArray(light, str.length() + 1);
 
     textAlign(light, pos_x, pos_y);
 }
@@ -192,10 +216,80 @@ void EFX::digStringAlign(byte dig, const char *string, PosX pos_x, PosY pos_y)
 {
     alignSimbols(getDigWidth(dig) + getStrWidth(string), height, pos_x, pos_y);
 
+    setX = x;
+
     setCursor(x, y);
 
     print(dig);
     print(string);
+}
+
+void EFX::strDigAlign(const char *string, byte dig, PosX pos_x, PosY pos_y)
+{
+    String space;
+
+    byte strW;
+
+    if (getStrWidth(string) > getStrWidth("WW"))
+    {
+        space = " ";
+        strW = getStrWidth(" ");
+    }
+    else
+    {
+        space = "  ";
+        strW = getStrWidth("  ");
+    }
+
+    alignSimbols(getStrWidth(string) + strW + getDigWidth(dig), height, pos_x, pos_y);
+
+    setX = x;
+
+    setCursor(x, y);
+
+    print(string);
+    print(space);
+    print(dig);
+}
+
+void EFX::strDigAlign(const String string, byte dig, PosX pos_x, PosY pos_y)
+{
+    char str[string.length() + 1];
+    String(string).toCharArray(str, string.length() + 1);
+
+    String space;
+
+    byte strW;
+
+    if (getStrWidth(str) > getStrWidth("WW"))
+    {
+        space = " ";
+        strW = getStrWidth(" ");
+    }
+    else
+    {
+        space = "  ";
+        strW = getStrWidth("  ");
+    }
+
+    alignSimbols(getStrWidth(str) + strW + getDigWidth(dig), height, pos_x, pos_y);
+
+    setX = x;
+
+    setCursor(x, y);
+
+    print(str);
+    print(space);
+    print(dig);
+}
+
+template <typename type>
+void EFX::digAlign(type dig, PosX pos_x, PosY pos_y)
+{
+    alignSimbols(getDigWidth(dig), height, pos_x, pos_y);
+
+    setCursor(x, y);
+    print(dig);
 }
 
 void EFX::digAlign(byte dig, PosX pos_x, PosY pos_y)
@@ -231,38 +325,44 @@ void EFX::frameAlign(byte W, byte H, PosX pos_x, PosY pos_y)
     drawFrame(x, y, W, H);
 }
 
-void EFX::blinkFrame(byte value, boolean dig, PosX pos_x, PosY pos_y, Timer &timer)
+void EFX::blinkFrame(int value, boolean dig, PosX pos_x, PosY pos_y, boolean tempBlock)
 {
-    if (timer.blinkReady())
+    if (!tempBlock)
     {
-        if (dig)
+        if (timer.alternation(blinkMil))
         {
-            width = getMaxCharWidth() * 2;
-        }
-        else
-        {
-            width = getDigWidth(value);
-        }
+            if (dig)
+            {
+                width = getMaxCharWidth() * 2;
+            }
+            else
+            {
+                width = getDigWidth(value);
+            }
 
-        frameAlign(width, height, pos_x, pos_y);
+            frameAlign(width, height, pos_x, pos_y);
+        }
     }
 }
 
-void EFX::blinkFrame(const char *format, byte digAmount, PosX pos_x, PosY pos_y, Timer &timer)
+void EFX::blinkFrame(const char *format, byte digAmount, PosX pos_x, PosY pos_y, boolean tempBlock)
 {
-    if (timer.blinkReady())
+    if (!tempBlock)
     {
-        width = getMaxCharWidth() * digAmount;
+        if (timer.alternation())
+        {
+            width = getMaxCharWidth() * digAmount;
 
-        setPosition(format, pos_x, pos_y);
+            setPosition(format, pos_x, pos_y);
 
-        borderW = 6;
-        borderH = 6;
+            borderW = 6;
+            borderH = 6;
 
-        width += borderW;
-        height += borderH;
+            width += borderW;
+            height += borderH;
 
-        drawFrame(x - borderW / 2, y - borderH / 2, width, height);
+            drawFrame(x - borderW / 2, y - borderH / 2, width, height);
+        }
     }
 }
 
@@ -288,7 +388,7 @@ void EFX::mover(byte &move_x, byte deep_x, byte id)
     }
 }
 
-void EFX::moveString(const char *string, PosX pos_x, PosY pos_y, Timer &timer, byte id)
+void EFX::moveString(const char *string, PosX pos_x, PosY pos_y, byte id)
 {
     setPosition(string, pos_x, pos_y);
 
@@ -315,13 +415,13 @@ void EFX::moveString(const char *string, PosX pos_x, PosY pos_y, Timer &timer, b
     setCursor(move_x[id], y);
     print(string);
 
-    if (run[id].moveReady())
+    if (run[id].wait(50))
     {
         mover(move_x[id], start_x[id], id);
     }
 }
 
-void EFX::escapeBar(Timer &timer)
+void EFX::escapeBar()
 {
     if (!timer.escBar)
     {
