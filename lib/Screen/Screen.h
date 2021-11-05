@@ -12,11 +12,10 @@
 class Screen : public EFX
 {
 private:
-    const byte screenWidth = 128;
-    const byte screenHeight = 64;
-
     const char *textCounter = "s";
     const char *vacState[2] = {"OFF", "ON"};
+
+    
 
 public:
     Screen();

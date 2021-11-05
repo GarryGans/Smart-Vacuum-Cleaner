@@ -23,14 +23,14 @@ void Screen::logo()
     } while (nextPage());
 }
 
-void Screen::setTimerScreen(Buttons &pedal)
+void Screen::setTimerScreen(Buttons &pedal, Buttons &buttonMinus, Buttons &buttonPlus)
 {
     setHeight(u8g2_font_courB18_tr);
 
     digAlign(pedal.counter, PosX::center, PosY::center);
-    blinkFrame(pedal.counter, false, PosX::center, PosY::centerFrame, pedal.blinkHide);
+    blinkFrame(pedal.counter, PosX::center, PosY::centerFrame, pedal.blinkHide);
 
-    escapeBar();
+    escapeBar(pedal.blinkHide);
 }
 
 void Screen::bottomLine(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer)
@@ -39,8 +39,7 @@ void Screen::bottomLine(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer)
     {
         setHeight(u8g2_font_pixelmordred_tf);
 
-        static EFX efx;
-        efx.moveString("manual mode", PosX::center, PosY::downSpace);
+        moveString("manual mode", PosX::center, PosY::downSpace);
     }
 }
 
@@ -73,7 +72,7 @@ void Screen::screens(Switchers &relayState, Buttons &pedal, Buttons &buttonMinus
     {
         if (buttonMinus.setTimerFlag || buttonPlus.setTimerFlag)
         {
-            setTimerScreen(pedal);
+            setTimerScreen(pedal, buttonMinus, buttonPlus);
         }
 
         else

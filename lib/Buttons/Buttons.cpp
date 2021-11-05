@@ -46,37 +46,18 @@ void Buttons::resetTimer()
     readTimer();
 }
 
-void Buttons::maxEscape()
+void Buttons::escSet()
 {
-    escapeCounter = maxEscapeCounter;
-}
-
-void Buttons::resetEscape()
-{
-    if (setTimerFlag)
+    if (!escBar && setTimerFlag)
     {
         setTimerFlag = false;
-        escBar = false;
-        maxEscape();
         writeTimer();
-    }
-}
-
-void Buttons::startEscSet()
-{
-    if (!blinkHide)
-    {
-        if (timer.ready(escapeCounter) && !escBar)
-        {
-            resetEscape();
-        }
     }
 }
 
 void Buttons::changeTimer(boolean minus, boolean plus)
 {
     blinkHide = true;
-    maxEscape();
 
     if (minus)
     {
@@ -100,14 +81,14 @@ void Buttons::setTimer(boolean &manualSwitch, Timer &timer, Buttons &pedal, Oper
             if (manualSwitch && timer.wait(secMillis))
             {
                 manualSwitch = false;
-
-                setTimerFlag = true;
             }
 
             else if (pedal.pedalSwitch)
             {
                 resetTimer();
             }
+
+            setTimerFlag = true;
         }
     }
 
@@ -167,8 +148,6 @@ void Buttons::redButton(Buttons &buttonMinus, Buttons &pedal, Timer &timer)
         }
     }
 }
-
-
 
 void Buttons::pedalCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer)
 {

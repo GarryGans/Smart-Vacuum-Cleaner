@@ -4,15 +4,20 @@
 #include <Arduino.h>
 #include <Wire.h>
 #include <U8g2lib.h>
-
 #include <Timer.h>
+// #include <Vector.h>
+#include <ArduinoSTL.h>
+#include <vector>
+
+using namespace std;
 
 // class EFX : public U8G2_SSD1306_128X64_NONAME_1_HW_I2C
 class EFX : public U8G2_SH1106_128X64_NONAME_1_HW_I2C
-
 {
 private:
     Timer timer;
+
+    Timer run;
 
     unsigned long blinkMil = 500;
 
@@ -30,22 +35,35 @@ private:
 
     byte blockWidth;
 
-    byte move_x;
-    boolean move;
-    boolean moveLeft;
-    boolean moveRight;
-    byte start_x;
-    byte start_y;
+    boolean escBar;
+
+    byte id = 0;
 
     int icon;
     int lock = 79;
     int unlock = 68;
     byte WH = 48;
 
-public:
+    struct stringPoint
+    {
+        byte move_x;
+        boolean move;
+        boolean moveLeft;
+        boolean moveRight;
+        byte start_x;
+        //  byte start_y;
+    };
+
+    vector<stringPoint> sp;
+
+    vector<Timer> ti;
+
     byte setX;
     byte setY;
 
+    const byte escapeCounter = 8;
+
+public:
     enum class PosX
     {
         center,
@@ -80,8 +98,25 @@ public:
         custom
     } pos_y;
 
+    struct moveStr
+    {
+        String string;
+        PosX pos_x;
+        PosY pos_y;
+        int speed;
+
+        bool operator==(const moveStr &) const;
+    };
+
+    vector<moveStr> strMov;
+
     EFX();
     ~EFX();
+
+    void customX(byte x);
+    void customY(byte y);
+
+    void sameScreen();
 
     byte nextY(byte num, byte id);
 
@@ -100,19 +135,21 @@ public:
     void digAlign(byte dig, PosX pos_x, PosY pos_y);
 
     void setPosition(const char *format, PosX pos_x, PosY pos_y);
+    void setPosition(const String format, PosX pos_x, PosY pos_y);
+
     void textAlign(const char *string, PosX pos_x, PosY pos_y);
 
     void stringAlign(String str, PosX pos_x, PosY pos_y);
 
     void setHeight(const uint8_t *font);
 
-    void mover(byte &move_x, byte deep_x);
-    void moveString(const char *string, PosX pos_x, PosY pos_y);
-    void escapeBar();
+    void mover(byte &move_x, byte deep_x, boolean &moveLeft, boolean &moveRight, byte start_x);
+    void moveString(const String string, PosX pos_x, PosY pos_y, int speed = 50);
+    void escapeBar(boolean reset);
 
-    void blinkFrame(int value, boolean dig, PosX pos_x, PosY pos_y, boolean tempBlock);
+    void blinkFrame(int value, PosX pos_x, PosY pos_y, boolean tempBlock = 0, boolean dig = 0 );
 
-    void blinkFrame(const char *format, byte digAmount, PosX pos_x, PosY pos_y, boolean tempBlock);
+    void blinkFrame(const char *format, byte digAmount, PosX pos_x, PosY pos_y, boolean tempBlock = false);
 };
 
 #endif

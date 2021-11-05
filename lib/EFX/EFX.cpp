@@ -9,6 +9,16 @@ EFX::~EFX()
 {
 }
 
+void EFX::customX(byte x)
+{
+    setX = x;
+}
+
+void EFX::customY(byte y)
+{
+    setY = y;
+}
+
 void EFX::alignSimbols(byte W, byte H, PosX pos_x, PosY pos_y)
 {
     switch (pos_x)
@@ -191,7 +201,7 @@ void EFX::setHeight(const uint8_t *font)
 
     // else
     // {
-    //     Serial.println("undefiner");
+    // Serial.println("undefiner");
     // }
 }
 
@@ -307,6 +317,16 @@ void EFX::setPosition(const char *format, PosX pos_x, PosY pos_y)
     setCursor(x, y);
 }
 
+void EFX::setPosition(const String format, PosX pos_x, PosY pos_y)
+{
+    char str[format.length() + 1];
+    String(format).toCharArray(str, format.length() + 1);
+
+    alignSimbols(getStrWidth(str), height, pos_x, pos_y);
+
+    setCursor(x, y);
+}
+
 void EFX::iconAlign(int icon, byte iconWH, PosX pos_x, PosY pos_y)
 {
     alignSimbols(iconWH, iconWH, pos_x, pos_y);
@@ -325,7 +345,7 @@ void EFX::frameAlign(byte W, byte H, PosX pos_x, PosY pos_y)
     drawFrame(x, y, W, H);
 }
 
-void EFX::blinkFrame(int value, boolean dig, PosX pos_x, PosY pos_y, boolean tempBlock)
+void EFX::blinkFrame(int value, PosX pos_x, PosY pos_y, boolean tempBlock, boolean dig)
 {
     if (!tempBlock)
     {
@@ -366,7 +386,7 @@ void EFX::blinkFrame(const char *format, byte digAmount, PosX pos_x, PosY pos_y,
     }
 }
 
-void EFX::mover(byte &move_x, byte deep_x)
+void EFX::mover(byte &move_x, byte deep_x, boolean &moveLeft, boolean &moveRight, byte start_x)
 {
     if (moveLeft)
     {
@@ -388,55 +408,85 @@ void EFX::mover(byte &move_x, byte deep_x)
     }
 }
 
-void EFX::moveString(const char *string, PosX pos_x, PosY pos_y)
+void EFX::sameScreen()
 {
-
-    setPosition(string, pos_x, pos_y);
-
-    if (!move)
+    if (sp[id].start_x != x)
     {
-        move = true;
-        move_x = start_x = x;
-        moveLeft = true;
-        moveRight = false;
-    }
+        sp[id].start_x = x;
 
-    if (start_x != x)
-    {
-        start_x = x;
-
-        if (move_x > 2 * start_x)
+        if (sp[id].move_x > 2 * sp[id].start_x)
         {
-            move_x = 2 * start_x;
-            moveRight = false;
-            moveLeft = true;
+            sp[id].move_x = 2 * sp[id].start_x;
+            sp[id].moveLeft = true;
+            sp[id].moveRight = false;
         }
-    }
-
-    setCursor(move_x, y);
-    print(string);
-
-    static Timer run;
-
-    if (run.wait(50))
-    {
-        mover(move_x, start_x);
     }
 }
 
-void EFX::escapeBar()
+bool EFX::moveStr::operator==(const moveStr &s) const
 {
-    if (!timer.escBar)
+    return (string == s.string && pos_x == s.pos_x && pos_y == s.pos_y && speed == s.speed);
+}
+
+void EFX::moveString(const String string, PosX pos_x, PosY pos_y, int speed)
+{
+    moveStr strNow = {string, pos_x, pos_y, speed};
+
+    for (byte i = 0; i < strMov.size(); i++)
     {
-        blockWidth = screenWidth / timer.maxEscapeCounter;
-        timer.escBar = true;
+        if (strMov[i] == strNow)
+        {
+            id = i;
+        }
     }
 
-    width = blockWidth * (timer.maxEscapeCounter - timer.escapeCounter);
+    if (strMov.empty() || !(strNow == strMov[id]))
+    {
+        stringPoint spNow;
+        spNow.move = false;
+
+        strMov.push_back(strNow);
+        sp.push_back(spNow);
+        ti.push_back(timer);
+
+        Serial.println("new");
+        Serial.println(strMov[strMov.size() - 1].string);
+        id = strMov.size() - 1;
+    }
+
+    setPosition(string, pos_x, pos_y);
+
+    if (!sp[id].move)
+    {
+        sp[id].move = true;
+        sp[id].move_x = sp[id].start_x = x;
+        sp[id].moveLeft = true;
+        sp[id].moveRight = false;
+    }
+
+    setCursor(sp[id].move_x, y);
+    print(string);
+
+    if (ti[id].wait(speed))
+    {
+        mover(sp[id].move_x, sp[id].start_x, sp[id].moveLeft, sp[id].moveRight, sp[id].start_x);
+    }
+}
+
+void EFX::escapeBar(boolean reset)
+{
+    if (!escBar)
+    {
+        blockWidth = screenWidth / escapeCounter;
+        escBar = true;
+    }
+
+    width = blockWidth * timer.counter(escapeCounter, true);
+
     drawBox(0, 58, width, 6);
 
-    if (width == blockWidth * timer.maxEscapeCounter)
+    if (width == blockWidth * escapeCounter)
     {
-        timer.escBar = false;
+        escBar = false;
     }
 }
