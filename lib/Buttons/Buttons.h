@@ -17,8 +17,7 @@ private:
     Timer timer;
     const unsigned long secMillis = 1000;
 
-    const byte maxEscapeCounter = 5;
-    byte escapeCounter = maxEscapeCounter;
+    const byte escapeCounter = 8;
 
     boolean setTimerFlag;
 
@@ -61,9 +60,8 @@ public:
 
     void changeTimer(boolean minus, boolean plus);
 
-    void startEscSet();
+    void escSet();
     void resetTimer();
-    void resetEscape();
     void maxEscape();
 
     void readTimer();

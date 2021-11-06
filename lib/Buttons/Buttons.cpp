@@ -118,7 +118,7 @@ void Buttons::setTimer(boolean &manualSwitch, Timer &timer, Buttons &pedal, Oper
             blinkHide = false;
         }
 
-        startEscSet();
+        escSet();
     }
 }
 
@@ -138,11 +138,12 @@ void Buttons::redButton(Buttons &buttonMinus, Buttons &pedal, Timer &timer)
 
     if (!pedal.isClick() || !pedal.isHold())
     {
+        Serial.println("red");
         setTimer(manualSwitch, timer, pedal, increase);
 
         if (buttonMinus.isHold() && isHold() && !manualSwitch)
         {
-            resetEscape();
+            // resetEscape();
             manualSwitch = true;
             pedal.pedalSwitch = false;
         }
@@ -157,7 +158,7 @@ void Buttons::pedalCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &ti
     {
         pedalSwitch = true;
 
-        resetEscape();
+        // resetEscape();
 
         resetTimer();
 

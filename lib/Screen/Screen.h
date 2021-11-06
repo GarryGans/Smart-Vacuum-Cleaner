@@ -22,7 +22,7 @@ public:
     ~Screen();
 
     void logo();
-    void setTimerScreen(Buttons &pedal);
+    void setTimerScreen(Buttons &pedal, Buttons &buttonMinus, Buttons &buttonPlus);
     void bottomLine(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer);
     void vacuumState(Switchers &relayState, Buttons &buttonPlus, Timer &timer);
     void screens(Switchers &relayState, Buttons &pedal, Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer);
