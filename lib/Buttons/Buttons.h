@@ -17,9 +17,6 @@ class Buttons : public GButton
     friend class Screen;
 
 private:
-    
-    
-
     Timer timer;
     const unsigned long secMillis = 1000;
 
@@ -57,10 +54,10 @@ public:
 
     void set(GButton &butt);
     void begin();
-    void setTimer(boolean &manualSwitch, Timer &timer, Operator state);
-    void blueButton(Timer &timer);
-    void redButton(Timer &timer);
-    void pedalCommands(Timer &timer);
+    void setTimer(boolean &manualSwitch,  Operator state);
+    void blueButton();
+    void redButton();
+    void pedalCommands();
 
     void changeTimer(boolean minus, boolean plus);
 
@@ -70,6 +67,8 @@ public:
 
     void readTimer();
     void writeTimer();
+
+    void com();
 };
 
 #endif

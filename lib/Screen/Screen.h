@@ -15,8 +15,6 @@ private:
     const char *textCounter = "s";
     const char *vacState[2] = {"OFF", "ON"};
 
-    
-
 public:
     Screen();
     ~Screen();

@@ -12,15 +12,6 @@ Buttons::~Buttons()
 {
 }
 
-void Buttons::begin()
-{
-    set(buttonPlus);
-    set(buttonMinus);
-    set(pedal);
-    
-    readTimer();
-}
-
 void Buttons::set(GButton &butt)
 {
     butt.setDebounce(50);      // настройка антидребезга (по умолчанию 80 мс)
@@ -34,6 +25,15 @@ void Buttons::set(GButton &butt)
     // NORM_OPEN - нормально-разомкнутая кнопка
     // NORM_CLOSE - нормально-замкнутая кнопка
     butt.setDirection(NORM_OPEN);
+}
+
+void Buttons::begin()
+{
+    set(buttonPlus);
+    set(buttonMinus);
+    set(pedal);
+
+    readTimer();
 }
 
 void Buttons::readTimer()
@@ -83,7 +83,7 @@ void Buttons::changeTimer(boolean minus, boolean plus)
     counter = constrain(counter, minSetCounter, maxSetCounter);
 }
 
-void Buttons::setTimer(boolean &manualSwitch, Timer &timer, Operator state)
+void Buttons::setTimer(boolean &manualSwitch, Operator state)
 {
     if (!setTimerFlag)
     {
@@ -134,23 +134,23 @@ void Buttons::setTimer(boolean &manualSwitch, Timer &timer, Operator state)
     }
 }
 
-void Buttons::blueButton(Timer &timer)
+void Buttons::blueButton()
 {
     // buttonMinus.tick();
 
     if (!pedal.isClick() || !pedal.isHold())
     {
-        setTimer(manualSwitch, timer, decrease);
+        setTimer(manualSwitch, decrease);
     }
 }
 
-void Buttons::redButton(Timer &timer)
+void Buttons::redButton()
 {
     // buttonPlus.tick();
 
     if (!pedal.isClick() || !pedal.isHold())
     {
-        setTimer(manualSwitch, timer, increase);
+        setTimer(manualSwitch, increase);
 
         if (buttonMinus.isHold() && buttonPlus.isHold() && !manualSwitch)
         {
@@ -161,7 +161,7 @@ void Buttons::redButton(Timer &timer)
     }
 }
 
-void Buttons::pedalCommands(Timer &timer)
+void Buttons::pedalCommands()
 {
     // pedal.tick();
 
@@ -192,4 +192,11 @@ void Buttons::pedalCommands(Timer &timer)
             resetTimer();
         }
     }
+}
+
+void Buttons::com()
+{
+    blueButton();
+    redButton();
+    pedalCommands();
 }

@@ -6,7 +6,6 @@
 #include <Switchers.h>
 #include <Timer.h>
 
-
 Buttons buttons;
 Switchers switchers;
 Screen screen;
@@ -16,8 +15,7 @@ void setup()
 {
   Serial.begin(9600);
 
-  
-
+  buttons.begin();
   delay(100);
 
   switchers.begin(vacPin);
@@ -31,9 +29,7 @@ void setup()
 
 void loop()
 {
-  // buttonMinus.blueButton(buttonPlus, pedal, timer);
-  // buttonPlus.redButton(buttonMinus, pedal, timer);
-  // pedal.pedalCommands(buttonMinus, buttonPlus, timer);
+  buttons.com();
 
   // switchers.switcher(buttonPlus, pedal);
 
