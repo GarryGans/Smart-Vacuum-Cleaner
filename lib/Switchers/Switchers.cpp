@@ -15,9 +15,9 @@ void Switchers::begin(byte vacuumPin)
     digitalWrite(vacuumPin, OFF);
 }
 
-void Switchers::switcher(Buttons &button, Buttons &pedal)
+void Switchers::switcher(Buttons &buttons)
 {
-    if (button.manualSwitch || pedal.pedalSwitch)
+    if (buttons.manualSwitch || buttons.pedalSwitch)
     {
         digitalWrite(vacuumPin, ON);
         relaySW = true;

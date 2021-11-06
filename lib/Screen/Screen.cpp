@@ -23,19 +23,19 @@ void Screen::logo()
     } while (nextPage());
 }
 
-void Screen::setTimerScreen(Buttons &pedal, Buttons &buttonMinus, Buttons &buttonPlus)
+void Screen::setTimerScreen(Buttons &buttons)
 {
     setHeight(u8g2_font_courB18_tr);
 
-    digAlign(pedal.counter, PosX::center, PosY::center);
-    blinkFrame(pedal.counter, PosX::center, PosY::centerFrame, pedal.blinkHide, true);
+    digAlign(buttons.counter, PosX::center, PosY::center);
+    blinkFrame(buttons.counter, PosX::center, PosY::centerFrame, buttons.blinkHide, true);
 
-    escapeBar(pedal.blinkHide);
+    escapeBar(buttons.blinkHide);
 }
 
-void Screen::bottomLine(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer)
+void Screen::bottomLine(Buttons &buttons)
 {
-    if (buttonPlus.manualSwitch)
+    if (buttons.manualSwitch)
     {
         setHeight(u8g2_font_pixelmordred_tf);
 
@@ -43,15 +43,15 @@ void Screen::bottomLine(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer)
     }
 }
 
-void Screen::vacuumState(Switchers &relayState, Buttons &buttonPlus, Timer &timer)
+void Screen::vacuumState(Switchers &relayState, Buttons &buttons)
 {
-    if (relayState.relaySW && !buttonPlus.manualSwitch)
+    if (relayState.relaySW && !buttons.manualSwitch)
     {
         pos_x = PosX::leftHalf;
         pos_y = PosY::upHalf;
 
         setHeight(u8g2_font_courB18_tr);
-        digStringAlign(buttonPlus.counter, textCounter, PosX::rightHalf, PosY::downHalf);
+        digStringAlign(buttons.counter, textCounter, PosX::rightHalf, PosY::downHalf);
     }
 
     else
@@ -65,20 +65,20 @@ void Screen::vacuumState(Switchers &relayState, Buttons &buttonPlus, Timer &time
     textAlign(vacState[relayState.relaySW], pos_x, pos_y);
 }
 
-void Screen::screens(Switchers &relayState, Buttons &pedal, Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer)
+void Screen::screens(Switchers &relayState, Buttons &buttons)
 {
     firstPage();
     do
     {
-        if (buttonMinus.setTimerFlag || buttonPlus.setTimerFlag)
+        if (buttons.setTimerFlag)
         {
-            setTimerScreen(pedal, buttonMinus, buttonPlus);
+            setTimerScreen(buttons);
         }
 
         else
         {
-            vacuumState(relayState, buttonPlus, timer);
-            bottomLine(buttonMinus, buttonPlus, timer);
+            vacuumState(relayState, buttons);
+            bottomLine(buttons);
         }
 
     } while (nextPage());

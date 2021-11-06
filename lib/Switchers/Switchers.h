@@ -21,7 +21,7 @@ public:
     ~Switchers();
 
     void begin(byte vacuumPin);
-    void switcher(Buttons &button, Buttons &pedal);
+    void switcher(Buttons &buttons);
 };
 
 #endif

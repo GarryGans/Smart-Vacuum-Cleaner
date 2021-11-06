@@ -15,15 +15,17 @@ private:
     const char *textCounter = "s";
     const char *vacState[2] = {"OFF", "ON"};
 
+    Timer timer;
+
 public:
     Screen();
     ~Screen();
 
     void logo();
-    void setTimerScreen(Buttons &pedal, Buttons &buttonMinus, Buttons &buttonPlus);
-    void bottomLine(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer);
-    void vacuumState(Switchers &relayState, Buttons &buttonPlus, Timer &timer);
-    void screens(Switchers &relayState, Buttons &pedal, Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer);
+    void setTimerScreen(Buttons &buttons);
+    void bottomLine(Buttons &buttons);
+    void vacuumState(Switchers &relayState, Buttons &buttons);
+    void screens(Switchers &relayState, Buttons &buttons);
 };
 
 #endif

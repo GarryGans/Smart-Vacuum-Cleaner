@@ -4,12 +4,10 @@
 #include <Screen.h>
 #include <Buttons.h>
 #include <Switchers.h>
-#include <Timer.h>
 
 Buttons buttons;
 Switchers switchers;
 Screen screen;
-Timer timer;
 
 void setup()
 {
@@ -23,6 +21,7 @@ void setup()
 
   screen.begin();
   delay(100);
+
   screen.logo();
   delay(500);
 }
@@ -31,7 +30,7 @@ void loop()
 {
   buttons.com();
 
-  // switchers.switcher(buttonPlus, pedal);
+  switchers.switcher(buttons);
 
-  // screen.screens(switchers, pedal, buttonMinus, buttonPlus, timer);
+  screen.screens(switchers, buttons);
 }

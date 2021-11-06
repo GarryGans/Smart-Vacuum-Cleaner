@@ -106,24 +106,7 @@ void Buttons::setTimer(boolean &manualSwitch, Operator state)
 
     if (setTimerFlag)
     {
-        if (buttonMinus.isClick() || buttonMinus.isHold() || buttonPlus.isClick() || buttonPlus.isHold())
-        {
-            switch (state)
-            {
-            case decrease:
-                minus = true;
-                break;
-
-            case increase:
-                plus = true;
-                break;
-
-            default:
-                break;
-            }
-
-            changeTimer(minus, plus);
-        }
+        changeTimer((buttonMinus.isClick() || buttonMinus.isHold()), (buttonPlus.isClick() || buttonPlus.isHold()));
 
         if (buttonMinus.isRelease() || buttonPlus.isRelease())
         {
@@ -136,8 +119,6 @@ void Buttons::setTimer(boolean &manualSwitch, Operator state)
 
 void Buttons::blueButton()
 {
-    // buttonMinus.tick();
-
     if (!pedal.isClick() || !pedal.isHold())
     {
         setTimer(manualSwitch, decrease);
@@ -146,7 +127,6 @@ void Buttons::blueButton()
 
 void Buttons::redButton()
 {
-    // buttonPlus.tick();
 
     if (!pedal.isClick() || !pedal.isHold())
     {
@@ -163,8 +143,6 @@ void Buttons::redButton()
 
 void Buttons::pedalCommands()
 {
-    // pedal.tick();
-
     if (pedal.isClick() || pedal.isHold())
     {
         pedalSwitch = true;
@@ -196,6 +174,10 @@ void Buttons::pedalCommands()
 
 void Buttons::com()
 {
+    buttonMinus.tick();
+    buttonPlus.tick();
+    pedal.tick();
+
     blueButton();
     redButton();
     pedalCommands();
