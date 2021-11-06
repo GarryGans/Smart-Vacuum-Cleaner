@@ -1,6 +1,6 @@
 #include "Buttons.h"
 
-Buttons::Buttons(int8_t pin) : GButton(pin)
+Buttons::Buttons()
 {
 }
 
@@ -10,19 +10,25 @@ Buttons::~Buttons()
 
 void Buttons::begin()
 {
-    setDebounce(50);      // настройка антидребезга (по умолчанию 80 мс)
-    setTimeout(300);      // настройка таймаута на удержание (по умолчанию 500 мс)
-    setClickTimeout(200); // настройка таймаута между кликами (по умолчанию 300 мс)
+    // set(buttonPlus);
+    // set(buttonMinus);
+    // set(pedal);
+    // readTimer();
+}
+
+void Buttons::set(GButton &butt)
+{
+    butt.setDebounce(50);      // настройка антидребезга (по умолчанию 80 мс)
+    butt.setTimeout(300);      // настройка таймаута на удержание (по умолчанию 500 мс)
+    butt.setClickTimeout(200); // настройка таймаута между кликами (по умолчанию 300 мс)
 
     // HIGH_PULL - кнопка подключена к GND, пин подтянут к VCC (PIN --- КНОПКА --- GND)
     // LOW_PULL  - кнопка подключена к VCC, пин подтянут к GND
-    setType(HIGH_PULL);
+    butt.setType(HIGH_PULL);
 
     // NORM_OPEN - нормально-разомкнутая кнопка
     // NORM_CLOSE - нормально-замкнутая кнопка
-    setDirection(NORM_OPEN);
-
-    readTimer();
+    butt.setDirection(NORM_OPEN);
 }
 
 void Buttons::readTimer()
@@ -50,7 +56,7 @@ void Buttons::escSet()
 {
     if (!escBar && setTimerFlag)
     {
-        setTimerFlag = false;
+        // setTimerFlag = false;
         writeTimer();
     }
 }
@@ -72,12 +78,13 @@ void Buttons::changeTimer(boolean minus, boolean plus)
     counter = constrain(counter, minSetCounter, maxSetCounter);
 }
 
-void Buttons::setTimer(boolean &manualSwitch, Timer &timer, Buttons &pedal, Operator state)
+void Buttons::setTimer(boolean &manualSwitch, Timer &timer, Operator state)
 {
     if (!setTimerFlag)
     {
-        if (isClick() || isHold())
+        if (this->buttonMinus.isClick() || buttonMinus.isHold() || buttonPlus.isClick() || buttonPlus.isHold())
         {
+            Serial.println("set");
             if (manualSwitch && timer.wait(secMillis))
             {
                 manualSwitch = false;
@@ -94,7 +101,7 @@ void Buttons::setTimer(boolean &manualSwitch, Timer &timer, Buttons &pedal, Oper
 
     if (setTimerFlag)
     {
-        if (isClick() || isHold())
+        if (buttonMinus.isClick() || buttonMinus.isHold() || buttonPlus.isClick() || buttonPlus.isHold())
         {
             switch (state)
             {
@@ -113,7 +120,7 @@ void Buttons::setTimer(boolean &manualSwitch, Timer &timer, Buttons &pedal, Oper
             changeTimer(minus, plus);
         }
 
-        if (isRelease())
+        if (buttonMinus.isRelease() || buttonPlus.isRelease())
         {
             blinkHide = false;
         }
@@ -122,26 +129,25 @@ void Buttons::setTimer(boolean &manualSwitch, Timer &timer, Buttons &pedal, Oper
     }
 }
 
-void Buttons::blueButton(Buttons &buttonPlus, Buttons &pedal, Timer &timer)
+void Buttons::blueButton( Timer &timer)
 {
-    tick();
+    // tick();
 
     if (!pedal.isClick() || !pedal.isHold())
     {
-        setTimer(buttonPlus.manualSwitch, timer, pedal, decrease);
+        setTimer(buttonPlus.manualSwitch, timer, decrease);
     }
 }
 
-void Buttons::redButton(Buttons &buttonMinus, Buttons &pedal, Timer &timer)
+void Buttons::redButton(Timer &timer)
 {
-    tick();
+    // tick();
 
     if (!pedal.isClick() || !pedal.isHold())
     {
-        Serial.println("red");
-        setTimer(manualSwitch, timer, pedal, increase);
+        setTimer(manualSwitch, timer, increase);
 
-        if (buttonMinus.isHold() && isHold() && !manualSwitch)
+        if (buttonMinus.isHold() && buttonPlus.isHold() && !manualSwitch)
         {
             // resetEscape();
             manualSwitch = true;
@@ -150,11 +156,11 @@ void Buttons::redButton(Buttons &buttonMinus, Buttons &pedal, Timer &timer)
     }
 }
 
-void Buttons::pedalCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &timer)
+void Buttons::pedalCommands( Timer &timer)
 {
-    tick();
+    // tick();
 
-    if (isClick() || isHold())
+    if (pedal.isClick() || pedal.isHold())
     {
         pedalSwitch = true;
 
@@ -168,7 +174,7 @@ void Buttons::pedalCommands(Buttons &buttonMinus, Buttons &buttonPlus, Timer &ti
         }
     }
 
-    if (isRelease() && !startTimer)
+    if (pedal.isRelease() && !startTimer)
     {
         startTimer = true;
     }

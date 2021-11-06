@@ -28,7 +28,7 @@ void Screen::setTimerScreen(Buttons &pedal, Buttons &buttonMinus, Buttons &butto
     setHeight(u8g2_font_courB18_tr);
 
     digAlign(pedal.counter, PosX::center, PosY::center);
-    blinkFrame(pedal.counter, PosX::center, PosY::centerFrame, pedal.blinkHide);
+    blinkFrame(pedal.counter, PosX::center, PosY::centerFrame, pedal.blinkHide, true);
 
     escapeBar(pedal.blinkHide);
 }
