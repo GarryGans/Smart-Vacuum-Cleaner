@@ -24,8 +24,6 @@ private:
 
     boolean setTimerFlag;
 
-    boolean escBar;
-
     boolean manualSwitch;
     boolean pedalSwitch;
     boolean minus;
@@ -54,14 +52,12 @@ public:
 
     void set(GButton &butt);
     void begin();
-    void setTimer(boolean &manualSwitch,  Operator state);
-    void blueButton();
-    void redButton();
+    void setTimer();
+    void buttons();
     void pedalCommands();
 
-    void changeTimer(boolean minus, boolean plus);
+    boolean changeTimer(boolean minus, boolean plus);
 
-    void escSet();
     void resetTimer();
     void maxEscape();
 

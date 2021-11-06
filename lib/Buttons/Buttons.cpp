@@ -57,16 +57,7 @@ void Buttons::resetTimer()
     readTimer();
 }
 
-void Buttons::escSet()
-{
-    if (!escBar && setTimerFlag)
-    {
-        // setTimerFlag = false;
-        writeTimer();
-    }
-}
-
-void Buttons::changeTimer(boolean minus, boolean plus)
+boolean Buttons::changeTimer(boolean minus, boolean plus)
 {
     blinkHide = true;
 
@@ -81,9 +72,11 @@ void Buttons::changeTimer(boolean minus, boolean plus)
     }
 
     counter = constrain(counter, minSetCounter, maxSetCounter);
+
+    return blinkHide;
 }
 
-void Buttons::setTimer(boolean &manualSwitch, Operator state)
+void Buttons::setTimer()
 {
     if (!setTimerFlag)
     {
@@ -106,31 +99,24 @@ void Buttons::setTimer(boolean &manualSwitch, Operator state)
 
     if (setTimerFlag)
     {
-        changeTimer((buttonMinus.isClick() || buttonMinus.isHold()), (buttonPlus.isClick() || buttonPlus.isHold()));
+        if (timer.ready(3, changeTimer((buttonMinus.isClick() || buttonMinus.isHold()), (buttonPlus.isClick() || buttonPlus.isHold()))))
+        {
+            setTimerFlag = false;
+            writeTimer();
+        }
 
         if (buttonMinus.isRelease() || buttonPlus.isRelease())
         {
             blinkHide = false;
         }
-
-        escSet();
     }
 }
 
-void Buttons::blueButton()
+void Buttons::buttons()
 {
     if (!pedal.isClick() || !pedal.isHold())
     {
-        setTimer(manualSwitch, decrease);
-    }
-}
-
-void Buttons::redButton()
-{
-
-    if (!pedal.isClick() || !pedal.isHold())
-    {
-        setTimer(manualSwitch, increase);
+        setTimer();
 
         if (buttonMinus.isHold() && buttonPlus.isHold() && !manualSwitch)
         {
@@ -178,7 +164,6 @@ void Buttons::com()
     buttonPlus.tick();
     pedal.tick();
 
-    blueButton();
-    redButton();
+    buttons();
     pedalCommands();
 }
