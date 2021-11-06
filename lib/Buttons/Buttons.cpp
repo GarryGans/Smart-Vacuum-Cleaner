@@ -17,6 +17,7 @@ void Buttons::begin()
     set(buttonPlus);
     set(buttonMinus);
     set(pedal);
+    
     readTimer();
 }
 
