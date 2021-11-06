@@ -52,15 +52,17 @@ public:
 
     void set(GButton &butt);
     void begin();
+
     void setTimer();
+
     void buttons();
     void pedalCommands();
 
     boolean changeTimer(boolean minus, boolean plus);
 
     void resetTimer();
-    void maxEscape();
-
+    void resetEscape();
+    
     void readTimer();
     void writeTimer();
 

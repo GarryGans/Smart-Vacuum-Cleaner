@@ -57,6 +57,12 @@ void Buttons::resetTimer()
     readTimer();
 }
 
+void Buttons::resetEscape()
+{
+    setTimerFlag = false;
+    writeTimer();
+}
+
 boolean Buttons::changeTimer(boolean minus, boolean plus)
 {
     blinkHide = true;
@@ -71,6 +77,11 @@ boolean Buttons::changeTimer(boolean minus, boolean plus)
         counter++;
     }
 
+    else
+    {
+        blinkHide = false;
+    }
+
     counter = constrain(counter, minSetCounter, maxSetCounter);
 
     return blinkHide;
@@ -82,7 +93,6 @@ void Buttons::setTimer()
     {
         if (buttonMinus.isClick() || buttonMinus.isHold() || buttonPlus.isClick() || buttonPlus.isHold())
         {
-            Serial.println("set");
             if (manualSwitch && timer.wait(secMillis))
             {
                 manualSwitch = false;
@@ -101,13 +111,7 @@ void Buttons::setTimer()
     {
         if (timer.ready(3, changeTimer((buttonMinus.isClick() || buttonMinus.isHold()), (buttonPlus.isClick() || buttonPlus.isHold()))))
         {
-            setTimerFlag = false;
-            writeTimer();
-        }
-
-        if (buttonMinus.isRelease() || buttonPlus.isRelease())
-        {
-            blinkHide = false;
+            resetEscape();
         }
     }
 }
@@ -120,7 +124,7 @@ void Buttons::buttons()
 
         if (buttonMinus.isHold() && buttonPlus.isHold() && !manualSwitch)
         {
-            // resetEscape();
+            resetEscape();
             manualSwitch = true;
             pedalSwitch = false;
         }
@@ -133,7 +137,7 @@ void Buttons::pedalCommands()
     {
         pedalSwitch = true;
 
-        // resetEscape();
+        resetEscape();
 
         resetTimer();
 

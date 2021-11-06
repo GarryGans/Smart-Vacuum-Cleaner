@@ -39,6 +39,10 @@ void Screen::bottomLine(Buttons &buttons)
 
         moveString("manual mode", PosX::center, PosY::downSpace);
     }
+    else
+    {
+        moveString("kuku", PosX::center, PosY::downSpace);
+    }
 }
 
 void Screen::vacuumState(Switchers &relayState, Buttons &buttons)
