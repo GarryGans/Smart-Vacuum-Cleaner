@@ -1,5 +1,9 @@
 #include "Buttons.h"
 
+GButton buttonPlus(plusPin);
+GButton buttonMinus(minusPin);
+GButton pedal(pedalPin);
+
 Buttons::Buttons()
 {
 }
@@ -10,10 +14,10 @@ Buttons::~Buttons()
 
 void Buttons::begin()
 {
-    // set(buttonPlus);
-    // set(buttonMinus);
-    // set(pedal);
-    // readTimer();
+    set(buttonPlus);
+    set(buttonMinus);
+    set(pedal);
+    readTimer();
 }
 
 void Buttons::set(GButton &butt)
@@ -82,7 +86,7 @@ void Buttons::setTimer(boolean &manualSwitch, Timer &timer, Operator state)
 {
     if (!setTimerFlag)
     {
-        if (this->buttonMinus.isClick() || buttonMinus.isHold() || buttonPlus.isClick() || buttonPlus.isHold())
+        if (buttonMinus.isClick() || buttonMinus.isHold() || buttonPlus.isClick() || buttonPlus.isHold())
         {
             Serial.println("set");
             if (manualSwitch && timer.wait(secMillis))
@@ -90,7 +94,7 @@ void Buttons::setTimer(boolean &manualSwitch, Timer &timer, Operator state)
                 manualSwitch = false;
             }
 
-            else if (pedal.pedalSwitch)
+            else if (pedalSwitch)
             {
                 resetTimer();
             }
@@ -129,19 +133,19 @@ void Buttons::setTimer(boolean &manualSwitch, Timer &timer, Operator state)
     }
 }
 
-void Buttons::blueButton( Timer &timer)
+void Buttons::blueButton(Timer &timer)
 {
-    // tick();
+    // buttonMinus.tick();
 
     if (!pedal.isClick() || !pedal.isHold())
     {
-        setTimer(buttonPlus.manualSwitch, timer, decrease);
+        setTimer(manualSwitch, timer, decrease);
     }
 }
 
 void Buttons::redButton(Timer &timer)
 {
-    // tick();
+    // buttonPlus.tick();
 
     if (!pedal.isClick() || !pedal.isHold())
     {
@@ -151,14 +155,14 @@ void Buttons::redButton(Timer &timer)
         {
             // resetEscape();
             manualSwitch = true;
-            pedal.pedalSwitch = false;
+            pedalSwitch = false;
         }
     }
 }
 
-void Buttons::pedalCommands( Timer &timer)
+void Buttons::pedalCommands(Timer &timer)
 {
-    // tick();
+    // pedal.tick();
 
     if (pedal.isClick() || pedal.isHold())
     {
@@ -168,9 +172,9 @@ void Buttons::pedalCommands( Timer &timer)
 
         resetTimer();
 
-        if (buttonPlus.manualSwitch)
+        if (manualSwitch)
         {
-            buttonPlus.manualSwitch = false;
+            manualSwitch = false;
         }
     }
 

@@ -11,15 +11,14 @@
 #include "Timer.h"
 #include <EEPROM.h>
 
-class Buttons
+class Buttons : public GButton
 {
     friend class Switchers;
     friend class Screen;
 
 private:
-    GButton buttonPlus(plusPin);
-    GButton buttonMinus(minusPin);
-    GButton pedal(pedalPin);
+    
+    
 
     Timer timer;
     const unsigned long secMillis = 1000;
@@ -52,15 +51,16 @@ private:
     const byte maxSetCounter = 99;
 
 public:
+
     Buttons();
     ~Buttons();
 
     void set(GButton &butt);
     void begin();
     void setTimer(boolean &manualSwitch, Timer &timer, Operator state);
-    void blueButton( Timer &timer);
+    void blueButton(Timer &timer);
     void redButton(Timer &timer);
-    void pedalCommands( Timer &timer);
+    void pedalCommands(Timer &timer);
 
     void changeTimer(boolean minus, boolean plus);
 
