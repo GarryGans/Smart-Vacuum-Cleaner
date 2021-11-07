@@ -41,9 +41,9 @@ void Screen::bottomLine(Buttons &buttons)
     }
 }
 
-void Screen::vacuumState(Switchers &relayState, Buttons &buttons)
+void Screen::vacuumState(Buttons &buttons)
 {
-    if (relayState.relaySW && !buttons.manualSwitch)
+    if (buttons.pedalSwitch)
     {
         pos_x = PosX::leftHalf;
         pos_y = PosY::upHalf;
@@ -60,10 +60,10 @@ void Screen::vacuumState(Switchers &relayState, Buttons &buttons)
 
     setHeight(u8g2_font_HelvetiPixelOutline_tr);
 
-    moveString(vacState[relayState.relaySW], pos_x, pos_y, 100);
+    moveString(vacState[(buttons.pedalSwitch || buttons.manualSwitch) ? true : false], pos_x, pos_y, 100);
 }
 
-void Screen::screens(Switchers &relayState, Buttons &buttons)
+void Screen::screens(Buttons &buttons)
 {
     firstPage();
     do
@@ -75,7 +75,7 @@ void Screen::screens(Switchers &relayState, Buttons &buttons)
 
         else
         {
-            vacuumState(relayState, buttons);
+            vacuumState(buttons);
             bottomLine(buttons);
         }
 

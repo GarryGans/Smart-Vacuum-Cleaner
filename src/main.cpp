@@ -32,5 +32,5 @@ void loop()
 
   switchers.switcher(buttons);
 
-  screen.screens(switchers, buttons);
+  screen.screens(buttons);
 }

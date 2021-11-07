@@ -24,8 +24,8 @@ public:
     void logo();
     void setTimerScreen(Buttons &buttons);
     void bottomLine(Buttons &buttons);
-    void vacuumState(Switchers &relayState, Buttons &buttons);
-    void screens(Switchers &relayState, Buttons &buttons);
+    void vacuumState( Buttons &buttons);
+    void screens( Buttons &buttons);
 };
 
 #endif

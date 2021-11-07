@@ -20,11 +20,9 @@ void Switchers::switcher(Buttons &buttons)
     if (buttons.manualSwitch || buttons.pedalSwitch)
     {
         digitalWrite(vacuumPin, ON);
-        relaySW = true;
     }
     else 
     {
         digitalWrite(vacuumPin, OFF);
-        relaySW = false;
     } 
 }

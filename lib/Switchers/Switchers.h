@@ -10,8 +10,6 @@
 
 class Switchers
 {
-    friend class Screen;
-
 private:
     byte vacuumPin;
     boolean relaySW;
