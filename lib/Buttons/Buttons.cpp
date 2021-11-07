@@ -57,7 +57,7 @@ void Buttons::resetTimer()
     readTimer();
 }
 
-void Buttons::resetEscape()
+void Buttons::resetSet()
 {
     setTimerFlag = false;
     writeTimer();
@@ -111,7 +111,7 @@ void Buttons::setTimer()
     {
         if (timer.ready(escapeCounter, changeTimer((buttonMinus.isClick() || buttonMinus.isHold()), (buttonPlus.isClick() || buttonPlus.isHold()))))
         {
-            resetEscape();
+            resetSet();
         }
     }
 }
@@ -126,7 +126,7 @@ void Buttons::buttons()
         {
             if (setTimerFlag)
             {
-                resetEscape();
+                resetSet();
             }
 
             manualSwitch = true;
@@ -147,9 +147,15 @@ void Buttons::pedalCommands()
     {
         pedalSwitch = true;
 
-        resetEscape();
+        if (setTimerFlag)
+        {
+            resetSet();
+        }
 
-        resetTimer();
+        if (startTimer)
+        {
+            resetTimer();
+        }
 
         if (manualSwitch)
         {
