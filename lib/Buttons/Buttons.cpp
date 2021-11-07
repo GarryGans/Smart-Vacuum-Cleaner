@@ -89,11 +89,11 @@ boolean Buttons::changeTimer(boolean minus, boolean plus)
 
 void Buttons::setTimer()
 {
-    if (!setTimerFlag)
+    if (!setTimerFlag && !block)
     {
         if (buttonMinus.isClick() || buttonMinus.isHold() || buttonPlus.isClick() || buttonPlus.isHold())
         {
-            if (manualSwitch && timer.wait(secMillis))
+            if (manualSwitch)
             {
                 manualSwitch = false;
             }
@@ -109,7 +109,7 @@ void Buttons::setTimer()
 
     if (setTimerFlag)
     {
-        if (timer.ready(3, changeTimer((buttonMinus.isClick() || buttonMinus.isHold()), (buttonPlus.isClick() || buttonPlus.isHold()))))
+        if (timer.ready(escapeCounter, changeTimer((buttonMinus.isClick() || buttonMinus.isHold()), (buttonPlus.isClick() || buttonPlus.isHold()))))
         {
             resetEscape();
         }
@@ -124,9 +124,19 @@ void Buttons::buttons()
 
         if (buttonMinus.isHold() && buttonPlus.isHold() && !manualSwitch)
         {
-            resetEscape();
+            if (setTimerFlag)
+            {
+                resetEscape();
+            }
+
             manualSwitch = true;
             pedalSwitch = false;
+            block = true;
+        }
+
+        if (block && timer.wait(500))
+        {
+            block = false;
         }
     }
 }

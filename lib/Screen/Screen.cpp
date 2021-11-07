@@ -39,10 +39,6 @@ void Screen::bottomLine(Buttons &buttons)
 
         moveString("manual mode", PosX::center, PosY::downSpace);
     }
-    else
-    {
-        moveString("kuku", PosX::center, PosY::downSpace);
-    }
 }
 
 void Screen::vacuumState(Switchers &relayState, Buttons &buttons)
@@ -64,7 +60,7 @@ void Screen::vacuumState(Switchers &relayState, Buttons &buttons)
 
     setHeight(u8g2_font_HelvetiPixelOutline_tr);
 
-    textAlign(vacState[relayState.relaySW], pos_x, pos_y);
+    moveString(vacState[relayState.relaySW], pos_x, pos_y, 100);
 }
 
 void Screen::screens(Switchers &relayState, Buttons &buttons)

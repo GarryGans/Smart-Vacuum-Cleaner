@@ -18,24 +18,18 @@ class Buttons : public GButton
 
 private:
     Timer timer;
-    const unsigned long secMillis = 1000;
 
-    const byte escapeCounter = 8;
+    const byte escapeCounter = 3;
 
     boolean setTimerFlag;
 
+    boolean block;
     boolean manualSwitch;
     boolean pedalSwitch;
     boolean minus;
     boolean plus;
 
     boolean startTimer;
-
-    enum Operator
-    {
-        decrease,
-        increase
-    };
 
     boolean blinkHide;
 
@@ -46,7 +40,6 @@ private:
     const byte maxSetCounter = 99;
 
 public:
-
     Buttons();
     ~Buttons();
 
@@ -62,7 +55,7 @@ public:
 
     void resetTimer();
     void resetEscape();
-    
+
     void readTimer();
     void writeTimer();
 
