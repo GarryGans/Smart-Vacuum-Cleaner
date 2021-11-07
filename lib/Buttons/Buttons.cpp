@@ -1,7 +1,7 @@
 #include "Buttons.h"
 
-GButton buttonPlus(plusPin);
-GButton buttonMinus(minusPin);
+GButton red(plusPin);
+GButton blue(minusPin);
 GButton pedal(pedalPin);
 
 Buttons::Buttons()
@@ -29,8 +29,8 @@ void Buttons::set(GButton &butt)
 
 void Buttons::begin()
 {
-    set(buttonPlus);
-    set(buttonMinus);
+    set(red);
+    set(blue);
     set(pedal);
 
     readTimer();
@@ -91,7 +91,7 @@ void Buttons::setTimer()
 {
     if (!setTimerFlag && !block)
     {
-        if (buttonMinus.isClick() || buttonMinus.isHold() || buttonPlus.isClick() || buttonPlus.isHold())
+        if (blue.isClick() || blue.isHold() || red.isClick() || red.isHold())
         {
             if (manualSwitch)
             {
@@ -109,7 +109,7 @@ void Buttons::setTimer()
 
     if (setTimerFlag)
     {
-        if (timer.ready(escapeCounter, changeTimer((buttonMinus.isClick() || buttonMinus.isHold()), (buttonPlus.isClick() || buttonPlus.isHold()))))
+        if (timer.ready(escapeCounter, changeTimer((blue.isClick() || blue.isHold()), (red.isClick() || red.isHold()))))
         {
             resetSet();
         }
@@ -122,7 +122,7 @@ void Buttons::buttons()
     {
         setTimer();
 
-        if (buttonMinus.isHold() && buttonPlus.isHold() && !manualSwitch)
+        if (blue.isHold() && red.isHold() && !manualSwitch)
         {
             if (setTimerFlag)
             {
@@ -180,8 +180,8 @@ void Buttons::pedalCommands()
 
 void Buttons::com()
 {
-    buttonMinus.tick();
-    buttonPlus.tick();
+    blue.tick();
+    red.tick();
     pedal.tick();
 
     buttons();
