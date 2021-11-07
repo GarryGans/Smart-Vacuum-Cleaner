@@ -54,7 +54,7 @@ public:
     boolean changeTimer(boolean minus, boolean plus);
 
     void resetTimer();
-    void resetEscape();
+    void resetSet();
 
     void readTimer();
     void writeTimer();
