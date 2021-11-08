@@ -60,7 +60,7 @@ void Screen::vacuumState(Buttons &buttons)
 
     setHeight(u8g2_font_HelvetiPixelOutline_tr);
 
-    moveString(vacState[(buttons.pedalSwitch || buttons.manualSwitch) ? true : false], pos_x, pos_y, 100);
+    moveString(vacState[(buttons.pedalSwitch || buttons.manualSwitch) ? true : false], pos_x, pos_y, buttons.manualSwitch ? 20 : 80);
 }
 
 void Screen::screens(Buttons &buttons)

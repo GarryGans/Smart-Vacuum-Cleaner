@@ -109,7 +109,7 @@ void Buttons::setTimer()
 
     if (setTimerFlag)
     {
-        if (timer.ready(escapeCounter, changeTimer((blue.isClick() || blue.isHold()), (red.isClick() || red.isHold()))))
+        if (timer[1].ready(escapeCounter, changeTimer((blue.isClick() || blue.isHold()), (red.isClick() || red.isHold()))))
         {
             resetSet();
         }
@@ -134,7 +134,7 @@ void Buttons::buttons()
             block = true;
         }
 
-        if (block && timer.wait(500))
+        if (block && timer[0].wait(500))
         {
             block = false;
         }
@@ -170,7 +170,7 @@ void Buttons::pedalCommands()
 
     if (startTimer)
     {
-        if (timer.ready(counter))
+        if (timer[0].ready(counter))
         {
             pedalSwitch = false;
             resetTimer();

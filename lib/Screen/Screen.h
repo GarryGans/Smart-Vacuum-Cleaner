@@ -7,16 +7,12 @@
 
 #include <Switchers.h>
 #include <Buttons.h>
-#include <Timer.h>
 
 class Screen : public EFX
 {
 private:
     const char *textCounter = "s";
     const char *vacState[2] = {"OFF", "ON"};
-
-    Timer timer;
-
 public:
     Screen();
     ~Screen();

@@ -17,9 +17,9 @@ class Buttons : public GButton
     friend class Screen;
 
 private:
-    Timer timer;
+    Timer timer[2];
 
-    const byte escapeCounter = 3;
+    byte escapeCounter = 3;
 
     boolean setTimerFlag;
 
