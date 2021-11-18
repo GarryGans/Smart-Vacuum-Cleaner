@@ -13,7 +13,7 @@ void Screen::logo()
     firstPage();
     do
     {
-        setHeight(u8g2_font_nokiafc22_tr);
+        setHeight(u8g2_font_courB08_tf);
         textAlign("Smart", PosX::center, PosY::upHalf);
 
         textAlign("Vacuum Cleaner", PosX::center, PosY::center);
@@ -25,7 +25,7 @@ void Screen::logo()
 
 void Screen::setTimerScreen(Buttons &buttons)
 {
-    setHeight(u8g2_font_courB18_tr);
+    setHeight(u8g2_font_profont22_tn);
 
     digAlign(buttons.counter, PosX::center, PosY::center);
     blinkFrame(buttons.counter, PosX::center, PosY::centerFrame, buttons.blinkHide, true);
@@ -48,7 +48,7 @@ void Screen::vacuumState(Buttons &buttons)
         pos_x = PosX::leftHalf;
         pos_y = PosY::upHalf;
 
-        setHeight(u8g2_font_courB18_tr);
+        setHeight(u8g2_font_profont22_tn);
         digStringAlign(buttons.counter, textCounter, PosX::rightHalf, PosY::downHalf);
     }
 
@@ -71,6 +71,7 @@ void Screen::screens(Buttons &buttons)
         if (buttons.setTimerFlag)
         {
             setTimerScreen(buttons);
+            
         }
 
         else
