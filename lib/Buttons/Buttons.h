@@ -19,7 +19,7 @@ class Buttons : public GButton
 private:
     Timer timer[2];
 
-    byte maxEsc = 3;
+    byte maxEsc = 6;
     byte escapeCounter = maxEsc;
 
     boolean setTimerFlag;
