@@ -65,22 +65,21 @@ void Buttons::resetSet()
 
 boolean Buttons::changeTimer(boolean minus, boolean plus)
 {
-    blinkHide = true;
-
+    blinkHide = false;
+    
     if (minus)
     {
         counter--;
+        blinkHide = true;
     }
 
     else if (plus)
     {
         counter++;
+        blinkHide = true;
     }
 
-    else
-    {
-        blinkHide = false;
-    }
+    
 
     counter = constrain(counter, minSetCounter, maxSetCounter);
 
@@ -112,6 +111,7 @@ void Buttons::setTimer()
         if (timer[1].ready(escapeCounter, changeTimer((blue.isClick() || blue.isHold()), (red.isClick() || red.isHold()))))
         {
             resetSet();
+
             if (pedalSwitch)
             {
                 startTimer = true;
