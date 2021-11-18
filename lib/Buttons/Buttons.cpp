@@ -98,7 +98,7 @@ void Buttons::setTimer()
                 manualSwitch = false;
             }
 
-            else if (pedalSwitch)
+            if (pedalSwitch)
             {
                 resetTimer();
             }
@@ -112,12 +112,11 @@ void Buttons::setTimer()
         if (timer[1].ready(escapeCounter, changeTimer((blue.isClick() || blue.isHold()), (red.isClick() || red.isHold()))))
         {
             resetSet();
-        }
-
-        if (pedalSwitch)
-        {
-            startTimer = true;
-            readTimer();
+            if (pedalSwitch)
+            {
+                startTimer = true;
+                readTimer();
+            }
         }
     }
 }
