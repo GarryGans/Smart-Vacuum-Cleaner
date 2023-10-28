@@ -66,7 +66,7 @@ void Buttons::resetSet()
 boolean Buttons::changeTimer(boolean minus, boolean plus)
 {
     blinkHide = false;
-    
+
     if (minus)
     {
         counter--;
@@ -78,8 +78,6 @@ boolean Buttons::changeTimer(boolean minus, boolean plus)
         counter++;
         blinkHide = true;
     }
-
-    
 
     counter = constrain(counter, minSetCounter, maxSetCounter);
 
