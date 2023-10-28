@@ -71,7 +71,6 @@ void Screen::screens(Buttons &buttons)
         if (buttons.setTimerFlag)
         {
             setTimerScreen(buttons);
-            
         }
 
         else
