@@ -52,7 +52,16 @@ void Screen::vacuumState(Buttons &buttons)
         digStringAlign(buttons.counter, textCounter, PosX::rightHalf, PosY::downHalf);
     }
 
-    else
+    if (buttons.manualSwitch)
+    {
+        pos_x = PosX::leftHalf;
+        pos_y = PosY::center;
+
+        setHeight(u8g2_font_profont22_tn);
+        digStringAlign(buttons.manualCounter, textCounter, PosX::rightHalf, PosY::center);
+    }
+
+    if (!(buttons.pedalSwitch || buttons.manualSwitch))
     {
         pos_x = PosX::center;
         pos_y = PosY::center;
@@ -60,7 +69,7 @@ void Screen::vacuumState(Buttons &buttons)
 
     setHeight(u8g2_font_HelvetiPixelOutline_tr);
 
-    moveString(vacState[(buttons.pedalSwitch || buttons.manualSwitch) ? true : false], pos_x, pos_y, buttons.manualSwitch ? 20 : 80);
+    moveString(vacState[(buttons.pedalSwitch || buttons.manualSwitch) ? true : false], pos_x, pos_y, 0, 0, buttons.manualSwitch ? 20 : 80);
 }
 
 void Screen::screens(Buttons &buttons)

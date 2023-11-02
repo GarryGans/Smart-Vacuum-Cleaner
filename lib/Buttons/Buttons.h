@@ -17,7 +17,7 @@ class Buttons : public GButton
     friend class Screen;
 
 private:
-    Timer timer[2];
+    Timer timer[4];
 
     byte escapeCounter = 3;
 
@@ -33,11 +33,15 @@ private:
 
     boolean blinkHide;
 
+    boolean reset;
+
     byte counter;
+
+    byte manualCounter = 10;
 
     const byte defaultCounter = 10;
     const byte minSetCounter = 1;
-    const byte maxSetCounter = 99;
+    const byte maxSetCounter = 255;
 
 public:
     Buttons();
@@ -50,6 +54,8 @@ public:
 
     void buttons();
     void pedalCommands();
+
+    void manualMode();
 
     boolean changeTimer(boolean minus, boolean plus);
 
