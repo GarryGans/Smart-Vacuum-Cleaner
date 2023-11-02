@@ -37,7 +37,7 @@ void Screen::bottomLine(Buttons &buttons)
     {
         setHeight(u8g2_font_pixelmordred_tf);
 
-        moveString("manual mode", PosX::center, PosY::downSpace);
+        moveString("manual mode", PosX::center, PosY::downSpace, 0, 0, 80);
     }
 }
 
@@ -69,7 +69,7 @@ void Screen::vacuumState(Buttons &buttons)
 
     setHeight(u8g2_font_HelvetiPixelOutline_tr);
 
-    moveString(vacState[(buttons.pedalSwitch || buttons.manualSwitch) ? true : false], pos_x, pos_y, 0, 0, buttons.manualSwitch ? 20 : 80);
+    moveString(vacState[(buttons.pedalSwitch || buttons.manualSwitch) ? true : false], pos_x, pos_y, 0, 0, buttons.manualSwitch ? 40 : 80);
 }
 
 void Screen::screens(Buttons &buttons)

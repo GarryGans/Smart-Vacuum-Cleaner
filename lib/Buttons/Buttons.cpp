@@ -39,11 +39,6 @@ void Buttons::begin()
 void Buttons::readTimer()
 {
     EEPROM.get(couterAddr, counter);
-
-    // if (counter == 255)
-    // {
-    //     counter = defaultCounter;
-    // }
 }
 
 void Buttons::writeTimer()
@@ -92,6 +87,8 @@ void Buttons::setTimer()
         {
             if (manualSwitch)
             {
+                reset = true;
+
                 manualSwitch = false;
             }
 
@@ -133,6 +130,7 @@ void Buttons::buttons()
             }
 
             manualSwitch = true;
+            reset = true;
 
             pedalSwitch = false;
             block = true;
@@ -150,6 +148,7 @@ void Buttons::pedalCommands()
     if (pedal.isClick() || pedal.isHold())
     {
         pedalSwitch = true;
+        reset = true;
 
         if (setTimerFlag)
         {
@@ -174,7 +173,9 @@ void Buttons::pedalCommands()
 
     if (startTimer)
     {
-        counter = timer[2].counter(counter);
+        counter = timer[2].counter(counter, false, reset);
+
+        reset = false;
 
         if (counter == 0)
         {
@@ -188,13 +189,13 @@ void Buttons::manualMode()
 {
     if (manualSwitch)
     {
-        manualCounter = timer[3].counter(manualCounter, false, reset);
+        manualCounter = timer[3].counter(manDef, false, reset);
+
         reset = false;
 
         if (manualCounter == 0)
         {
             manualSwitch = false;
-            manualCounter = 10;
         }
     }
 }

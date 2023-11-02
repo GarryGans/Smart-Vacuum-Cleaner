@@ -6,6 +6,8 @@
 #define minusPin 4
 #define pedalPin 2
 
+#define manDef 240
+
 #include <Arduino.h>
 #include "GyverButton.h"
 #include "Timer.h"
@@ -37,7 +39,7 @@ private:
 
     byte counter;
 
-    byte manualCounter = 10;
+    byte manualCounter = manDef;
 
     const byte defaultCounter = 10;
     const byte minSetCounter = 1;
