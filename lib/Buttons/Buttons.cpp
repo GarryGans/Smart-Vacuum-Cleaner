@@ -106,12 +106,6 @@ void Buttons::setTimer()
         if (timer[0].ready(escapeCounter, changeTimer((blue.isClick() || blue.isHold()), (red.isClick() || red.isHold()))))
         {
             resetSet();
-
-            if (pedalSwitch)
-            {
-                startTimer = true;
-                readTimer();
-            }
         }
     }
 }
@@ -136,7 +130,7 @@ void Buttons::buttons()
             block = true;
         }
 
-        if (block && timer[1].wait(500))
+        if (block && timer[1].wait(1000))
         {
             block = false;
         }
