@@ -23,34 +23,41 @@ private:
 
     byte escapeCounter = 3;
 
-    boolean setTimerFlag;
+    boolean setTimerFlag = false;
 
-    boolean block;
-    boolean manualSwitch;
-    boolean pedalSwitch;
-    boolean minus;
-    boolean plus;
+    boolean block = false;
 
-    boolean startTimer;
+    boolean manualSwitch = false;
+    boolean pedalSwitch = false;
 
-    boolean blinkHide;
+    boolean minus = false;
+    boolean plus = false;
 
-    boolean reset;
+    boolean startTimer = false;
 
-    byte counter;
+    boolean blinkHide = false;
+
+    boolean reset = false;
+
+    byte counter = 0;
 
     byte manualCounter = manDef;
 
     const byte defaultCounter = 10;
     const byte minSetCounter = 1;
-    const byte maxSetCounter = 255;
+    const byte maxSetCounter = 240;
 
 public:
     Buttons();
     ~Buttons();
 
+    
+
     void set(GButton &butt);
     void begin();
+
+    boolean blueB();
+    boolean redB();
 
     void setTimer();
 

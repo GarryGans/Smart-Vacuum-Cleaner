@@ -12,6 +12,8 @@ Buttons::~Buttons()
 {
 }
 
+
+
 void Buttons::set(GButton &butt)
 {
     butt.setDebounce(50);      // настройка антидребезга (по умолчанию 80 мс)
@@ -34,6 +36,16 @@ void Buttons::begin()
     set(pedal);
 
     readTimer();
+}
+
+boolean Buttons::blueB()
+{
+    return blue.isClick() || blue.isHold();
+}
+
+boolean Buttons::redB()
+{
+    return red.isClick() || red.isHold();
 }
 
 void Buttons::readTimer()
@@ -62,19 +74,17 @@ boolean Buttons::changeTimer(boolean minus, boolean plus)
 {
     blinkHide = false;
 
-    if (minus)
+    if (minus && counter > minSetCounter)
     {
         counter--;
         blinkHide = true;
     }
 
-    else if (plus)
+    else if (plus && counter < maxSetCounter)
     {
         counter++;
         blinkHide = true;
     }
-
-    counter = constrain(counter, minSetCounter, maxSetCounter);
 
     return blinkHide;
 }
@@ -83,7 +93,7 @@ void Buttons::setTimer()
 {
     if (!setTimerFlag && !block)
     {
-        if (blue.isClick() || blue.isHold() || red.isClick() || red.isHold())
+        if (blueB() || redB())
         {
             if (manualSwitch)
             {
@@ -103,7 +113,7 @@ void Buttons::setTimer()
 
     if (setTimerFlag)
     {
-        if (timer[0].ready(escapeCounter, changeTimer((blue.isClick() || blue.isHold()), (red.isClick() || red.isHold()))))
+        if (timer[0].ready(escapeCounter, changeTimer(blueB(), redB())))
         {
             resetSet();
         }

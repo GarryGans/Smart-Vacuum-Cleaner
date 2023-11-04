@@ -37,7 +37,7 @@ void Screen::bottomLine(Buttons &buttons)
     {
         setHeight(u8g2_font_pixelmordred_tf);
 
-        moveStringDeep("manual mode", PosX::center, PosY::downSpace, 0, 80);
+        moveStringPad("manual mode", PosX::center, PosY::downSpace, 10, 80);
     }
 }
 

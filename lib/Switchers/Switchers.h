@@ -12,7 +12,6 @@ class Switchers
 {
 private:
     byte vacuumPin;
-    boolean relaySW;
 
 public:
     Switchers();
