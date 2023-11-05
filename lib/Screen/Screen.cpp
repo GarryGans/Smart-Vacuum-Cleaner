@@ -39,7 +39,7 @@ void Screen::bottomLine(Buttons &buttons)
     {
         setHeight(u8g2_font_pixelmordred_tf);
 
-        moveStringPad("manual mode", PosX::center, PosY::downSpace, 10, 80);
+        moveStringPad("manual mode", PosX::center, PosY::downSpace, manStrPad, manStrSpeed);
     }
 }
 
@@ -51,7 +51,7 @@ void Screen::vacuumState(Buttons &buttons)
         pos_y = PosY::upHalf;
 
         setHeight(u8g2_font_profont22_tn);
-        digStringAlign(buttons.counter, textCounter, PosX::rightHalf, PosY::downHalf);
+        digStringAlign(buttons.counter, "s", PosX::rightHalf, PosY::downHalf);
     }
 
     if (buttons.manualSwitch)
@@ -60,7 +60,7 @@ void Screen::vacuumState(Buttons &buttons)
         pos_y = PosY::center;
 
         setHeight(u8g2_font_profont22_tn);
-        digStringAlign(buttons.manualCounter, textCounter, PosX::rightHalf, PosY::center);
+        digStringAlign(buttons.manualCounter, "s", PosX::rightHalf, PosY::center);
     }
 
     if (!(buttons.pedalSwitch || buttons.manualSwitch))
@@ -68,12 +68,15 @@ void Screen::vacuumState(Buttons &buttons)
         pos_x = PosX::center;
         pos_y = PosY::center;
 
-        escapeBar(false, 4, a, true, 1000 );
+        escapeBar(false, escCount, esc, true, escTime);
     }
 
     setHeight(u8g2_font_HelvetiPixelOutline_tr);
 
-    moveStringDeep(vacState[(buttons.pedalSwitch || buttons.manualSwitch) ? true : false], pos_x, pos_y, 0, buttons.manualSwitch ? 40 : 80);
+    String state = vacState[(buttons.pedalSwitch || buttons.manualSwitch) ? true : false];
+    byte speed = buttons.manualSwitch ? manSpeed : autoSpeed;
+
+    moveStringDeep(state, pos_x, pos_y, stateStrDeep, speed);
 }
 
 void Screen::screens(Buttons &buttons)
