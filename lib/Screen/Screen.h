@@ -14,7 +14,7 @@
 #define escCount 4
 #define escTime 1000
 
-#define stateStrDeep 0
+#define stateStrDeep 10
 #define manSpeed 40
 #define autoSpeed 80
 
@@ -22,6 +22,8 @@ class Screen : public EFX
 {
 private:
     boolean esc = false;
+
+    String mode = "manual mode";
 
     const char *vacState[2] = {"OFF", "ON"};
 

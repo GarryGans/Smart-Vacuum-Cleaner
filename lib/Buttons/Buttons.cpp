@@ -48,8 +48,9 @@ boolean Buttons::redB()
 
 void Buttons::writeTimer()
 {
-    setTimerFlag = false;
     EEPROM.put(couterAddr, counter);
+    reset_A = true;
+    setTimerFlag = false;
 }
 
 void Buttons::manualSw()
@@ -58,10 +59,11 @@ void Buttons::manualSw()
     {
         manualSwitch = true;
         pedalSwitch = false;
+        startTimer = false;
 
         setTimerFlag = false;
 
-        reset = true;
+        reset_M = true;
 
         block = true;
     }
@@ -102,20 +104,19 @@ void Buttons::setTimer()
         {
             manualSwitch = false;
 
-            if (pedalSwitch)
-            {
-                startTimer = false;
-            }
-
-            reset = true;
-
             setTimerFlag = true;
+
+            reset_B = true;
         }
     }
 
     if (setTimerFlag)
     {
-        temp = timer[0].reduceCounter(escCount, changeTimer(blueB(), redB()));
+        reset_P = changeTimer(blueB(), redB()) || reset_B;
+
+        temp = timer[0].reduceCounter(escCount, reset_P);
+
+        reset_B = false;
 
         if (temp == 0)
         {
@@ -142,11 +143,14 @@ void Buttons::pedalCommands()
 
         startTimer = false;
 
-        reset = true;
+        reset_A = true;
+
+        autoCounter = counter;
 
         if (setTimerFlag)
         {
             writeTimer();
+            reset_B = true;
         }
     }
 
@@ -155,11 +159,11 @@ void Buttons::pedalCommands()
         startTimer = true;
     }
 
-    if (startTimer)
+    if (startTimer && !setTimerFlag)
     {
-        autoCounter = timer[2].reduceCounter(counter, reset);
+        autoCounter = timer[2].reduceCounter(counter, reset_A);
 
-        reset = false;
+        reset_A = false;
 
         if (autoCounter == 0)
         {
@@ -173,9 +177,9 @@ void Buttons::manualMode()
 {
     if (manualSwitch)
     {
-        manualCounter = timer[3].reduceCounter(manDef, reset);
+        manualCounter = timer[3].reduceCounter(manDef, reset_M);
 
-        reset = false;
+        reset_M = false;
 
         if (manualCounter == 0)
         {

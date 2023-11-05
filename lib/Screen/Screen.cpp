@@ -32,7 +32,11 @@ void Screen::setTimerScreen(Buttons &buttons)
     digAlign(buttons.counter, PosX::center, PosY::center);
     blinkFrame(buttons.counter, PosX::center, PosY::centerFrame, buttons.blinkHide, true);
 
-    escapeBar(buttons.temp, true);
+    escapeBar(buttons.temp, buttons.reset_P);
+    // progressBar(buttons.temp, buttons.reset_P);
+
+    // progressBrickBar(buttons.temp, buttons.reset_P);
+    // escapeBrickBar(buttons.temp, buttons.reset_P);
 }
 
 void Screen::bottomLine(Buttons &buttons)
@@ -41,7 +45,7 @@ void Screen::bottomLine(Buttons &buttons)
     {
         setHeight(u8g2_font_pixelmordred_tf);
 
-        moveStringPad("manual mode", PosX::center, PosY::downSpace, manStrPad, manStrSpeed);
+        moveStringPad(mode, PosX::center, PosY::downSpace, manStrPad, manStrSpeed);
     }
 }
 
@@ -70,12 +74,13 @@ void Screen::vacuumState(Buttons &buttons)
         pos_x = PosX::center;
         pos_y = PosY::center;
 
-        escapeBar(false, escCount, esc, true, escTime);
+        // escapeBar(false, escCount, esc, true, escTime);
     }
 
     setHeight(u8g2_font_HelvetiPixelOutline_tr);
 
     String state = vacState[(buttons.pedalSwitch || buttons.manualSwitch) ? true : false];
+
     byte speed = buttons.manualSwitch ? manSpeed : autoSpeed;
 
     moveStringDeep(state, pos_x, pos_y, stateStrDeep, speed);

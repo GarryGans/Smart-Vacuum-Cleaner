@@ -40,7 +40,10 @@ private:
 
     boolean blinkHide = false;
 
-    boolean reset = false;
+    boolean reset_A = false;
+    boolean reset_M = false;
+    boolean reset_B = false;
+    boolean reset_P = false;
 
     byte counter = 0;
 
