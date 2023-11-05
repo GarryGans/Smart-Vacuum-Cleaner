@@ -150,7 +150,7 @@ void Buttons::pedalCommands()
         }
     }
 
-    else if (pedalSwitch && pedal.isRelease() && !startTimer)
+    else if (pedalSwitch && pedal.isRelease() && !startTimer && !setTimerFlag)
     {
         startTimer = true;
     }

@@ -23,7 +23,6 @@ class Screen : public EFX
 private:
     boolean esc = false;
 
-    // const char *textCounter = "s";
     const char *vacState[2] = {"OFF", "ON"};
 
 public:

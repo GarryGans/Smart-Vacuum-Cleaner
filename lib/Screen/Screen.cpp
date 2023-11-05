@@ -11,7 +11,6 @@ Screen::~Screen()
 void Screen::logo()
 {
     // MACH MEMORY FLASH
-    
 
     firstPage();
     do
@@ -54,7 +53,7 @@ void Screen::vacuumState(Buttons &buttons)
         pos_y = PosY::upHalf;
 
         setHeight(u8g2_font_profont22_tn);
-        digStringAlign(buttons.autoCounter, "s", PosX::rightHalf, PosY::downHalf);
+        digAlign(buttons.autoCounter, PosX::rightHalf, PosY::downHalf);
     }
 
     if (buttons.manualSwitch)
@@ -63,7 +62,7 @@ void Screen::vacuumState(Buttons &buttons)
         pos_y = PosY::center;
 
         setHeight(u8g2_font_profont22_tn);
-        digStringAlign(buttons.manualCounter, "s", PosX::rightHalf, PosY::center);
+        digAlign(buttons.manualCounter, PosX::rightHalf, PosY::center);
     }
 
     if (!(buttons.pedalSwitch || buttons.manualSwitch))
