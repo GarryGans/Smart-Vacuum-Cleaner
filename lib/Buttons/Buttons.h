@@ -44,7 +44,9 @@ private:
 
     byte counter = 0;
 
-    byte manualCounter = manDef;
+    byte manualCounter = 0;
+
+    byte autoCounter = 0;
 
 public:
     Buttons();
@@ -59,7 +61,6 @@ public:
     void readTimer();
     void writeTimer();
 
-    void resetTimer();
     void resetSet();
 
     void manualSw();

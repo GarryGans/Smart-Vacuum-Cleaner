@@ -54,7 +54,7 @@ void Screen::vacuumState(Buttons &buttons)
         pos_y = PosY::upHalf;
 
         setHeight(u8g2_font_profont22_tn);
-        digStringAlign(buttons.counter, "s", PosX::rightHalf, PosY::downHalf);
+        digStringAlign(buttons.autoCounter, "s", PosX::rightHalf, PosY::downHalf);
     }
 
     if (buttons.manualSwitch)
