@@ -21,7 +21,8 @@ class Buttons : public GButton
 private:
     Timer timer[4];
 
-    byte escapeCounter = 3;
+    byte escapeCounter = 4;
+    byte temp;
 
     boolean setTimerFlag = false;
 
@@ -51,9 +52,7 @@ public:
     Buttons();
     ~Buttons();
 
-    
-
-    void set(GButton &butt);
+        void set(GButton &butt);
     void begin();
 
     boolean blueB();

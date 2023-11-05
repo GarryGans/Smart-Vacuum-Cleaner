@@ -12,8 +12,6 @@ Buttons::~Buttons()
 {
 }
 
-
-
 void Buttons::set(GButton &butt)
 {
     butt.setDebounce(50);      // настройка антидребезга (по умолчанию 80 мс)
@@ -113,7 +111,9 @@ void Buttons::setTimer()
 
     if (setTimerFlag)
     {
-        if (timer[0].ready(escapeCounter, changeTimer(blueB(), redB())))
+        temp = timer[0].reduceCounter(escapeCounter, changeTimer(blueB(), redB()));
+
+        if (temp == 0)
         {
             resetSet();
         }

@@ -29,6 +29,8 @@ void Screen::setTimerScreen(Buttons &buttons)
 
     digAlign(buttons.counter, PosX::center, PosY::center);
     blinkFrame(buttons.counter, PosX::center, PosY::centerFrame, buttons.blinkHide, true);
+
+    escapeBar(buttons.temp, true);
 }
 
 void Screen::bottomLine(Buttons &buttons)
