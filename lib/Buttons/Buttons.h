@@ -52,7 +52,7 @@ public:
     Buttons();
     ~Buttons();
 
-        void set(GButton &butt);
+    void set(GButton &butt);
     void begin();
 
     boolean blueB();
