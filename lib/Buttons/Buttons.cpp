@@ -33,7 +33,7 @@ void Buttons::begin()
     set(blue);
     set(pedal);
 
-    readTimer();
+    EEPROM.get(couterAddr, counter);
 }
 
 boolean Buttons::blueB()
@@ -46,20 +46,10 @@ boolean Buttons::redB()
     return red.isClick() || red.isHold();
 }
 
-void Buttons::readTimer()
-{
-    EEPROM.get(couterAddr, counter);
-}
-
 void Buttons::writeTimer()
 {
-    EEPROM.put(couterAddr, counter);
-}
-
-void Buttons::resetSet()
-{
     setTimerFlag = false;
-    writeTimer();
+    EEPROM.put(couterAddr, counter);
 }
 
 void Buttons::manualSw()
@@ -110,10 +100,7 @@ void Buttons::setTimer()
     {
         if (blueB() || redB())
         {
-            if (manualSwitch)
-            {
-                manualSwitch = false;
-            }
+            manualSwitch = false;
 
             if (pedalSwitch)
             {
@@ -132,7 +119,7 @@ void Buttons::setTimer()
 
         if (temp == 0)
         {
-            resetSet();
+            writeTimer();
         }
     }
 }
@@ -159,7 +146,7 @@ void Buttons::pedalCommands()
 
         if (setTimerFlag)
         {
-            resetSet();
+            writeTimer();
         }
     }
 

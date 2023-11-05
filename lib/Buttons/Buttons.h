@@ -58,10 +58,7 @@ public:
     boolean blueB();
     boolean redB();
 
-    void readTimer();
     void writeTimer();
-
-    void resetSet();
 
     void manualSw();
     boolean changeTimer(boolean minus, boolean plus);
