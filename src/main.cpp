@@ -23,7 +23,7 @@ void setup()
   delay(100);
 
   screen.logo();
-  delay(500);
+  delay(1000);
 }
 
 void loop()

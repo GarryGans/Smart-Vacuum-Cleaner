@@ -10,6 +10,9 @@ Screen::~Screen()
 
 void Screen::logo()
 {
+    // MACH MEMORY FLASH
+    
+
     firstPage();
     do
     {
