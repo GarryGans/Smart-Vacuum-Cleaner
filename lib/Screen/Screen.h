@@ -11,8 +11,11 @@
 class Screen : public EFX
 {
 private:
+    boolean a = false;
+
     const char *textCounter = "s";
     const char *vacState[2] = {"OFF", "ON"};
+
 public:
     Screen();
     ~Screen();
@@ -20,8 +23,8 @@ public:
     void logo();
     void setTimerScreen(Buttons &buttons);
     void bottomLine(Buttons &buttons);
-    void vacuumState( Buttons &buttons);
-    void screens( Buttons &buttons);
+    void vacuumState(Buttons &buttons);
+    void screens(Buttons &buttons);
 };
 
 #endif

@@ -65,6 +65,8 @@ void Screen::vacuumState(Buttons &buttons)
     {
         pos_x = PosX::center;
         pos_y = PosY::center;
+
+        escapeBar(false, 4, a, true, 1000 );
     }
 
     setHeight(u8g2_font_HelvetiPixelOutline_tr);
