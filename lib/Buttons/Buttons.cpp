@@ -68,10 +68,28 @@ void Buttons::resetSet()
     writeTimer();
 }
 
+void Buttons::manualSw()
+{
+    if (blue.isHold() && red.isHold() && !manualSwitch)
+    {
+        manualSwitch = true;
+        pedalSwitch = false;
+
+        setTimerFlag = false;
+
+        reset = true;
+
+        block = true;
+    }
+
+    if (block && timer[1].wait(1000))
+    {
+        block = false;
+    }
+}
+
 boolean Buttons::changeTimer(boolean minus, boolean plus)
 {
-    blinkHide = false;
-
     if (minus && counter > minSetCounter)
     {
         counter--;
@@ -84,29 +102,12 @@ boolean Buttons::changeTimer(boolean minus, boolean plus)
         blinkHide = true;
     }
 
+    else
+    {
+        blinkHide = false;
+    }
+
     return blinkHide;
-}
-
-void Buttons::manualSw()
-{
-    if (blue.isHold() && red.isHold() && !manualSwitch)
-    {
-        if (setTimerFlag)
-        {
-            resetSet();
-        }
-
-        manualSwitch = true;
-        reset = true;
-
-        pedalSwitch = false;
-        block = true;
-    }
-
-    if (block && timer[1].wait(1000))
-    {
-        block = false;
-    }
 }
 
 void Buttons::setTimer()
@@ -115,10 +116,10 @@ void Buttons::setTimer()
     {
         if (blueB() || redB())
         {
+            // reset = true;
+
             if (manualSwitch)
             {
-                reset = true;
-
                 manualSwitch = false;
             }
 
@@ -146,9 +147,8 @@ void Buttons::buttons()
 {
     if (!pedal.isClick() || !pedal.isHold())
     {
-        setTimer();
-
         manualSw();
+        setTimer();
     }
 }
 
@@ -157,6 +157,7 @@ void Buttons::pedalCommands()
     if (pedal.isClick() || pedal.isHold())
     {
         pedalSwitch = true;
+
         reset = true;
 
         if (setTimerFlag)

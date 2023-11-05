@@ -56,21 +56,20 @@ public:
     boolean blueB();
     boolean redB();
 
-    void manualSw();
-    void setTimer();
-
-    void buttons();
-    void pedalCommands();
-
-    void manualMode();
-
-    boolean changeTimer(boolean minus, boolean plus);
+    void readTimer();
+    void writeTimer();
 
     void resetTimer();
     void resetSet();
 
-    void readTimer();
-    void writeTimer();
+    void manualSw();
+    boolean changeTimer(boolean minus, boolean plus);
+    void setTimer();
+    void buttons();
+
+    void pedalCommands();
+
+    void manualMode();
 
     void com();
 };
