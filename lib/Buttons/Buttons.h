@@ -1,6 +1,11 @@
 #ifndef BUTTONS_H
 #define BUTTONS_H
 
+#include <Arduino.h>
+#include "GyverButton.h"
+#include "Timer.h"
+#include <EEPROM.h>
+
 #define couterAddr 0
 #define plusPin 5
 #define minusPin 4
@@ -8,10 +13,11 @@
 
 #define manDef 240
 
-#include <Arduino.h>
-#include "GyverButton.h"
-#include "Timer.h"
-#include <EEPROM.h>
+#define defaultCounter 10
+#define minSetCounter 1
+#define maxSetCounter 240
+
+#define escCount 4
 
 class Buttons : public GButton
 {
@@ -21,7 +27,6 @@ class Buttons : public GButton
 private:
     Timer timer[4];
 
-    byte escapeCounter = 4;
     byte temp;
 
     boolean setTimerFlag = false;
@@ -30,9 +35,6 @@ private:
 
     boolean manualSwitch = false;
     boolean pedalSwitch = false;
-
-    boolean minus = false;
-    boolean plus = false;
 
     boolean startTimer = false;
 
@@ -44,10 +46,6 @@ private:
 
     byte manualCounter = manDef;
 
-    const byte defaultCounter = 10;
-    const byte minSetCounter = 1;
-    const byte maxSetCounter = 240;
-
 public:
     Buttons();
     ~Buttons();
@@ -58,6 +56,7 @@ public:
     boolean blueB();
     boolean redB();
 
+    void manualSw();
     void setTimer();
 
     void buttons();

@@ -87,6 +87,28 @@ boolean Buttons::changeTimer(boolean minus, boolean plus)
     return blinkHide;
 }
 
+void Buttons::manualSw()
+{
+    if (blue.isHold() && red.isHold() && !manualSwitch)
+    {
+        if (setTimerFlag)
+        {
+            resetSet();
+        }
+
+        manualSwitch = true;
+        reset = true;
+
+        pedalSwitch = false;
+        block = true;
+    }
+
+    if (block && timer[1].wait(1000))
+    {
+        block = false;
+    }
+}
+
 void Buttons::setTimer()
 {
     if (!setTimerFlag && !block)
@@ -111,7 +133,7 @@ void Buttons::setTimer()
 
     if (setTimerFlag)
     {
-        temp = timer[0].reduceCounter(escapeCounter, changeTimer(blueB(), redB()));
+        temp = timer[0].reduceCounter(escCount, changeTimer(blueB(), redB()));
 
         if (temp == 0)
         {
@@ -126,24 +148,7 @@ void Buttons::buttons()
     {
         setTimer();
 
-        if (blue.isHold() && red.isHold() && !manualSwitch)
-        {
-            if (setTimerFlag)
-            {
-                resetSet();
-            }
-
-            manualSwitch = true;
-            reset = true;
-
-            pedalSwitch = false;
-            block = true;
-        }
-
-        if (block && timer[1].wait(1000))
-        {
-            block = false;
-        }
+        manualSw();
     }
 }
 
@@ -177,7 +182,7 @@ void Buttons::pedalCommands()
 
     if (startTimer)
     {
-        counter = timer[2].counter(counter, false, reset);
+        counter = timer[2].reduceCounter(counter, reset);
 
         reset = false;
 
@@ -193,7 +198,7 @@ void Buttons::manualMode()
 {
     if (manualSwitch)
     {
-        manualCounter = timer[3].counter(manDef, false, reset);
+        manualCounter = timer[3].reduceCounter(manDef, reset);
 
         reset = false;
 
