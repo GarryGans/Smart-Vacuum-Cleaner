@@ -9,14 +9,14 @@
 #include <Buttons.h>
 
 #define manStrPad 10
-#define manStrSpeed 80
+#define manStrTime 80
 
 #define escCount 4
 #define escTime 1000
 
 #define stateStrDeep 10
-#define manSpeed 40
-#define autoSpeed 80
+#define manTime 40
+#define autoTime 80
 
 class Screen : public EFX
 {

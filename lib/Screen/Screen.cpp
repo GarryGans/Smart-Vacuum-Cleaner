@@ -45,7 +45,7 @@ void Screen::bottomLine(Buttons &buttons)
     {
         setHeight(u8g2_font_pixelmordred_tf);
 
-        moveStringPad(mode, PosX::center, PosY::downSpace, manStrPad, manStrSpeed);
+        moveStringPad(mode, PosX::center, PosY::downSpace, manStrPad, manStrTime);
     }
 }
 
@@ -81,9 +81,9 @@ void Screen::vacuumState(Buttons &buttons)
 
     String state = vacState[(buttons.pedalSwitch || buttons.manualSwitch) ? true : false];
 
-    byte speed = buttons.manualSwitch ? manSpeed : autoSpeed;
+    byte time = buttons.manualSwitch ? manTime : autoTime;
 
-    moveStringDeep(state, pos_x, pos_y, stateStrDeep, speed);
+    moveStringDeep(state, pos_x, pos_y, stateStrDeep, time);
 }
 
 void Screen::screens(Buttons &buttons)
