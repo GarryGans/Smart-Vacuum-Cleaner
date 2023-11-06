@@ -11,7 +11,7 @@ Screen screen;
 
 void setup()
 {
-  // Serial.begin(9600);
+  Serial.begin(9600);
 
   buttons.begin();
   delay(100);
@@ -22,8 +22,8 @@ void setup()
   screen.begin();
   delay(100);
 
-  screen.logo();
-  delay(1000);
+  // screen.logo();
+  // delay(1000);
 }
 
 void loop()

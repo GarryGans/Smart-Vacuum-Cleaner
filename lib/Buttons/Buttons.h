@@ -11,7 +11,7 @@
 #define minusPin 4
 #define pedalPin 2
 
-#define manDef 240
+#define manDef 90
 
 #define defaultCounter 10
 #define minSetCounter 1
@@ -43,7 +43,8 @@ private:
     boolean reset_A = false;
     boolean reset_M = false;
     boolean reset_B = false;
-    boolean reset_P = false;
+
+    // boolean reset_P = false;
 
     byte counter = 0;
 

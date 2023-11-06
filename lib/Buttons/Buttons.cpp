@@ -49,7 +49,7 @@ boolean Buttons::redB()
 void Buttons::writeTimer()
 {
     EEPROM.put(couterAddr, counter);
-    reset_A = true;
+    // reset_A = true;
     setTimerFlag = false;
 }
 
@@ -79,21 +79,16 @@ boolean Buttons::changeTimer(boolean minus, boolean plus)
     if (minus && counter > minSetCounter)
     {
         counter--;
-        blinkHide = true;
+        return true;
     }
 
     else if (plus && counter < maxSetCounter)
     {
         counter++;
-        blinkHide = true;
+        return true;
     }
 
-    else
-    {
-        blinkHide = false;
-    }
-
-    return blinkHide;
+    return false;
 }
 
 void Buttons::setTimer()
@@ -107,29 +102,37 @@ void Buttons::setTimer()
             setTimerFlag = true;
 
             reset_B = true;
+
+            Serial.print("reset_B ");
+            Serial.println(reset_B);
         }
     }
 
     if (setTimerFlag)
     {
-        reset_P = changeTimer(blueB(), redB()) || reset_B;
+        Serial.print("reset_B 2 ");
+        Serial.println(reset_B);
 
-        temp = timer[0].reduceCounter(escCount, reset_P);
+        blinkHide = changeTimer(blueB(), redB());
 
-        reset_B = false;
+        temp = timer[0].reduceCounter(escCount, reset_B);
+
+        reset_B = blinkHide;
 
         if (temp == 0)
         {
             writeTimer();
+            Serial.println("ZERO");
         }
     }
 }
 
 void Buttons::buttons()
 {
-    if (!pedal.isClick() || !pedal.isHold())
+    manualSw();
+
+    if (!pedalSwitch)
     {
-        manualSw();
         setTimer();
     }
 }

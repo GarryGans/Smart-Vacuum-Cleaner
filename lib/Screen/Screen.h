@@ -18,6 +18,8 @@
 #define manTime 40
 #define autoTime 80
 
+
+
 class Screen : public EFX
 {
 private:
@@ -28,6 +30,8 @@ private:
     const char *vacState[2] = {"OFF", "ON"};
 
 public:
+    
+
     Screen();
     ~Screen();
 
