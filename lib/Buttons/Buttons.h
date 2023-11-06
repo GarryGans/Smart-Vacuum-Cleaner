@@ -65,9 +65,9 @@ public:
     void writeTimer();
 
     void manualSw();
+    
     boolean changeTimer(boolean minus, boolean plus);
     void setTimer();
-    void buttons();
 
     void pedalCommands();
 

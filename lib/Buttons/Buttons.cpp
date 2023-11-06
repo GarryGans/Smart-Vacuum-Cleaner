@@ -53,26 +53,6 @@ void Buttons::writeTimer()
     setTimerFlag = false;
 }
 
-void Buttons::manualSw()
-{
-    if (blue.isHold() && red.isHold() && !manualSwitch)
-    {
-        manualSwitch = true;
-        pedalSwitch = false;
-        startTimer = false;
-
-        setTimerFlag = false;
-
-        reset_M = true;
-
-        block = true;
-    }
-
-    if (block && timer[1].wait(1000))
-    {
-        block = false;
-    }
-}
 
 boolean Buttons::changeTimer(boolean minus, boolean plus)
 {
@@ -127,13 +107,39 @@ void Buttons::setTimer()
     }
 }
 
-void Buttons::buttons()
+void Buttons::manualSw()
 {
-    manualSw();
-
-    if (!pedalSwitch)
+    if (blue.isHold() && red.isHold() && !manualSwitch)
     {
-        setTimer();
+        manualSwitch = true;
+        pedalSwitch = false;
+        startTimer = false;
+
+        setTimerFlag = false;
+
+        reset_M = true;
+
+        block = true;
+    }
+
+    if (block && timer[1].wait(1000))
+    {
+        block = false;
+    }
+}
+
+void Buttons::manualMode()
+{
+    if (manualSwitch)
+    {
+        manualCounter = timer[3].reduceCounter(manDef, reset_M);
+
+        reset_M = false;
+
+        if (manualCounter == 0)
+        {
+            manualSwitch = false;
+        }
     }
 }
 
@@ -153,7 +159,6 @@ void Buttons::pedalCommands()
         if (setTimerFlag)
         {
             writeTimer();
-            reset_B = true;
         }
     }
 
@@ -176,20 +181,6 @@ void Buttons::pedalCommands()
     }
 }
 
-void Buttons::manualMode()
-{
-    if (manualSwitch)
-    {
-        manualCounter = timer[3].reduceCounter(manDef, reset_M);
-
-        reset_M = false;
-
-        if (manualCounter == 0)
-        {
-            manualSwitch = false;
-        }
-    }
-}
 
 void Buttons::com()
 {
@@ -197,7 +188,13 @@ void Buttons::com()
     red.tick();
     pedal.tick();
 
-    buttons();
+    manualSw();
     manualMode();
+
+    if (!pedalSwitch)
+    {
+        setTimer();
+    }
+
     pedalCommands();
 }
