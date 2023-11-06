@@ -29,8 +29,6 @@ void setup()
 void loop()
 {
   buttons.com();
-
-  switchers.switcher(buttons);
-
   screen.screens(buttons);
+  switchers.switcher(buttons);
 }

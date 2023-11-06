@@ -49,10 +49,8 @@ boolean Buttons::redB()
 void Buttons::writeTimer()
 {
     EEPROM.put(couterAddr, counter);
-    // reset_A = true;
     setTimerFlag = false;
 }
-
 
 boolean Buttons::changeTimer(boolean minus, boolean plus)
 {
@@ -73,45 +71,49 @@ boolean Buttons::changeTimer(boolean minus, boolean plus)
 
 void Buttons::setTimer()
 {
-    if (!setTimerFlag && !block)
+    if (!pedalSwitch)
     {
-        if (blueB() || redB())
+        if (!setTimerFlag)
         {
-            manualSwitch = false;
+            if (blueB() || redB())
+            {
+                manualSwitch = false;
 
-            setTimerFlag = true;
+                setTimerFlag = true;
 
-            reset_B = true;
+                reset_B = true;
 
-            Serial.print("reset_B ");
-            Serial.println(reset_B);
+                // Serial.print("reset_B ");
+                // Serial.println(reset_B);
+            }
         }
-    }
 
-    if (setTimerFlag)
-    {
-        Serial.print("reset_B 2 ");
-        Serial.println(reset_B);
-
-        blinkHide = changeTimer(blueB(), redB());
-
-        temp = timer[0].reduceCounter(escCount, reset_B);
-
-        reset_B = blinkHide;
-
-        if (temp == 0)
+        if (setTimerFlag)
         {
-            writeTimer();
-            Serial.println("ZERO");
+            // Serial.print("reset_B 2 ");
+            // Serial.println(reset_B);
+
+            blinkHide = changeTimer(blueB(), redB());
+
+            temp = timer[0].reduceCounter(escCount, reset_B);
+
+            reset_B = blinkHide;
+
+            if (temp == 0)
+            {
+                writeTimer();
+                // Serial.println("ZERO");
+            }
         }
     }
 }
 
-void Buttons::manualSw()
+void Buttons::manualMode()
 {
     if (blue.isHold() && red.isHold() && !manualSwitch)
     {
         manualSwitch = true;
+
         pedalSwitch = false;
         startTimer = false;
 
@@ -126,10 +128,7 @@ void Buttons::manualSw()
     {
         block = false;
     }
-}
 
-void Buttons::manualMode()
-{
     if (manualSwitch)
     {
         manualCounter = timer[3].reduceCounter(manDef, reset_M);
@@ -143,7 +142,7 @@ void Buttons::manualMode()
     }
 }
 
-void Buttons::pedalCommands()
+void Buttons::pedalMode()
 {
     if (pedal.isClick() || pedal.isHold())
     {
@@ -181,20 +180,14 @@ void Buttons::pedalCommands()
     }
 }
 
-
 void Buttons::com()
 {
     blue.tick();
     red.tick();
     pedal.tick();
 
-    manualSw();
+    setTimer();
+
     manualMode();
-
-    if (!pedalSwitch)
-    {
-        setTimer();
-    }
-
-    pedalCommands();
+    pedalMode();
 }
