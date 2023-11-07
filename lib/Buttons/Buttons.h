@@ -44,10 +44,10 @@ private:
     boolean reset_M = false;
     boolean reset_B = false;
 
-    // boolean reset_P = false;
+    boolean escape = false;
 
-    byte counter = 0;
-
+    boolean correct = false;
+    
     byte manualCounter = 0;
 
     byte autoCounter = 0;
@@ -61,8 +61,6 @@ public:
 
     boolean blueB();
     boolean redB();
-
-    void writeTimer();
 
     boolean changeTimer(boolean minus, boolean plus);
     void setTimer();

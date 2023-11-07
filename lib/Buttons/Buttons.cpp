@@ -33,7 +33,7 @@ void Buttons::begin()
     set(blue);
     set(pedal);
 
-    EEPROM.get(couterAddr, counter);
+    EEPROM.get(couterAddr, autoCounter);
 }
 
 boolean Buttons::blueB()
@@ -46,23 +46,17 @@ boolean Buttons::redB()
     return red.isClick() || red.isHold();
 }
 
-void Buttons::writeTimer()
-{
-    EEPROM.put(couterAddr, counter);
-    setTimerFlag = false;
-}
-
 boolean Buttons::changeTimer(boolean minus, boolean plus)
 {
-    if (minus && counter > minSetCounter)
+    if (minus && autoCounter > minSetCounter)
     {
-        counter--;
+        autoCounter--;
         return true;
     }
 
-    else if (plus && counter < maxSetCounter)
+    else if (plus && autoCounter < maxSetCounter)
     {
-        counter++;
+        autoCounter++;
         return true;
     }
 
@@ -71,28 +65,26 @@ boolean Buttons::changeTimer(boolean minus, boolean plus)
 
 void Buttons::setTimer()
 {
-    if (!pedalSwitch)
+    if (!(pedal.isClick() || pedal.isHold()))
     {
         if (!setTimerFlag)
         {
             if (blueB() || redB())
             {
+                startTimer = false;
+
+                EEPROM.get(couterAddr, autoCounter);
+
                 manualSwitch = false;
 
                 setTimerFlag = true;
 
                 reset_B = true;
-
-                // Serial.print("reset_B ");
-                // Serial.println(reset_B);
             }
         }
 
         if (setTimerFlag)
         {
-            // Serial.print("reset_B 2 ");
-            // Serial.println(reset_B);
-
             blinkHide = changeTimer(blueB(), redB());
 
             temp = timer[0].reduceCounter(escCount, reset_B);
@@ -101,8 +93,16 @@ void Buttons::setTimer()
 
             if (temp == 0)
             {
-                writeTimer();
-                // Serial.println("ZERO");
+                EEPROM.put(couterAddr, autoCounter);
+                setTimerFlag = false;
+
+                EEPROM.get(couterAddr, autoCounter);
+
+                if (pedalSwitch)
+                {
+                    reset_A = true;
+                    correct = true;
+                }
             }
         }
     }
@@ -151,14 +151,15 @@ void Buttons::pedalMode()
 
         startTimer = false;
 
-        reset_A = true;
-
-        autoCounter = counter;
-
         if (setTimerFlag)
         {
-            writeTimer();
+            EEPROM.put(couterAddr, autoCounter);
+            setTimerFlag = false;
         }
+
+        EEPROM.get(couterAddr, autoCounter);
+
+        reset_A = true;
     }
 
     else if (pedalSwitch && pedal.isRelease() && !startTimer && !setTimerFlag)
@@ -168,15 +169,20 @@ void Buttons::pedalMode()
 
     if (startTimer && !setTimerFlag)
     {
-        autoCounter = timer[2].reduceCounter(counter, reset_A);
-
         reset_A = false;
 
-        if (autoCounter == 0)
+        if (escape)
         {
             pedalSwitch = false;
             startTimer = false;
+            escape = false;
         }
+    }
+
+    if (correct)
+    {
+        startTimer = true;
+        correct = false;
     }
 }
 

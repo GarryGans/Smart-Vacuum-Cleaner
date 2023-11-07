@@ -1,10 +1,7 @@
 #include "Screen.h"
 
-
-
 Screen::Screen() : EFX()
 {
-   
 }
 
 Screen::~Screen()
@@ -32,14 +29,8 @@ void Screen::setTimerScreen(Buttons &buttons)
 {
     setHeight(u8g2_font_profont22_tn);
 
-    digAlign(buttons.counter, PosX::center, PosY::center);
-    blinkFrame(buttons.counter, PosX::center, PosY::centerFrame, buttons.blinkHide, true);
-
-    escapeBar(buttons.temp, buttons.reset_B);
-    // progressBar(buttons.temp, buttons.reset_P);
-
-    // progressBrickBar(buttons.temp, buttons.reset_P);
-    // escapeBrickBar(buttons.temp, buttons.reset_P);
+    digAlign(buttons.autoCounter, PosX::center, PosY::center);
+    blinkFrame(buttons.autoCounter, PosX::center, PosY::centerFrame, buttons.blinkHide, true);
 }
 
 void Screen::bottomLine(Buttons &buttons)
@@ -62,8 +53,7 @@ void Screen::vacuumState(Buttons &buttons)
         setHeight(u8g2_font_profont22_tn);
         digAlign(buttons.autoCounter, PosX::rightHalf, PosY::center);
 
-        // escapeBrickBar(buttons.autoCounter, buttons.reset_A);
-        escapeBar(buttons.autoCounter, buttons.reset_A);
+        autoBar(buttons.autoCounter, buttons.escape, false, buttons.reset_A);
     }
 
     if (buttons.manualSwitch)
@@ -77,17 +67,12 @@ void Screen::vacuumState(Buttons &buttons)
 
         setHeight(u8g2_font_profont22_tn);
         digAlign(buttons.manualCounter, PosX::rightHalf, PosY::center);
-
-        // escapeBrickBar(buttons.manualCounter, buttons.reset_M);
-        // escapeBar(buttons.manualCounter, buttons.reset_M);
     }
 
     if (!(buttons.pedalSwitch || buttons.manualSwitch))
     {
         pos_x = PosX::center;
         pos_y = PosY::center;
-
-        // escapeBar(false, escCount, esc, true, escTime);
     }
 
     setHeight(u8g2_font_HelvetiPixelOutline_tr);
