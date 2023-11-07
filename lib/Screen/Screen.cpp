@@ -60,7 +60,7 @@ void Screen::vacuumState(Buttons &buttons)
         pos_y = PosY::upHalf;
 
         setHeight(u8g2_font_profont22_tn);
-        digAlign(buttons.autoCounter, PosX::rightHalf, PosY::downHalf);
+        digAlign(buttons.autoCounter, PosX::rightHalf, PosY::center);
 
         // escapeBrickBar(buttons.autoCounter, buttons.reset_A);
         escapeBar(buttons.autoCounter, buttons.reset_A);
