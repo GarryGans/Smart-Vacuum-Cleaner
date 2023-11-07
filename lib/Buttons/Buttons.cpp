@@ -87,7 +87,7 @@ void Buttons::setTimer()
         {
             blinkHide = changeTimer(blueB(), redB());
 
-            temp = timer[0].reduceCounter(escCount, reset_B);
+            byte temp = timer[0].reduceCounter(escCount, reset_B );
 
             reset_B = blinkHide;
 
@@ -133,7 +133,7 @@ void Buttons::manualMode()
     {
         manualCounter = timer[3].reduceCounter(manDef, reset_M);
 
-        reset_M = false;
+        // reset_M = false;
 
         if (manualCounter == 0)
         {

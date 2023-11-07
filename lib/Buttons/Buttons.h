@@ -27,8 +27,6 @@ class Buttons : public GButton
 private:
     Timer timer[4];
 
-    byte temp;
-
     boolean setTimerFlag = false;
 
     boolean block = false;
