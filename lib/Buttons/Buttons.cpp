@@ -133,7 +133,7 @@ void Buttons::manualMode()
     {
         manualCounter = timer[3].reduceCounter(manDef, reset_M);
 
-        // reset_M = false;
+        reset_M = false;
 
         if (manualCounter == 0)
         {
